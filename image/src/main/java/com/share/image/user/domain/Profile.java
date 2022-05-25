@@ -1,20 +1,16 @@
 package com.share.image.user.domain;
 
-import lombok.Generated;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 
 @Getter
 @NoArgsConstructor
 @Entity
 public class Profile {
 
-    @Id @Generated
+    @Id @GeneratedValue
     private Long id;
 
     @OneToOne

@@ -1,7 +1,6 @@
 package com.share.image.feed.domain;
 
 import com.share.image.user.domain.User;
-import lombok.Generated;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
@@ -15,7 +14,7 @@ import java.util.List;
 @Entity
 public class Feed {
 
-    @Id @Generated
+    @Id @GeneratedValue
     private Long id;
 
     @Column(nullable = false)

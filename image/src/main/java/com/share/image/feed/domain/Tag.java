@@ -1,13 +1,9 @@
 package com.share.image.feed.domain;
 
-import lombok.Generated;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.List;
 
 @Getter
@@ -15,7 +11,7 @@ import java.util.List;
 @Entity
 public class Tag {
 
-    @Id @Generated
+    @Id @GeneratedValue
     private Long id;
 
     @Column(nullable = false)

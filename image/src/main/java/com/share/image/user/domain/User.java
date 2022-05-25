@@ -38,6 +38,9 @@ public class User {
     @OneToOne
     private Profile profile;
 
+    @Enumerated(EnumType.STRING)
+    private RoleType role;
+
     @OneToMany
     private List<Feed> feeds;
 
