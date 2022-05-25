@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -12,12 +13,15 @@ import java.util.List;
 public class Tag {
 
     @Id @GeneratedValue
+    @Column(name = "tag_id")
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String name;
 
-    @OneToMany
-    private List<Feed> feeds;
+    @OneToMany(mappedBy = "tag", cascade = CascadeType.ALL)
+    private List<Feed> feeds = new ArrayList<>();
+
+
 
 }
