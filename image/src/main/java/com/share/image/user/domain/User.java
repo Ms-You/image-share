@@ -9,6 +9,7 @@ import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -17,6 +18,7 @@ import java.util.List;
 public class User {
 
     @Id @GeneratedValue
+    @Column(name = "user_id")
     private Long id;
 
     @Column(nullable = false)
@@ -35,20 +37,9 @@ public class User {
     @Column(nullable = false)
     private int age;
 
-    @OneToOne
-    private Profile profile;
-
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private RoleType role;
-
-    @OneToMany
-    private List<Feed> feeds;
-
-    @OneToMany
-    private List<Like> likes;
-
-    @OneToMany
-    private List<Reply> replies;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -56,6 +47,19 @@ public class User {
 
     @CreatedDate
     private LocalDateTime createdDate;
+
+    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Profile profile;
+
+    @OneToMany(mappedBy = "writer", cascade = CascadeType.ALL)
+    private List<Feed> feeds = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Like> likes = new ArrayList<>();
+
+    @OneToMany(mappedBy = "writer", cascade = CascadeType.ALL)
+    private List<Reply> replies = new ArrayList<>();
+
 
 
 }
