@@ -14,18 +14,23 @@ import java.time.LocalDateTime;
 public class Reply {
 
     @Id @GeneratedValue
+    @Column(name = "reply_id")
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
-
-    @ManyToOne
-    private User writer;
-
-    @ManyToOne
-    private Feed feed;
 
     @CreatedDate
     private LocalDateTime createdDate;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User writer;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "feed_id")
+    private Feed feed;
+
+
 
 }
