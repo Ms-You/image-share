@@ -16,7 +16,7 @@ Image share project for Spring Boot
 |8|GET|/app/feeds/feedName/:feedName|피드 명으로 피드 조회 API|
 |9|GET|/app/feeds/tag/tagId/:tagIdx|태그 아이디로 전체 피드 조회 API|
 |10|GET|/app/feeds/tag/tagName/:tagName|태그 명으로 전체 피드 조회 API|
-|11|GET|/app/subs|모든 구독 목록 조회 API|
+|11|GET|/app/subs/status/:status|상태에 따른 구독 목록 조회 API|
 |12|GET|/app/feeds/like|좋아요 누른 피드 조회 API|
 
 <br/>
