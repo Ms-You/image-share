@@ -3,6 +3,7 @@ package com.share.image.user.domain;
 import com.share.image.feed.domain.Feed;
 import com.share.image.feed.domain.Like;
 import com.share.image.feed.domain.Reply;
+import com.share.image.feed.domain.Subscribe;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
@@ -41,9 +42,8 @@ public class User {
     @Enumerated(EnumType.STRING)
     private RoleType role;
 
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private Subscribe subscribe;
+    @OneToMany
+    private List<Subscribe> subscribes = new ArrayList<>();
 
     @CreatedDate
     private LocalDateTime createdDate;
