@@ -62,8 +62,4 @@ public class User {
     private List<Reply> replies = new ArrayList<>();
 
 
-    public void setRoleUser(){
-        this.role = RoleType.USER;
-    }
-
 }
