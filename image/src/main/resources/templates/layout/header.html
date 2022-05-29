@@ -6,7 +6,7 @@
         <div class="container-fluid">
 
             <a class="navbar-brand" href="/">
-                <img src="img/logo.png" alt="로고" width="30" height="30" class="d-inline-block align-text-top">
+                <img th:src="@{/img/logo.png}" alt="로고" width="30" height="30" class="d-inline-block align-text-top">
                 <span style="color:#237375; font-size: 25px;">Image Share</span>
             </a>
 
@@ -19,10 +19,14 @@
                     <a class="nav-link" href="#">공지사항</a>
                 </li>
                 <li class="nav-item ml-4">
-                    <button type="button" class="btn btn-outline-success" style="border-radius:25px;">로그인</button>
+                    <a th:href="@{/user/login}">
+                        <button type="button" class="btn btn-outline-success" style="border-radius:25px;">로그인</button>
+                    </a>
                 </li>
                 <li class="nav-item ml-3">
-                    <button type="button" class="btn btn-outline-secondary" style="border-radius:25px;">회원가입</button>
+                    <a th:href="@{/user/join}">
+                        <button type="button" class="btn btn-outline-secondary" style="border-radius:25px;">회원가입</button>
+                    </a>
                 </li>
             </ul>
             <!--  로그인 상태  -->
@@ -31,13 +35,13 @@
                     <form class="d-flex">
                         <input class="form-control me-2" type="search" placeholder="검색" aria-label="Search">
                         <button class="btn btn-outline-secondary" type="submit">
-                            <img src="img/search.png" alt="검색" width="20" height="20" class="d-inline-block align-text-top">
+                            <img th:src="@{/img/search.png}" alt="검색" width="20" height="20" class="d-inline-block align-text-top">
                         </button>
                     </form>
                 </li>
                 <li class="nav-item ml-4">
                     <a class="nav-link" href="#">
-                        <img src="img/bell.png" alt="알림" width="30" height="30" class="d-inline-block align-text-top">
+                        <img th:src="@{/img/bell.png}" alt="알림" width="30" height="30" class="d-inline-block align-text-top">
                     </a>
                 </li>
                 <li class="nav-item ml-3">
