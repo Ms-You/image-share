@@ -32,5 +32,16 @@ public class UserController {
     }
 
 
+    // 닉네임 중복 검사
+    @ResponseBody
+    @PostMapping("/user/nickname")
+    public ResponseEntity<?> duplicateNickName(@RequestBody JoinRequestDto joinRequestDto) {
+        if (userService.nicknameDuplicated(joinRequestDto.getNickName()))
+            return new ResponseEntity<>("사용가능한 닉네임입니다.", HttpStatus.OK);
+        else
+            return new ResponseEntity<>("사용할 수 없는 닉네임입니다.", HttpStatus.BAD_REQUEST);
+    }
+
+
 
 }

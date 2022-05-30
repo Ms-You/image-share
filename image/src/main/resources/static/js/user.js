@@ -3,6 +3,10 @@ let index = {
         $("#btn-save").on("click", ()=>{
             this.save();
         });
+
+        $("#nickname-duplicate").on("click", ()=>{
+            this.check();
+        });
     },
 
     save: function(){
@@ -26,6 +30,23 @@ let index = {
 
     },
 
+    check: function(){
+        let data = {
+            nickName: $("#nickName").val()
+        };
+
+        $.ajax({
+            type: "POST",
+            url: "/user/nickname",
+            data: JSON.stringify(data),
+            contentType: "application/json; charset=utf-8",
+        }).done(function(resp){
+            alert(resp);
+        }).fail(function(error){
+            alert(error.responseText);
+        });
+
+    },
 
 
 }
