@@ -11,4 +11,18 @@ public class IndexController {
         return "index";
     }
 
+    // 회원가입 페이지 이동
+    @GetMapping("/user/join")
+    public String join(){
+
+        return "/user/join";
+    }
+
+    // 로그인 페이지 이동
+    @GetMapping("/user/login")
+    public String login(){
+
+        return "/user/login";
+    }
+
 }
