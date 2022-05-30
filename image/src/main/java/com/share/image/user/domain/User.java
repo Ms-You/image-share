@@ -18,7 +18,6 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @Entity
 public class User {
 
@@ -34,10 +33,6 @@ public class User {
 
     @Column(nullable = false, length = 255)
     private String password;
-
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private Gender gender;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -60,6 +55,16 @@ public class User {
 
     @OneToMany(mappedBy = "writer", cascade = CascadeType.ALL)
     private List<Reply> replies = new ArrayList<>();
+
+    @Builder
+    public User(Long id, String email, String nickName, String password, RoleType role){
+        this.id = id;
+        this.email = email;
+        this.nickName = nickName;
+        this.password = password;
+        this.role = role;
+        this.createdDate = LocalDateTime.now();
+    }
 
 
 }
