@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<!-- head.html -->
+<th:block th:replace="layout/head::headFragment"></th:block>
+
+<!-- layout/header.html -->
+<header th:replace="layout/header::headerFragment"></header>
+
+<body>
+<div class="container">
+    <h2>회원가입</h2>
+    <form class="was-validated">
+        <!--  이메일  -->
+        <div class="form-group">
+            <input type="email" class="form-control" id="email" placeholder="이메일" name="email" required>
+        </div>
+        <!--  비밀번호  -->
+        <div class="form-group">
+            <input type="password" class="form-control" id="password" placeholder="비밀번호" name="password" required>
+        </div>
+        <!--  닉네임  -->
+        <div class="form-group">
+            <input type="text" class="form-control" id="nickName" placeholder="닉네임" name="nickName" required>
+        </div>
+
+    </form>
+    <button id="btn-save" class="btn btn-primary">회원가입</button>
+</div>
+
+<script src="/js/user.js"></script>
+</body>
+
+<!-- layout/footer.html -->
+<footer th:replace="layout/footer::footerFragment"></footer>
