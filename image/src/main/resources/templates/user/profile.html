@@ -9,28 +9,26 @@
 <header th:replace="layout/header::headerFragment"></header>
 
 <body>
-
-  <img th:src="@{/profile_imgs/} + ${profile.profileImageUrl}" onerror="this.src='/img/default_profile.png';" />
-  <form th:action="@{/app/profile}" method="post" name="form" enctype="multipart/form-data" accept-charset="UTF-8">
+<div class="container">
+  <!--  프로필 이미지  -->
+  <img th:src="@{/profile_imgs/} + ${user.profileImageUrl}" onerror="this.src='/img/default_profile.png';" width="150" height="150" style="border-radius: 100%;" />
     <!--  닉네임  -->
     <div>닉네임</div>
     <div>
-        <input name="nickName" th:value="${profile.user.nickName}"/>
+      <h4 th:text="${user.nickName}"></h4>
     </div>
     <!--  소개말  -->
-    <div>소개말</div>
-    <div>
-        <input name="intro" th:value="${profile.intro}" placeholder="자신을 소개해보세요."/>
+    <div th:if="${#strings.isEmpty(user.intro)}"></div>
+    <div th:if="${not #strings.isEmpty(user.intro)}">
+        <div>소개말</div>
+        <div>
+          <h6 th:text="${user.intro}"></h6>
+        </div>
     </div>
 
-    <!--  프로필 이미지  -->
-    <div>닉네임</div>
-    <div>
-        <input type="file" name="file" multiple="multiple"/>
-    </div>
-
-    <input type="submit" id="submit" value="수정"/>
-  </form>
-
+    <a th:href="@{/user/update}">
+      <button type="button" class="btn btn-primary" style="border-radius:25px;">프로필 수정</button>
+    </a>
+</div>
 </body>
 </html>

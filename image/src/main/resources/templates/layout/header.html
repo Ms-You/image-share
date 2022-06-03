@@ -19,12 +19,12 @@
                     <a class="nav-link" href="#">공지사항</a>
                 </li>
                 <li class="nav-item ml-4">
-                    <a th:href="@{/user/login}">
+                    <a th:href="@{/auth/login}">
                         <button type="button" class="btn btn-outline-success" style="border-radius:25px;">로그인</button>
                     </a>
                 </li>
                 <li class="nav-item ml-3">
-                    <a th:href="@{/user/join}">
+                    <a th:href="@{/auth/join}">
                         <button type="button" class="btn btn-outline-secondary" style="border-radius:25px;">회원가입</button>
                     </a>
                 </li>
@@ -45,10 +45,12 @@
                     </a>
                 </li>
                 <li class="nav-item ml-3">
-                    <button type="button" class="btn btn-outline-info" style="border-radius:25px;" >회원정보</button>
+                    <a th:href="@{/user/profile}">
+                        <img th:src="@{/profile_imgs/} + ${#authentication.getPrincipal().getUser().getProfileImageUrl}" onerror="this.src='/img/default_profile.png';" width="30" height="30" style="border-radius: 100%">
+                    </a>
                 </li>
                 <li class="nav-item ml-3">
-                    <a th:href="@{/user/logout}">
+                    <a th:href="@{/auth/logout}">
                         <button type="button" class="btn btn-outline-danger" style="border-radius:25px;" >로그아웃</button>
                     </a>
                 </li>
