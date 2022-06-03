@@ -38,14 +38,16 @@ public class User {
     @Enumerated(EnumType.STRING)
     private RoleType role;
 
+    private String profileImageUrl;
+
+    @Column(nullable = true, columnDefinition = "TEXT")
+    private String intro;
+
     @CreatedDate
     private LocalDateTime createdDate;
 
     @OneToMany
     private List<Subscribe> subscribes = new ArrayList<>();
-
-    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Profile profile;
 
     @OneToMany(mappedBy = "writer", cascade = CascadeType.ALL)
     private List<Feed> feeds = new ArrayList<>();
@@ -57,18 +59,24 @@ public class User {
     private List<Reply> replies = new ArrayList<>();
 
     @Builder
-    public User(Long id, String email, String nickName, String password, RoleType role){
+    public User(Long id, String email, String nickName, String password, RoleType role, String intro, String profileImageUrl){
         this.id = id;
         this.email = email;
         this.nickName = nickName;
         this.password = password;
         this.role = role;
+        this.intro = intro;
+        this.profileImageUrl = profileImageUrl;
         this.createdDate = LocalDateTime.now();
     }
 
+    public void updateProfileImageUrl(String profileImageUrl){
+        this.profileImageUrl = profileImageUrl;
+    }
 
-    public void modifyNickName(String nickName){
+    public void updateProfile(String nickName, String intro){
         this.nickName = nickName;
+        this.intro = intro;
     }
 
 }
