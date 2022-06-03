@@ -67,4 +67,8 @@ public class User {
     }
 
 
+    public void modifyNickName(String nickName){
+        this.nickName = nickName;
+    }
+
 }
