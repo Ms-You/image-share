@@ -27,3 +27,13 @@ spring:
   jackson:
     serialization:
       fail-on-empty-beans: false
+
+# multipart 설정
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 2MB
+
+# 파일 경로 설정
+profileImg:
+  path: C:/Users/명수/Documents/공부/스프링/image/profile_imgs/
