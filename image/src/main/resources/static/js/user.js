@@ -18,12 +18,12 @@ let index = {
 
         $.ajax({
             type: "POST",
-            url: "/user/join",
+            url: "/auth/join",
             data: JSON.stringify(data),
             contentType: "application/json; charset=utf-8",
         }).done(function(resp){
             alert(resp);
-            location.href = "/user/login";
+            location.href = "/auth/login";
         }).fail(function(error){
             alert(error.responseText);
         });
@@ -37,7 +37,7 @@ let index = {
 
         $.ajax({
             type: "POST",
-            url: "/user/nickname",
+            url: "/auth/nickname",
             data: JSON.stringify(data),
             contentType: "application/json; charset=utf-8",
         }).done(function(resp){

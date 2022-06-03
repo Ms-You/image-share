@@ -12,16 +12,14 @@ public class IndexController {
     }
 
     // 회원가입 페이지 이동
-    @GetMapping("/user/join")
+    @GetMapping("/auth/join")
     public String join(){
-
         return "/user/join";
     }
 
     // 로그인 페이지 이동
-    @GetMapping("/user/login")
+    @GetMapping("/auth/login")
     public String login(){
-
         return "/user/login";
     }
 
