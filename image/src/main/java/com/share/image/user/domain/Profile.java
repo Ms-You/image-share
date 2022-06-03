@@ -18,12 +18,22 @@ public class Profile {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(nullable = true)
-    private String profileImage;
+    private String profileImageUrl;
 
     @Column(nullable = true, columnDefinition = "TEXT")
     private String intro;
 
+    public void uploadUser(User user){
+        this.user = user;
+    }
 
+    public void updateProfileImageUrl(String profileImageUrl){
+        this.profileImageUrl = profileImageUrl;
+    }
+
+    public void updateProfile(String nickName, String intro){
+        this.user.modifyNickName(nickName);
+        this.intro = intro;
+    }
 
 }
