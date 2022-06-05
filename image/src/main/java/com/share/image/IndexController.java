@@ -1,5 +1,6 @@
 package com.share.image;
 
+import com.share.image.user.dto.JoinRequestDto;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -13,7 +14,7 @@ public class IndexController {
 
     // 회원가입 페이지 이동
     @GetMapping("/auth/join")
-    public String join(){
+    public String join(JoinRequestDto joinRequestDto){
         return "/user/join";
     }
 

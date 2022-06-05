@@ -7,10 +7,9 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-@AllArgsConstructor
-@NoArgsConstructor
 @Data
-@Builder
+@ToString
+@NoArgsConstructor
 public class JoinRequestDto {
     private Long id;
 
@@ -27,5 +26,12 @@ public class JoinRequestDto {
     @Size(min = 2, max = 8, message = "닉네임은 2~8자 사이로 입력해주세요.")
     private String nickName;
 
+    @Builder
+    public JoinRequestDto(Long id, String email, String password, String nickName){
+        this.id = id;
+        this.email = email;
+        this.password = password;
+        this.nickName = nickName;
+    }
 
 }
