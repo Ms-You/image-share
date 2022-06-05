@@ -54,19 +54,9 @@ public class UserService {
                 .role(RoleType.ROLE_USER)
                 .build();
 
-//        nicknameDuplicated(user.getNickName());
-
         return userRepository.save(user);
 
     }
-//
-//    @Transactional(readOnly = true)
-//    public boolean nicknameDuplicated(String nickName){
-//        if(userRepository.existsByNickName(nickName) || nickName.equals(""))
-//            return false;
-//        else
-//            return true;
-//    }
 
 
     @Value("${profileImg.path}")

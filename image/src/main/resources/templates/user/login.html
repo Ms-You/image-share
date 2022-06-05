@@ -18,6 +18,12 @@
             <input type="password" class="form-control" id="password" placeholder="비밀번호" name="password" required>
         </div>
         <button class="btn btn-primary">로그인</button>
+
+        <div th:if="${#strings.isEmpty(error)}"></div>
+        <div th:if="${not #strings.isEmpty(error)}">
+            <p id="valid" class="alert alert-danger" th:text="${exception}"></p>
+        </div>
+
     </form>
 
 </div>
