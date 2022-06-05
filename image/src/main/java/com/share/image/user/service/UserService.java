@@ -16,6 +16,8 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -62,9 +64,11 @@ public class UserService {
     @Value("${profileImg.path}")
     private String uploadFolder;
 
-    public void updateProfile(User user, UpdateRequestDto updateRequestDto, MultipartFile multipartFile){
+    public void updateProfile(User user, UpdateRequestDto updateRequestDto, MultipartFile multipartFile) throws UnsupportedEncodingException {
 
         String fileName = user.getId() + "_" + multipartFile.getOriginalFilename();
+        // 한글 파일 명 깨짐 처리
+        fileName = URLEncoder.encode(fileName, "UTF-8");
         Path imageFilePath = Paths.get(uploadFolder + fileName);
         log.info("fileName: {}", fileName);
 
