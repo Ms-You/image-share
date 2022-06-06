@@ -26,6 +26,11 @@ public class UsersDtoValidator implements Validator {
         if (userRepository.existsByNickName(joinRequestDto.getNickName())){
             errors.rejectValue("nickName", "nickName", new Object[]{joinRequestDto.getNickName()}, "이미 사용중인 닉네임입니다.");
         }
-
+        if (!joinRequestDto.getPassword().equals(joinRequestDto.getPassword_confirm())){
+            errors.rejectValue("password_confirm", "key","비밀번호가 일치하지 않습니다.");
+        }
     }
+
+
+
 }

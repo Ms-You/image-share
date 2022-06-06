@@ -22,6 +22,8 @@ public class JoinRequestDto {
             message = "비밀번호는 영문 대,소문자와 숫자, 특수기호가 적어도 1개 이상씩 포함된 8자 ~ 20자의 비밀번호여야 합니다.")
     private String password;
 
+    private String password_confirm;
+
     @NotBlank(message = "닉네임은 필수 입력 값입니다.")
     @Size(min = 2, max = 8, message = "닉네임은 2~8자 사이로 입력해주세요.")
     private String nickName;
