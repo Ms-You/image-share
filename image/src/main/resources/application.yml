@@ -37,3 +37,6 @@ spring:
 # 파일 경로 설정
 profileImg:
   path: C:/Users/명수/Documents/공부/스프링/image/profile_imgs/
+
+tagImg:
+  path: C:/Users/명수/Documents/공부/스프링/image/tag_imgs/
