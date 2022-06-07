@@ -13,8 +13,11 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Map;
 
@@ -45,7 +48,9 @@ public class AdminTagController {
 
     // 태그 생성
     @PostMapping("/new/tag")
-    public String newTag(@Valid TagRequestDto tagRequestDto, Errors errors, Model model) {
+    public String newTag(@Valid TagRequestDto tagRequestDto, Errors errors, Model model, @RequestParam MultipartFile file) throws UnsupportedEncodingException {
+        // 파일 유효성 검사를 위해 파일명을 dto 에 넣어줌
+        tagRequestDto.insertImage(file.getOriginalFilename());
         tagDtoValidator.validate(tagRequestDto, errors);
 
         if (errors.hasErrors()){
@@ -59,7 +64,7 @@ public class AdminTagController {
             return "admin/new_tag";
         }
 
-        adminTagService.createTag(tagRequestDto);
+        adminTagService.createTag(tagRequestDto, file);
         return "redirect:/admin/tags";
     }
 

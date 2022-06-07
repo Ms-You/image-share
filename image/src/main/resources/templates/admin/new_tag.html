@@ -10,18 +10,19 @@
 <body layout:fragment="content">
 
 <div class="container">
-    <form th:action="@{/admin/new/tag}" method="post" modelAttribute="tagRequestDto">
+    <form th:action="@{/admin/new/tag}" method="post" modelAttribute="tagRequestDto" enctype="multipart/form-data" accept-charset="UTF-8">
         <!--  태그명  -->
         <div class="form-group fone mt-2">
             <div>태그명</div>
             <input name="name" placeholder="태그명을 적어주세요."/>
             <span th:style="${'color: red; font-size:11px;'}" th:text="${valid_name}"></span>
         </div>
-        <!--  경로  -->
+
+        <!--  프로필 이미지  -->
         <div class="form-group fone mt-2">
-            <div>경로</div>
-            <input name="path" placeholder="경로를 적어주세요."/>
-            <span th:style="${'color: red; font-size:11px;'}" th:text="${valid_path}"></span>
+            <div>닉네임</div>
+            <input type="file" name="file" multiple="multiple"/>
+            <span th:style="${'color: red; font-size:11px;'}" th:text="${valid_tagImageUrl}"></span>
         </div>
 
         <input type="submit" id="submit" value="생성"/>

@@ -25,9 +25,11 @@ public class TagDtoValidator implements Validator {
         if (tagRepository.existsByName(tagRequestDto.getName())){
             errors.rejectValue("name", "name", new Object[]{tagRequestDto.getName()}, "이미 존재하는 태그입니다.");
         }
-        if (tagRepository.existsByPath(tagRequestDto.getPath())){
-            errors.rejectValue("path", "path", new Object[]{tagRequestDto.getPath()}, "이미 존재하는 경로입니다.");
+
+        if (tagRequestDto.getTagImageUrl().isEmpty()) {
+            errors.rejectValue("tagImageUrl", "tagImageUrl", new Object[]{tagRequestDto.getTagImageUrl()}, "태그 이미지를 업로드해주세요.");
         }
+
     }
 
 
