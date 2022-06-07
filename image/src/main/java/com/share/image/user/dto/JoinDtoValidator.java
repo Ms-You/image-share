@@ -8,7 +8,7 @@ import org.springframework.validation.Validator;
 
 @Component
 @RequiredArgsConstructor
-public class UsersDtoValidator implements Validator {
+public class JoinDtoValidator implements Validator {
 
     private final UserRepository userRepository;
 
