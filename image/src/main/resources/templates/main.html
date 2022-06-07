@@ -44,8 +44,9 @@
 
   <!--  tag start  -->
   <div th:each="tag: ${tags}">
-    <a th:href="@{/admin/details(path=${tag.path})}">
+    <a th:href="@{/user/details(id=${tag.id})}">
         <span th:text="${tag.name}"></span>
+        <img th:src="@{/tag_imgs/} + ${tag.tagImageUrl}" width="150" height="150" style="border-radius: 100%;" />
     </a>
   </div>
   <!--  tag end  -->

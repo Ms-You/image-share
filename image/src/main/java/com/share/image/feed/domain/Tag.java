@@ -20,17 +20,19 @@ public class Tag {
     @Column(nullable = false, unique = true)
     private String name;
 
-    @Column(nullable = false, unique = true)
-    private String path;
+    private String tagImageUrl;
 
     @OneToMany(mappedBy = "tag", cascade = CascadeType.ALL)
     private List<Feed> feeds = new ArrayList<>();
 
     @Builder
-    public Tag(Long id, String name, String path){
+    public Tag(Long id, String name){
         this.id = id;
         this.name = name;
-        this.path = path;
+    }
+
+    public void updateTagImageUrl(String tagImageUrl){
+        this.tagImageUrl = tagImageUrl;
     }
 
 

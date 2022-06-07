@@ -20,12 +20,11 @@
         <tr>
             <th>번호</th>
             <th>이름</th>
-            <th>경로</th>
         </tr>
         <tr th:each="tag: ${tags}">
             <td th:text="${tag.id}"></td>
             <td th:text="${tag.name}"></td>
-            <td th:text="${tag.path}"></td>
+            <img th:src="@{/tag_imgs/} + ${tag.tagImageUrl}" width="150" height="150" style="border-radius: 100%;" />
         </tr>
     </table>
 </div>

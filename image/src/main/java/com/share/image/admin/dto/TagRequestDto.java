@@ -18,14 +18,18 @@ public class TagRequestDto {
     @Size(min = 1, max = 8, message = "태그명은 최대 8자까지 입력해주세요.")
     private String name;
 
-    @NotBlank(message = "경로는 필수 입력 값입니다.")
-    private String path;
+    private String tagImageUrl;
 
     @Builder
-    public TagRequestDto(Long id, String name, String path){
+    public TagRequestDto(Long id, String name, String tagImageUrl){
         this.id = id;
         this.name = name;
-        this.path = path;
+        this.tagImageUrl = tagImageUrl;
+    }
+
+    // 파일 유효성 검사를 위해 파일명을 넣어줌
+    public void insertImage(String fileName){
+        this.tagImageUrl = fileName;
     }
 
 }
