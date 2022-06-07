@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<!-- head.html -->
+<th:block th:replace="layout/head::headFragment"></th:block>
+
+<!-- layout/admin_header.html -->
+<header th:replace="layout/admin_header::admin_headerFragment"></header>
+<body layout:fragment="content">
+
+<div class="container">
+    <form th:action="@{/admin/new/tag}" method="post" modelAttribute="tagRequestDto">
+        <!--  태그명  -->
+        <div class="form-group fone mt-2">
+            <div>태그명</div>
+            <input name="name" placeholder="태그명을 적어주세요."/>
+            <span th:style="${'color: red; font-size:11px;'}" th:text="${valid_name}"></span>
+        </div>
+        <!--  경로  -->
+        <div class="form-group fone mt-2">
+            <div>경로</div>
+            <input name="path" placeholder="경로를 적어주세요."/>
+            <span th:style="${'color: red; font-size:11px;'}" th:text="${valid_path}"></span>
+        </div>
+
+        <input type="submit" id="submit" value="생성"/>
+    </form>
+</div>
+
+</body>
+<footer th:replace="layout/footer::footerFragment"></footer>
