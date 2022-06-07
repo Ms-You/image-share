@@ -4,13 +4,11 @@ import com.share.image.config.PrincipalDetails;
 import com.share.image.user.domain.User;
 import com.share.image.user.dto.JoinRequestDto;
 import com.share.image.user.dto.UpdateRequestDto;
-import com.share.image.user.dto.UsersDtoValidator;
+import com.share.image.user.dto.JoinDtoValidator;
 import com.share.image.user.repository.UserRepository;
 import com.share.image.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
@@ -18,7 +16,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.io.IOException;
@@ -31,7 +28,7 @@ public class UserController {
 
     private final UserService userService;
     private final UserRepository userRepository;
-    private final UsersDtoValidator usersDtoValidator;
+    private final JoinDtoValidator usersDtoValidator;
 
 
     @PostMapping("/auth/join")
