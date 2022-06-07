@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<!-- head.html -->
+<th:block th:replace="layout/head::headFragment"></th:block>
+
+<!-- layout/header.html -->
+<header th:replace="layout/header::headerFragment"></header>
+
+<body layout:fragment="content">
+<!-- content -->
+<div class="container">
+  <!--  image slide show  -->
+  <div class="slideshow-container">
+
+    <div class="mySlides">
+      <div class="numbertext">1 / 3</div>
+      <img th:src="@{/img/sample1.jpg}" style="width:100%">
+    </div>
+
+    <div class="mySlides">
+      <div class="numbertext">2 / 3</div>
+      <img th:src="@{/img/sample2.jpg}" style="width:100%">
+    </div>
+
+    <div class="mySlides">
+      <div class="numbertext">3 / 3</div>
+      <img th:src="@{/img/sample3.jpg}" style="width:100%">
+    </div>
+
+    <a class="prev" onclick="plusSlides(-1)">❮</a>
+    <a class="next" onclick="plusSlides(1)">❯</a>
+
+  </div>
+  <br>
+
+  <div style="text-align:center">
+    <span class="dot" onclick="currentSlide(1)"></span>
+    <span class="dot" onclick="currentSlide(2)"></span>
+    <span class="dot" onclick="currentSlide(3)"></span>
+  </div>
+  <!--  image slide show end -->
+
+  <!--  tag start  -->
+  <div th:each="tag: ${tags}">
+    <a th:href="@{/admin/details(path=${tag.path})}">
+        <span th:text="${tag.name}"></span>
+    </a>
+  </div>
+  <!--  tag end  -->
+
+</div>
+</body>
+
+<!--  index.js  -->
+<script type="text/javascript" th:src="@{/js/index.js}"></script>
+
+
+<!-- layout/footer.html -->
+<footer th:replace="layout/footer::footerFragment"></footer>
