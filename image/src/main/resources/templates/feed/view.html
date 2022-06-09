@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<!-- head.html -->
+<th:block th:replace="layout/head::headFragment"></th:block>
+
+<!-- layout/header.html -->
+<header th:replace="layout/header::headerFragment"></header>
+
+<body layout:fragment="content">
+<!-- content -->
+<div class="container">
+
+    <!--  제목  -->
+    <div>
+        <h3 th:text="${feed.title}"></h3>
+        작성자: <h6 th:text="${feed.writer.nickName}"></h6>
+        작성시간: <h6 th:text="${feed.createdDate}"></h6>
+    </div>
+    <!--  설명  -->
+    <div>
+        <h5 th:text="${feed.description}"></h5>
+    </div>
+    <!--  피드 이미지  -->
+    <div>
+        <img th:src="@{/feed_imgs/} + ${feed.feedImageUrl}" width="400" height="400" />
+    </div>
+
+    <a th:href="@{/user}">
+        <button class="btn btn-primary">돌아가기</button>
+    </a>
+
+</div>
+</body>
+
+
+<!-- layout/footer.html -->
+<footer th:replace="layout/footer::footerFragment"></footer>
