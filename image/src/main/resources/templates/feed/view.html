@@ -27,9 +27,15 @@
         <img th:src="@{/feed_imgs/} + ${feed.feedImageUrl}" width="400" height="400" />
     </div>
 
-    <a th:href="@{/user}">
+    <a th:href="@{/user/tag/{id}(id=${feed.tag.id})}">
         <button class="btn btn-primary">돌아가기</button>
     </a>
+
+    <div th:if="${feed.writer.id.equals(#authentication.getPrincipal().getUser().id)}">
+        <a th:href="@{/user/feed/update/{id}(id=${feed.id})}">
+            <button class="btn btn-primary">수정하기</button>
+        </a>
+    </div>
 
 </div>
 </body>

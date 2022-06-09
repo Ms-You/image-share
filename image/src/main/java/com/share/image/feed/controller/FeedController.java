@@ -101,6 +101,76 @@ public class FeedController {
         return "feed/view";
     }
 
+    // 피드 수정페이지 이동
+    @GetMapping("/feed/update/{feed_id}")
+    public String updateFeed(@AuthenticationPrincipal PrincipalDetails principalDetails,
+                                @PathVariable(name = "feed_id") Long feedId, Model model){
+
+        User user = userRepository.findById(principalDetails.getUser().getId()).orElseThrow(()->{
+            return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
+        });
+
+        Feed feed = feedRepository.findById(feedId).orElseThrow(()->{
+            return new IllegalArgumentException("존재하지 않는 피드입니다.");
+        });
+
+        if (user.getId() != feed.getWriter().getId()){
+            return "feed/exception";
+        }
+
+        List<Tag> tags = tagRepository.findAll();
+        model.addAttribute("tags", tags);
+        model.addAttribute("feed", feed);
+
+        return "feed/update";
+    }
+
+    // 피드 수정
+    @PostMapping("/feed/update/{feed_id}")
+    public String updateFeed(@AuthenticationPrincipal PrincipalDetails principalDetails,
+            @PathVariable(name = "feed_id") Long feedId,
+            @Valid FeedRequestDto feedRequestDto,
+            Errors errors,
+            Model model,
+            @RequestParam MultipartFile file,
+            @RequestParam String tagName) throws UnsupportedEncodingException {
+
+        User user = userRepository.findById(principalDetails.getUser().getId()).orElseThrow(()->{
+            return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
+        });
+
+        Feed feed = feedRepository.findById(feedId).orElseThrow(()->{
+            return new IllegalArgumentException("존재하지 않는 피드입니다.");
+        });
+
+
+        // select-option 에서 태그 이름을 받아와서 dto 에 넣어줌
+        Tag tag = tagRepository.findByName(tagName);
+        feedRequestDto.insertTag(tag);
+
+        // 파일 유효성 검사를 위해 파일명을 dto 에 넣어줌
+        feedRequestDto.insertImage(file.getOriginalFilename());
+        feedDtoValidator.validate(feedRequestDto, errors);
+
+        // 유효성 검사
+        if (errors.hasErrors()){
+            List<Tag> tags = tagRepository.findAll();
+            model.addAttribute("feedRequestDto", feedRequestDto);
+            model.addAttribute("tags", tags);
+            model.addAttribute("feed", feed);
+
+            Map<String, String> validatorResult = feedService.validateHandling(errors);
+            for (String key : validatorResult.keySet()) {
+                model.addAttribute(key, validatorResult.get(key));
+            }
+
+            return "feed/update";
+        }
+        feedService.updateFeed(user, feed, feedRequestDto, file);
+        return "redirect:/user";
+
+    }
+
 
 
 }

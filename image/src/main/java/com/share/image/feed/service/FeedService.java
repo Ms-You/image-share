@@ -78,7 +78,38 @@ public class FeedService {
         feedRepository.save(feed);
     }
 
+    public void updateFeed(User user, Feed findFeed, FeedRequestDto feedRequestDto, MultipartFile multipartFile) throws UnsupportedEncodingException {
 
+        Feed feed = Feed.builder()
+                .id(findFeed.getId())
+                .title(feedRequestDto.getTitle())
+                .description(feedRequestDto.getDescription())
+                .tag(feedRequestDto.getTag())
+                .writer(user)
+                .build();
+
+        String fileName = user.getId() + "_" + multipartFile.getOriginalFilename();
+        // 한글 파일 명 깨짐 처리
+        fileName = URLEncoder.encode(fileName, "UTF-8");
+        Path imageFilePath = Paths.get(uploadFolder + fileName);
+        log.info("fileName: {}", fileName);
+
+        // 파일 업로드 여부 확인
+        if (multipartFile.getSize() != 0){
+            try{
+                if (feed.getFeedImageUrl() != null) {
+                    File file = new File(uploadFolder + feed.getFeedImageUrl());
+                    file.delete();
+                }
+                Files.write(imageFilePath, multipartFile.getBytes());
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+            feed.updateFeedImageUrl(fileName);
+        }
+
+        feedRepository.save(feed);
+    }
 
 
 

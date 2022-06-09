@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<!-- head.html -->
+<th:block th:replace="layout/head::headFragment"></th:block>
+
+<!-- layout/header.html -->
+<header th:replace="layout/header::headerFragment"></header>
+
+<body layout:fragment="content">
+<!-- content -->
+<div class="container">
+
+    <form th:action="@{/user/feed/update/{id}(id=${feed.id})}" method="post" modelAttribute="feedRequestDto" name="form" enctype="multipart/form-data" accept-charset="UTF-8">
+        <!--  제목  -->
+        <div>제목</div>
+        <div>
+            <input type="text" name="title" th:value="${feed.title}" placeholder="제목을 입력해주세요."/>
+            <span th:style="${'color: red; font-size:11px;'}" th:text="${valid_title}"></span>
+        </div>
+        <!--  설명  -->
+        <div>설명</div>
+        <div>
+            <input type="text" name="description" th:value="${feed.description}" placeholder="간단한 설명을 입력해주세요."/>
+            <span th:style="${'color: red; font-size:11px;'}" th:text="${valid_description}"></span>
+        </div>
+
+        <!--  피드 이미지  -->
+        <div>업로드 할 이미지</div>
+        <div>
+            <input type="file" name="file" multiple="multiple"/>
+            <span th:style="${'color: red; font-size:11px;'}" th:text="${valid_feedImageUrl}"></span>
+        </div>
+
+        <div>업로드 할 태그</div>
+        <div>
+            <select class="form-select" name="tagName">
+                <option th:each="tag : ${tags}" th:value="${tag.name}" th:text="${tag.name}"></option>
+            </select>
+        </div>
+
+        <button class="btn btn-primary" type="submit">수정</button>
+    </form>
+
+</div>
+</body>
+
+<!-- layout/footer.html -->
+<footer th:replace="layout/footer::footerFragment"></footer>
