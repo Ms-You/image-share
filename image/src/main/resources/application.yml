@@ -40,3 +40,6 @@ profileImg:
 
 tagImg:
   path: C:/Users/명수/Documents/공부/스프링/image/tag_imgs/
+
+feedImg:
+  path: C:/Users/명수/Documents/공부/스프링/image/feed_imgs/

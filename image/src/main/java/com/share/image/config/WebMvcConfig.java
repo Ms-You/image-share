@@ -15,6 +15,10 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Value("C:/Users/명수/Documents/공부/스프링/image/tag_imgs/")
     private String tagUploadFolder;
 
+    @Value("C:/Users/명수/Documents/공부/스프링/image/feed_imgs/")
+    private String feedUploadFolder;
+
+
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         WebMvcConfigurer.super.addResourceHandlers(registry);
@@ -32,6 +36,14 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .setCachePeriod(60 * 10 * 6)
                 .resourceChain(true)
                 .addResolver(new PathResourceResolver());
+
+        registry
+                .addResourceHandler("/feed_imgs/**")
+                .addResourceLocations("file:///" + feedUploadFolder)
+                .setCachePeriod(60 * 10 * 6)
+                .resourceChain(true)
+                .addResolver(new PathResourceResolver());
+
 
     }
 }
