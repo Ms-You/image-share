@@ -1,6 +1,7 @@
 package com.share.image.feed.domain;
 
 import com.share.image.user.domain.User;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
@@ -25,8 +26,7 @@ public class Feed {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String description;
 
-    @Column(nullable = false)
-    private String uploadImage;
+    private String feedImageUrl;
 
     @CreatedDate
     private LocalDateTime createdDate;
@@ -46,5 +46,19 @@ public class Feed {
     private List<Reply> replies = new ArrayList<>();
 
 
+    @Builder
+    public Feed(Long id, String title, String description, Tag tag, User writer){
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.tag = tag;
+        this.writer = writer;
+        this.createdDate = LocalDateTime.now();
+    }
+
+
+    public void updateFeedImageUrl(String feedImageUrl){
+        this.feedImageUrl = feedImageUrl;
+    }
 
 }
