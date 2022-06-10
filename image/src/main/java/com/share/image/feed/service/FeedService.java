@@ -78,15 +78,9 @@ public class FeedService {
         feedRepository.save(feed);
     }
 
-    public void updateFeed(User user, Feed findFeed, FeedRequestDto feedRequestDto, MultipartFile multipartFile) throws UnsupportedEncodingException {
+    public void updateFeed(User user, Feed feed, FeedRequestDto feedRequestDto, MultipartFile multipartFile) throws UnsupportedEncodingException {
 
-        Feed feed = Feed.builder()
-                .id(findFeed.getId())
-                .title(feedRequestDto.getTitle())
-                .description(feedRequestDto.getDescription())
-                .tag(feedRequestDto.getTag())
-                .writer(user)
-                .build();
+        feed.modifyFeed(feedRequestDto.getTitle(), feedRequestDto.getDescription(), feedRequestDto.getTag());
 
         String fileName = user.getId() + "_" + multipartFile.getOriginalFilename();
         // 한글 파일 명 깨짐 처리

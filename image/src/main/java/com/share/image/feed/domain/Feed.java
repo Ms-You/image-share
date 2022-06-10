@@ -56,6 +56,12 @@ public class Feed {
         this.createdDate = LocalDateTime.now();
     }
 
+    public void modifyFeed(String title, String description, Tag tag){
+        this.title = title;
+        this.description = description;
+        this.tag = tag;
+    }
+
 
     public void updateFeedImageUrl(String feedImageUrl){
         this.feedImageUrl = feedImageUrl;
