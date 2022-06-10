@@ -13,6 +13,11 @@ spring:
     username: root
     password: root
 
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
+
   jpa:
     open-in-view: true
     hibernate:
