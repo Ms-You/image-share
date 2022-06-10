@@ -78,7 +78,7 @@ public class UserController {
 
 
     // 회원 정보 수정
-    @PostMapping("/user/update")
+    @PutMapping("/user/update")
     public String uploadProfile(
             @Valid UpdateRequestDto updateRequestDto,
             @AuthenticationPrincipal PrincipalDetails principalDetails,
