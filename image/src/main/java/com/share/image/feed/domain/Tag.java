@@ -31,6 +31,10 @@ public class Tag {
         this.name = name;
     }
 
+    public void updateTagName(String name){
+        this.name = name;
+    }
+
     public void updateTagImageUrl(String tagImageUrl){
         this.tagImageUrl = tagImageUrl;
     }

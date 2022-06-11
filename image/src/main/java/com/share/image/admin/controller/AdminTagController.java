@@ -1,5 +1,6 @@
 package com.share.image.admin.controller;
 
+import com.share.image.admin.dto.TagDtoUpdateValidator;
 import com.share.image.admin.dto.TagDtoValidator;
 import com.share.image.admin.dto.TagRequestDto;
 import com.share.image.admin.service.AdminTagService;
@@ -10,10 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
@@ -28,6 +26,7 @@ import java.util.Map;
 public class AdminTagController {
 
     private final TagDtoValidator tagDtoValidator;
+    private final TagDtoUpdateValidator tagDtoUpdateValidator;
     private final AdminTagService adminTagService;
     private final TagRepository tagRepository;
 
@@ -37,13 +36,13 @@ public class AdminTagController {
         List<Tag> tags = tagRepository.findAll();
         model.addAttribute("tags", tags);
 
-        return "/admin/tags";
+        return "/admin/tag/tags";
     }
 
     // 태그 생성 페이지로 이동
     @GetMapping("/new/tag")
     public String createTag(){
-        return "/admin/new_tag";
+        return "/admin/tag/new_tag";
     }
 
     // 태그 생성
@@ -61,12 +60,70 @@ public class AdminTagController {
                 model.addAttribute(key, validatorResult.get(key));
             }
 
-            return "admin/new_tag";
+            return "admin/tag/new_tag";
         }
 
         adminTagService.createTag(tagRequestDto, file);
-        return "redirect:/admin/tags";
+        return "redirect:/admin/tag/tags";
     }
+
+
+    // 태그 수정페이지 이동
+    @GetMapping("/tag/update/{tag_id}")
+    public String updateTag(@PathVariable(name = "tag_id") Long tagId, Model model){
+
+        Tag tag = tagRepository.findById(tagId).orElseThrow(()->{
+            return new IllegalArgumentException("존재하지 않는 태그입니다.");
+        });
+        model.addAttribute("tag", tag);
+
+        return "admin/tag/update";
+    }
+
+    // 태그 수정
+    @PutMapping("/tag/update/{tag_id}")
+    public String updateTag(@PathVariable(name = "tag_id") Long tagId,
+                            @Valid TagRequestDto tagRequestDto,
+                            Errors errors,
+                            Model model,
+                            @RequestParam MultipartFile file) throws UnsupportedEncodingException {
+
+        Tag tag = tagRepository.findById(tagId).orElseThrow(()->{
+            return new IllegalArgumentException("존재하지 않는 태그입니다.");
+        });
+
+        // 파일 유효성 검사를 위해 파일명을 dto 에 넣어줌
+        tagRequestDto.insertImage(file.getOriginalFilename());
+
+
+        // tagRequestDto 와 tag 의 name 이 같을 경우 파일 존재 여부만 체크
+        if (!tag.getName().equals(tagRequestDto.getName())){
+            tagDtoValidator.validate(tagRequestDto, errors);
+        } else {
+            tagDtoUpdateValidator.validate(tagRequestDto, errors);
+        }
+
+
+        // 유효성 검사
+        if (errors.hasErrors()){
+            model.addAttribute("tagRequestDto", tagRequestDto);
+            model.addAttribute("tag", tag);
+
+            Map<String, String> validatorResult = adminTagService.validateHandling(errors);
+            for (String key : validatorResult.keySet()) {
+                model.addAttribute(key, validatorResult.get(key));
+            }
+
+            return "admin/tag/update";
+        }
+        adminTagService.updateTag(tag, tagRequestDto, file);
+
+        return "redirect:/admin/tag/tags";
+
+
+
+    }
+
 
 
 }

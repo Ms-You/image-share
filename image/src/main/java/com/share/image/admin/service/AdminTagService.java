@@ -31,6 +31,7 @@ public class AdminTagService {
 
     private final TagRepository tagRepository;
 
+    @Transactional(readOnly = true)
     public Map<String, String> validateHandling(Errors errors) {
         Map<String, String> validatorResult = new HashMap<>();
 
@@ -77,6 +78,39 @@ public class AdminTagService {
 
         tagRepository.save(tag);
     }
+
+
+    public void updateTag(Tag tag, TagRequestDto tagRequestDto, MultipartFile multipartFile) throws UnsupportedEncodingException {
+
+        tag.updateTagName(tagRequestDto.getName());
+
+        UUID uuid = UUID.randomUUID();
+
+        String fileName = uuid.toString() + "_" + multipartFile.getOriginalFilename();
+        // 한글 파일 명 깨짐 처리
+        fileName = URLEncoder.encode(fileName, "UTF-8");
+        Path imageFilePath = Paths.get(uploadFolder + fileName);
+        log.info("fileName: {}", fileName);
+
+        // 파일 업로드 여부 확인
+        if (multipartFile.getSize() != 0) {
+            try {
+                if (tag.getTagImageUrl() != null) {
+                    File file = new File(uploadFolder + tag.getTagImageUrl());
+                    file.delete();
+                }
+                Files.write(imageFilePath, multipartFile.getBytes());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            tag.updateTagImageUrl(fileName);
+        }
+
+        tagRepository.save(tag);
+
+    }
+
+
 
 
 }
