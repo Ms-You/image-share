@@ -7,6 +7,16 @@
 
 <!-- layout/admin_header.html -->
 <header th:replace="layout/admin_header::admin_headerFragment"></header>
+
+<script type="text/javascript">
+    function deleteTag(tagId, tagName){
+        var result = confirm(tagName + " 태그를 정말로 삭제하시겠습니까?");
+            if (result) {
+                location.href = "delete/" + tagId;
+            }
+    }
+</script>
+
 <body layout:fragment="content">
 <div class="container">
     <div>
@@ -36,9 +46,7 @@
                 </a>
             </td>
             <td>
-                <a th:href="@{/admin/tag/delete/{id}(id=${tag.id})}">
-                    <button>삭제</button>
-                </a>
+                <button th:onclick="deleteTag('[[${tag.id}]]','[[${tag.name}]]')"/>삭제</button>
             </td>
         </tr>
     </table>

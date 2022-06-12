@@ -64,7 +64,7 @@ public class AdminTagController {
         }
 
         adminTagService.createTag(tagRequestDto, file);
-        return "redirect:/admin/tag/tags";
+        return "redirect:/admin/tags";
     }
 
 
@@ -118,10 +118,16 @@ public class AdminTagController {
         }
         adminTagService.updateTag(tag, tagRequestDto, file);
 
-        return "redirect:/admin/tag/tags";
+        return "redirect:/admin/tags";
+    }
 
 
+    // 태그 삭제
+    @GetMapping("/delete/{tag_id}")
+    public String deleteTag(@PathVariable("tag_id") Long tagId) {
+        tagRepository.deleteById(tagId);
 
+        return "redirect:/admin/tags";
     }
 
 
