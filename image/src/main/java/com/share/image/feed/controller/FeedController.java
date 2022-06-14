@@ -168,5 +168,20 @@ public class FeedController {
     }
 
 
+    // 피드 삭제
+    @GetMapping("/feed/delete/{feed_id}")
+    public String deleteFeed(@PathVariable("feed_id") Long feedId) {
+        Feed feed = feedRepository.findById(feedId).orElseThrow(()->{
+            return new IllegalArgumentException("존재하지 않는 피드입니다.");
+        });
+
+        Long tagId = feed.getTag().getId();
+
+        feedRepository.deleteById(feedId);
+
+        return "redirect:/user/tag/" + tagId;
+    }
+
+
 
 }

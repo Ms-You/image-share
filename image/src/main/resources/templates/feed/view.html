@@ -8,6 +8,15 @@
 <!-- layout/header.html -->
 <header th:replace="layout/header::headerFragment"></header>
 
+<script type="text/javascript">
+    function deleteFeed(feedId, feedName){
+        var result = confirm(feedName + " 피드를 정말로 삭제하시겠습니까?");
+            if (result) {
+                location.href = "delete/" + feedId;
+            }
+    }
+</script>
+
 <body layout:fragment="content">
 <!-- content -->
 <div class="container">
@@ -35,6 +44,9 @@
         <a th:href="@{/user/feed/update/{id}(id=${feed.id})}">
             <button class="btn btn-primary">수정하기</button>
         </a>
+    </div>
+    <div th:if="${feed.writer.id.equals(#authentication.getPrincipal().getUser().id)}">
+        <button class="btn btn-primary" th:onclick="deleteFeed('[[${feed.id}]]','[[${feed.title}]]')"/>삭제하기</button>
     </div>
 
 </div>
