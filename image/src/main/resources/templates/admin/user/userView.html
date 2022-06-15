@@ -12,32 +12,41 @@
 <div class="container">
 
     <div>
-        <a th:href="@{/admin/}">
+        <a th:href="@{/admin/users}">
             <button type="button" class="btn btn-primary" style="border-radius:25px;">뒤로 가기</button>
         </a>
     </div>
 
-    <h1>사용자 목록</h1>
     <table>
         <tr>
-            <th>번호</th>
             <th>닉네임</th>
             <th>이메일</th>
-            <th>권한</th>
-            <th>프로필 이미지</th>
-            <th>보기</th>
+            <th>프로필</th>
         </tr>
-        <tr th:each="user: ${users}">
-            <td th:text="${user.id}"></td>
+        <tr>
             <td th:text="${user.nickName}"></td>
             <td th:text="${user.email}"></td>
-            <td th:text="${user.role}"></td>
             <td>
                 <img th:src="@{/profile_imgs/} + ${user.profileImageUrl}" width="150" height="150" style="border-radius: 100%;" />
             </td>
+        </tr>
+    </table>
+
+    <h1>피드 목록</h1>
+    <table>
+        <tr>
+            <th>번호</th>
+            <th>제목</th>
+            <th>피드</th>
+            <th>태그</th>
+        </tr>
+        <tr th:each="feed: ${feeds}">
+            <td th:text="${feed.id}"></td>
+            <td th:text="${feed.title}"></td>
+            <td th:text="${feed.tag.name}"></td>
             <td>
-                <a th:href="@{/admin/user/{id}(id=${user.id})}">
-                    <button type="button" class="btn btn-primary" style="border-radius:25px;">보기</button>
+                <a th:href="@{/admin/feed/{id}(id=${feed.id})}">
+                    <img th:src="@{/feed_imgs/} + ${feed.feedImageUrl}" width="150" height="150" style="border-radius: 100%;" />
                 </a>
             </td>
         </tr>
