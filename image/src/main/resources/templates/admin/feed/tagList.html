@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<!-- head.html -->
+<th:block th:replace="layout/head::headFragment"></th:block>
+
+<!-- layout/admin_header.html -->
+<header th:replace="layout/admin_header::admin_headerFragment"></header>
+
+<body layout:fragment="content">
+<div class="container">
+
+    <h1>태그 목록</h1>
+    <table>
+        <tr>
+            <th>번호</th>
+            <th>태그 명</th>
+            <th>태그</th>
+        </tr>
+        <tr th:each="tag: ${tagList}">
+            <td th:text="${tag.id}"></td>
+            <td th:text="${tag.name}"></td>
+            <td>
+                <a th:href="@{/admin/tag/{id}(id=${tag.id})}">
+                    <img th:src="@{/tag_imgs/} + ${tag.tagImageUrl}" width="150" height="150" style="border-radius: 100%;" />
+                </a>
+            </td>
+        </tr>
+    </table>
+</div>
+</body>
+<footer th:replace="layout/footer::footerFragment"></footer>
