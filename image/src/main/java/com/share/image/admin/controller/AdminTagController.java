@@ -4,6 +4,7 @@ import com.share.image.admin.dto.TagDtoUpdateValidator;
 import com.share.image.admin.dto.TagDtoValidator;
 import com.share.image.admin.dto.TagRequestDto;
 import com.share.image.admin.service.AdminTagService;
+import com.share.image.feed.domain.Feed;
 import com.share.image.feed.domain.Tag;
 import com.share.image.feed.repository.TagRepository;
 import lombok.RequiredArgsConstructor;
@@ -130,6 +131,30 @@ public class AdminTagController {
         return "redirect:/admin/tags";
     }
 
+
+    // 태그 목록 보기 (이후 태그 목록 확인 가능)
+    @GetMapping("/tag/list")
+    public String tagList(Model model){
+        List<Tag> tagList = tagRepository.findAll();
+        model.addAttribute("tagList", tagList);
+
+        return "admin/tag/tagList";
+    }
+
+
+    // 피드 모음 페이지로 이동
+    @GetMapping("/tag/{tag_id}")
+    public String feeds(@PathVariable(name = "tag_id") Long tagId, Model model){
+
+        Tag tag = tagRepository.findById(tagId).orElseThrow(()->{
+            return new IllegalArgumentException("존재하지 않는 태그입니다.");
+        });
+
+        List<Feed> feeds = tag.getFeeds();
+        model.addAttribute("feeds", feeds);
+
+        return "admin/feed/feeds";
+    }
 
 
 }

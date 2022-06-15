@@ -1,9 +1,7 @@
 package com.share.image.admin.controller;
 
 import com.share.image.feed.domain.Feed;
-import com.share.image.feed.domain.Tag;
 import com.share.image.feed.repository.FeedRepository;
-import com.share.image.feed.repository.TagRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -12,7 +10,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -20,30 +17,18 @@ import java.util.List;
 @RequestMapping("/admin")
 public class AdminFeedController {
 
-    private final TagRepository tagRepository;
     private final FeedRepository feedRepository;
 
-    @GetMapping("/tag/list")
-    public String tagList(Model model){
-        List<Tag> tagList = tagRepository.findAll();
-        model.addAttribute("tagList", tagList);
-
-        return "admin/feed/tagList";
-    }
-
-
-    // 피드 모음 페이지로 이동
-    @GetMapping("/tag/{tag_id}")
-    public String feeds(@PathVariable(name = "tag_id") Long tagId, Model model){
-
-        Tag tag = tagRepository.findById(tagId).orElseThrow(()->{
-            return new IllegalArgumentException("존재하지 않는 태그입니다.");
+    // 특정 피드 보기
+    @GetMapping("/feed/{feed_id}")
+    public String feedView(@PathVariable(name = "feed_id") Long feedId, Model model){
+        Feed feed = feedRepository.findById(feedId).orElseThrow(()->{
+            return new IllegalArgumentException("존재하지 않는 피드입니다.");
         });
 
-        List<Feed> feeds = tag.getFeeds();
-        model.addAttribute("feeds", feeds);
+        model.addAttribute("feed", feed);
 
-        return "admin/feed/feeds";
+        return "admin/feed/feedView";
     }
 
 

@@ -41,7 +41,7 @@
             <td th:text="${feed.title}"></td>
             <td th:text="${feed.writer.nickName}"></td>
             <td>
-                <a th:href="@{/user/feed/{id}(id=${feed.id})}">
+                <a th:href="@{/admin/feed/{id}(id=${feed.id})}">
                     <img th:src="@{/feed_imgs/} + ${feed.feedImageUrl}" width="150" height="150" style="border-radius: 100%;" />
                 </a>
             </td>
