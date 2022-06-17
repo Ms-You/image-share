@@ -13,12 +13,31 @@
 <div class="container">
 
     <!--  feed list start  -->
-    <div th:each="feed: ${feeds}">
+    <div th:each="feed: ${feeds.content}">
         <a th:href="@{/user/feed/{id}(id=${feed.id})}">
             <img th:src="@{/feed_imgs/} + ${feed.feedImageUrl}" width="150" height="150" style="border-radius: 100%;" />
         </a>
     </div>
     <!--  feed list end  -->
+
+    <!--  paging start  -->
+    <ul class="pagination justify-content-center">
+        <div th:if="${feeds.first}">
+            <li class="page-item disabled"><a class="page-link" th:href="@{/user/tag/(tag_id=${tag.id}, page=${feeds.number-1})}">이전</a></li>
+        </div>
+        <div th:unless="${feeds.first}">
+            <li class="page-item"><a class="page-link" th:href="@{/user/tag/(tag_id=${tag.id}, page=${feeds.number-1})}">이전</a></li>
+        </div>
+
+        <div th:if="${feeds.last}">
+            <li class="page-item disabled"><a class="page-link" th:href="@{/user/tag/(tag_id=${tag.id}, page=${feeds.number+1})}">다음</a></li>
+        </div>
+        <div th:unless="${feeds.last}">
+            <li class="page-item"><a class="page-link" th:href="@{/user/tag/(tag_id=${tag.id}, page=${feeds.number+1})}">다음</a></li>
+        </div>
+    </ul>
+    <!--  paging end  -->
+
 
 </div>
 </body>
