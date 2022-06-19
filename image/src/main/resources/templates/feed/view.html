@@ -32,8 +32,32 @@
         <h5 th:text="${feed.description}"></h5>
     </div>
     <!--  피드 이미지  -->
-    <div>
-        <img th:src="@{/feed_imgs/} + ${feed.feedImageUrl}" width="400" height="400" />
+    <div class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img th:src="@{/feed_imgs/} + ${feed.feedImageUrl}" class="d-block w-100"/>
+            </div>
+        </div>
+
+        <!--  이전 피드로 이동  -->
+        <a th:href="@{/user/feed/{id}(id=${prevFeed})}">
+            <div th:if="${not #strings.isEmpty(prevFeed)}">
+                <button class="carousel-control-prev" type="button" data-bs-slide="prev">❮</button>
+            </div>
+                <div th:unless="${not #strings.isEmpty(prevFeed)}">
+                    <button class="carousel-control-prev" type="button" data-bs-slide="prev" disabled>❮</button>
+                </div>
+        </a>
+        <!--  다음 피드로 이동  -->
+        <a th:href="@{/user/feed/{id}(id=${nextFeed})}">
+            <div th:if="${not #strings.isEmpty(nextFeed)}">
+                <button class="carousel-control-next" type="button" data-bs-slide="next">❯</button>
+            </div>
+            <div th:unless="${not #strings.isEmpty(nextFeed)}">
+                <button class="carousel-control-next" type="button" data-bs-slide="next" disabled>❯</button>
+            </div>
+        </a>
+
     </div>
 
     <a th:href="@{/user/tag/(tag_id=${feed.tag.id})}">
