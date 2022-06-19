@@ -1,6 +1,7 @@
 package com.share.image.feed.domain;
 
 import com.share.image.user.domain.User;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
@@ -31,6 +32,15 @@ public class Reply {
     @JoinColumn(name = "feed_id")
     private Feed feed;
 
+
+    @Builder
+    public Reply(Long id, String content, User writer, Feed feed){
+        this.id = id;
+        this.content = content;
+        this.writer = writer;
+        this.feed = feed;
+        this.createdDate = LocalDateTime.now();
+    }
 
 
 }
