@@ -2,10 +2,12 @@ package com.share.image.feed.controller;
 
 import com.share.image.config.PrincipalDetails;
 import com.share.image.feed.domain.Feed;
+import com.share.image.feed.domain.Reply;
 import com.share.image.feed.domain.Tag;
 import com.share.image.feed.dto.FeedDtoValidator;
 import com.share.image.feed.dto.FeedRequestDto;
 import com.share.image.feed.repository.FeedRepository;
+import com.share.image.feed.repository.ReplyRepository;
 import com.share.image.feed.repository.TagRepository;
 import com.share.image.feed.service.FeedService;
 import com.share.image.user.domain.User;
@@ -36,6 +38,7 @@ public class FeedController {
     private final TagRepository tagRepository;
     private final UserRepository userRepository;
     private final FeedRepository feedRepository;
+    private final ReplyRepository replyRepository;
 
     // 피드 생성 페이지로 이동
     @GetMapping("/new/feed")
@@ -96,7 +99,10 @@ public class FeedController {
             return new IllegalArgumentException("존재하지 않는 피드입니다.");
         });
 
+        List<Reply> replies = replyRepository.findByFeed(feed);
+
         model.addAttribute("feed", feed);
+        model.addAttribute("replies", replies);
 
         return "feed/view";
     }
