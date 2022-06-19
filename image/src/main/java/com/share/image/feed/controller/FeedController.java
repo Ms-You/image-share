@@ -101,6 +101,8 @@ public class FeedController {
 
         List<Reply> replies = replyRepository.findByFeed(feed);
 
+        model.addAttribute("prevFeed", feedRepository.leadFeedId(feed.getId(), feed.getTag().getId()));
+        model.addAttribute("nextFeed", feedRepository.lagFeedId(feed.getId(), feed.getTag().getId()));
         model.addAttribute("feed", feed);
         model.addAttribute("replies", replies);
 
@@ -185,7 +187,7 @@ public class FeedController {
 
         feedRepository.deleteById(feedId);
 
-        return "redirect:/user/tag/" + tagId;
+        return "redirect:/user/tag/?tag_id=" + tagId;
     }
 
 
