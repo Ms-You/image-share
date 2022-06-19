@@ -36,7 +36,7 @@
         <img th:src="@{/feed_imgs/} + ${feed.feedImageUrl}" width="400" height="400" />
     </div>
 
-    <a th:href="@{/user/tag/{id}(id=${feed.tag.id})}">
+    <a th:href="@{/user/tag/(tag_id=${feed.tag.id})}">
         <button class="btn btn-primary">돌아가기</button>
     </a>
 
@@ -47,6 +47,30 @@
     </div>
     <div th:if="${feed.writer.id.equals(#authentication.getPrincipal().getUser().id)}">
         <button class="btn btn-primary" th:onclick="deleteFeed('[[${feed.id}]]','[[${feed.title}]]')"/>삭제하기</button>
+    </div>
+
+    <hr>
+
+    <div th:if="${replies!=null and !replies.empty}">
+        <h3>Comment</h3>
+        <div th:each="reply: ${replies}">
+            <h4 th:text="${reply.writer.nickName}"></h4>
+            <h5 th:text="${reply.content}"></h5>
+            <h6 th:text="${reply.createdDate}"></h6>
+            <hr>
+        </div>
+    </div>
+    <div th:unless="${replies!=null and !replies.empty}">
+        <p>
+            아직 댓글이 없습니다.<br/>
+            새로운 댓글을 작성해보세요.
+        </p>
+    </div>
+
+    <div>
+        <a th:href="@{/user/reply/feed/{id}(id=${feed.id})}">
+            <button class="btn btn-primary">댓글 달기</button>
+        </a>
     </div>
 
 </div>
