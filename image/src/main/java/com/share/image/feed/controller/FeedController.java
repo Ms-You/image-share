@@ -191,5 +191,21 @@ public class FeedController {
     }
 
 
+    // 특정 사용자의 피드 관리
+    @GetMapping("/feeds")
+    public String manageFeeds(@AuthenticationPrincipal PrincipalDetails principalDetails, Model model){
+
+        User user = userRepository.findById(principalDetails.getUser().getId()).orElseThrow(()->{
+            return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
+        });
+
+        List<Feed> feeds = user.getFeeds();
+
+        model.addAttribute("feeds", feeds);
+
+        return "/user/feeds";
+    }
+
+
 
 }
