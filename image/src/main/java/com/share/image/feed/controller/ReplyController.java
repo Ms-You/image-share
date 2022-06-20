@@ -2,6 +2,7 @@ package com.share.image.feed.controller;
 
 import com.share.image.config.PrincipalDetails;
 import com.share.image.feed.domain.Feed;
+import com.share.image.feed.domain.Reply;
 import com.share.image.feed.dto.ReplyRequestDto;
 import com.share.image.feed.repository.FeedRepository;
 import com.share.image.feed.service.ReplyService;
@@ -78,6 +79,17 @@ public class ReplyController {
     }
 
 
+    // 댓글 삭제
+    @GetMapping("/feed/delete/reply/{reply_id}")
+    public String deleteFeed(@PathVariable("reply_id") Long replyId) {
+        Reply reply = replyService.findByReplyId(replyId);
+        // 댓글 삭제
+        replyService.deleteReply(reply);
+
+        Long feedId = reply.getFeed().getId();
+
+        return "redirect:/user/feed/" + feedId;
+    }
 
 
 

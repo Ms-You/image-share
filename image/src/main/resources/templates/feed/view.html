@@ -15,6 +15,13 @@
                 location.href = "delete/" + feedId;
             }
     }
+
+    function deleteReply(replyId){
+        var result = confirm("댓글을 정말로 삭제하시겠습니까?");
+            if (result) {
+                location.href = "delete/reply/" + replyId;
+            }
+    }
 </script>
 
 <body layout:fragment="content">
@@ -81,6 +88,10 @@
             <h4 th:text="${reply.writer.nickName}"></h4>
             <h5 th:text="${reply.content}"></h5>
             <h6 th:text="${reply.createdDate}"></h6>
+            <!--  댓글 삭제  -->
+            <div th:if="${reply.writer.id.equals(#authentication.getPrincipal().getUser().id)}">
+                <button th:onclick="deleteReply('[[${reply.id}]]')"/>삭제</button>
+            </div>
             <hr>
         </div>
     </div>

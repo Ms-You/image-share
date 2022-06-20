@@ -48,4 +48,15 @@ public class ReplyService {
     }
 
 
+    public Reply findByReplyId(Long replyId){
+        return replyRepository.findById(replyId).orElseThrow(()->{
+            return new IllegalArgumentException("존재하지 않는 댓글입니다.");
+        });
+    }
+
+    public void deleteReply(Reply reply){
+        replyRepository.delete(reply);
+    }
+
+
 }
