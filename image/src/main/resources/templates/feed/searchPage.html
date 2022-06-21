@@ -13,7 +13,7 @@
 <div class="container">
 
     <!--  feed list start  -->
-    <div th:each="feed: ${searchList}">
+    <div th:each="feed: ${searchList.content}">
         <a th:href="@{/user/feed/{id}(id=${feed.id})}">
             <img th:src="@{/feed_imgs/} + ${feed.feedImageUrl}" width="150" height="150" style="border-radius: 100%;" />
         </a>
@@ -30,42 +30,42 @@
     </div>
 
 
-<!--    &lt;!&ndash; 페이징처리 시작 &ndash;&gt;-->
-<!--    <div th:if="${!feeds.isEmpty()}">-->
-<!--        <ul class="pagination justify-content-center">-->
+    <!-- 페이징처리 시작 -->
+    <div th:if="${!searchList.isEmpty()}">
+        <ul class="pagination justify-content-center">
 
-<!--            <li class="page-item" th:classappend="${!feeds.hasPrevious} ? 'disabled'">-->
-<!--                <a class="page-link" th:href="@{/user/tag/(tag_id=${tag.id}, page='0')}" aria-label="Previous">-->
-<!--                    <span aria-hidden="true">&laquo;</span>-->
-<!--                </a>-->
-<!--            </li>-->
+            <li class="page-item" th:classappend="${!searchList.hasPrevious} ? 'disabled'">
+                <a class="page-link" th:href="@{/user/feed/search/(keyword=${keyword}, page='0')}" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
 
-<!--            <li class="page-item" th:classappend="${!feeds.hasPrevious} ? 'disabled'">-->
-<!--                <a class="page-link" th:href="@{/user/tag/(tag_id=${tag.id}, page=${feeds.number-1})}">-->
-<!--                    <span>&lt;</span>-->
-<!--                </a>-->
-<!--            </li>-->
+            <li class="page-item" th:classappend="${!searchList.hasPrevious} ? 'disabled'">
+                <a class="page-link" th:href="@{/user/feed/search/(keyword=${keyword}, page=${searchList.number-1})}">
+                    <span>&lt;</span>
+                </a>
+            </li>
 
-<!--            <li th:each="page: ${#numbers.sequence(startPage, endPage)}"-->
-<!--                th:classappend="${page == feeds.number + 1} ? 'active'" class="page-item">-->
-<!--                <a th:text="${page}" class="page-link" th:href="@{/user/tag/(tag_id=${tag.id}, page=${page-1})}"></a>-->
-<!--            </li>-->
+            <li th:each="page: ${#numbers.sequence(startPage, endPage)}"
+                th:classappend="${page == searchList.number + 1} ? 'active'" class="page-item">
+                <a th:text="${page}" class="page-link" th:href="@{/user/feed/search/(keyword=${keyword}, page=${page-1})}"></a>
+            </li>
 
-<!--            <li class="page-item" th:classappend="${!feeds.hasNext} ? 'disabled'">-->
-<!--                <a class="page-link" th:href="@{/user/tag/(tag_id=${tag.id}, page=${feeds.number+1})}">-->
-<!--                    <span>&gt;</span>-->
-<!--                </a>-->
-<!--            </li>-->
+            <li class="page-item" th:classappend="${!searchList.hasNext} ? 'disabled'">
+                <a class="page-link" th:href="@{/user/feed/search/(keyword=${keyword}, page=${searchList.number+1})}">
+                    <span>&gt;</span>
+                </a>
+            </li>
 
-<!--            <li class="page-item" th:classappend="${!feeds.hasNext} ? 'disabled'">-->
-<!--                <a class="page-link" th:href="@{/user/tag/(tag_id=${tag.id}, page=${feeds.totalPages-1})}" aria-label="Previous">-->
-<!--                    <span aria-hidden="true">&raquo;</span>-->
-<!--                </a>-->
-<!--            </li>-->
+            <li class="page-item" th:classappend="${!searchList.hasNext} ? 'disabled'">
+                <a class="page-link" th:href="@{/user/feed/search/(keyword=${keyword}, page=${searchList.totalPages-1})}" aria-label="Previous">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
 
-<!--        </ul>-->
-<!--    </div>-->
-<!--    &lt;!&ndash; 페이징처리 끝 &ndash;&gt;-->
+        </ul>
+    </div>
+    <!-- 페이징처리 끝 -->
 
 
 </div>

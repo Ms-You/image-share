@@ -14,6 +14,10 @@ import com.share.image.user.domain.User;
 import com.share.image.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
@@ -209,10 +213,17 @@ public class FeedController {
 
     // 피드 검색
     @GetMapping("/feed/search")
-    public String searchFeed(String keyword, Model model){
-        List<Feed> searchList = feedService.search(keyword);
+    public String searchFeed(String keyword, Model model, @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC)Pageable pageable) {
+        Page<Feed> searchList = feedService.search(keyword, pageable);
+
+        int startPage = (int) (Math.floor(pageable.getPageNumber() / pageable.getPageSize()) * pageable.getPageSize() + 1);
+        int tempEndPage = startPage + pageable.getPageSize() - 1;
+        int endPage = tempEndPage > searchList.getTotalPages() ? searchList.getTotalPages() : tempEndPage;
 
         model.addAttribute("searchList", searchList);
+        model.addAttribute("keyword", keyword);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
 
         return "feed/searchPage";
     }
