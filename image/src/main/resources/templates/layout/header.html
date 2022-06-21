@@ -42,8 +42,8 @@
                 </span>
                 <!--  ADMIN 권한  -->
                 <li class="nav-item">
-                    <form class="d-flex">
-                        <input class="form-control me-2" type="search" placeholder="검색" aria-label="Search">
+                    <form th:action="@{/user/feed/search}" method="get" class="d-flex">
+                        <input class="form-control me-2" type="search" name="keyword" placeholder="검색" aria-label="Search">
                         <button class="btn btn-outline-secondary" type="submit">
                             <img th:src="@{/img/search.png}" alt="검색" width="20" height="20" class="d-inline-block align-text-top">
                         </button>

@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+
 public interface FeedRepository extends JpaRepository<Feed, Long> {
     Page<Feed> findByTag(Tag tag, Pageable pageable);
 
@@ -17,5 +19,6 @@ public interface FeedRepository extends JpaRepository<Feed, Long> {
     @Query(value = "select feed_id from Feed where feed_id = (select MAX(feed_id) from Feed where feed_id < :feedId and tag_id = :tagId)", nativeQuery = true)
     Long leadFeedId(@Param(value = "feedId") Long feedId, @Param(value = "tagId") Long tagId);
 
+    List<Feed> findByTitleContaining(String keyword);
 
 }

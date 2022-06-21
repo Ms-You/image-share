@@ -20,6 +20,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -105,6 +106,12 @@ public class FeedService {
         feedRepository.save(feed);
     }
 
+
+    public List<Feed> search(String keyword){
+        List<Feed> feedList = feedRepository.findByTitleContaining(keyword);
+
+        return feedList;
+    }
 
 
 }

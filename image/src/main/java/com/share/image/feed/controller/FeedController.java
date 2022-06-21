@@ -207,5 +207,15 @@ public class FeedController {
     }
 
 
+    // 피드 검색
+    @GetMapping("/feed/search")
+    public String searchFeed(String keyword, Model model){
+        List<Feed> searchList = feedService.search(keyword);
+
+        model.addAttribute("searchList", searchList);
+
+        return "feed/searchPage";
+    }
+
 
 }
