@@ -28,13 +28,15 @@
 <!-- content -->
 <div class="container">
 
-    <!--  제목  -->
     <div>
-        <h3 th:text="${feed.title}"></h3>
-        작성자: <h6 th:text="${feed.writer.nickName}"></h6>
-        작성시간: <h6 th:text="${feed.createdDate}"></h6>
-        조회수: <h6 th:text="${feed.view}"></h6>
+        <img th:src="@{/profile_imgs/} + ${feed.writer.profileImageUrl}" onerror="this.src='/img/default_profile.png';" width="30" height="30" style="border-radius: 100%;" />
+        <span th:text="${feed.writer.nickName}" style="font-size: 30px;"></span>
+        <h6 th:text="${feed.createdDate}"></h6>
+        조회수: <span th:text="${feed.view}"></span>
     </div>
+    <hr>
+    <!--  제목  -->
+    <h3 th:text="${feed.title}"></h3>
     <!--  설명  -->
     <div>
         <h5 th:text="${feed.description}"></h5>
@@ -82,8 +84,9 @@
     <div th:if="${replies!=null and !replies.empty}">
         <h3>Comment</h3>
         <div th:each="reply: ${replies}">
-            <h4 th:text="${reply.writer.nickName}"></h4>
-            <h5 th:text="${reply.content}"></h5>
+            <img th:src="@{/profile_imgs/} + ${reply.writer.profileImageUrl}" onerror="this.src='/img/default_profile.png';" width="30" height="30" style="border-radius: 100%;" />
+            <span th:text="${reply.writer.nickName}" style="font-size: 30px;"></span>
+            <h4 th:text="${reply.content}"></h4>
             <h6 th:text="${reply.createdDate}"></h6>
             <!--  댓글 삭제  -->
             <div th:if="${reply.writer.id.equals(#authentication.getPrincipal().getUser().id)}">
