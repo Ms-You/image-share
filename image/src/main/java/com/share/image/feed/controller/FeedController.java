@@ -109,6 +109,7 @@ public class FeedController {
         model.addAttribute("nextFeed", feedRepository.lagFeedId(feed.getId(), feed.getTag().getId()));
         model.addAttribute("feed", feed);
         model.addAttribute("replies", replies);
+        feedService.updateView(feed.getId());
 
         return "feed/view";
     }

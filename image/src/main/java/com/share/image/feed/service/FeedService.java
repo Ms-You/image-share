@@ -54,6 +54,7 @@ public class FeedService {
         Feed feed = Feed.builder()
                 .title(feedRequestDto.getTitle())
                 .description(feedRequestDto.getDescription())
+                .view(0)
                 .tag(feedRequestDto.getTag())
                 .writer(user)
                 .build();
@@ -113,6 +114,11 @@ public class FeedService {
         Page<Feed> feedList = feedRepository.findByTitleContaining(keyword, pageable);
 
         return feedList;
+    }
+
+
+    public void updateView(Long feedId){
+        feedRepository.updateView(feedId);
     }
 
 
