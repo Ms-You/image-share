@@ -67,10 +67,6 @@
 
     </div>
 
-    <a th:href="@{/user/tag/(tag_id=${feed.tag.id})}">
-        <button class="btn btn-primary">돌아가기</button>
-    </a>
-
     <div th:if="${feed.writer.id.equals(#authentication.getPrincipal().getUser().id)}">
         <a th:href="@{/user/feed/update/{id}(id=${feed.id})}">
             <button class="btn btn-primary">수정하기</button>
