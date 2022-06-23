@@ -32,7 +32,7 @@
         <img th:src="@{/profile_imgs/} + ${feed.writer.profileImageUrl}" onerror="this.src='/img/default_profile.png';" width="30" height="30" style="border-radius: 100%;" />
         <span th:text="${feed.writer.nickName}" style="font-size: 30px;"></span>
         <h6 th:text="${feed.createdDate}"></h6>
-        조회수: <span th:text="${feed.view}"></span>
+        조회수: <span th:text="${#lists.size(feed.views)}"></span>
     </div>
     <hr>
     <!--  제목  -->

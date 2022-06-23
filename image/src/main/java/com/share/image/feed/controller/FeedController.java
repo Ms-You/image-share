@@ -11,6 +11,7 @@ import com.share.image.feed.repository.ReplyRepository;
 import com.share.image.feed.repository.TagRepository;
 import com.share.image.feed.service.FeedService;
 import com.share.image.feed.service.LikeService;
+import com.share.image.feed.service.ViewService;
 import com.share.image.user.domain.User;
 import com.share.image.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -40,7 +41,7 @@ public class FeedController {
 
     private final FeedDtoValidator feedDtoValidator;
     private final FeedService feedService;
-
+    private final ViewService viewService;
     private final LikeService likeService;
     private final TagRepository tagRepository;
     private final UserRepository userRepository;
@@ -121,11 +122,15 @@ public class FeedController {
             model.addAttribute("likeStatus", "/img/empty_heart.png");
         }
 
+        // 피드를 안 본 경우 조회수 1 증가
+        if (viewService.isUserViewFeed(feedId, user.getId())) {
+            viewService.viewFeed(feedId, user.getId());
+        }
+
         model.addAttribute("prevFeed", feedRepository.leadFeedId(feed.getId(), feed.getTag().getId()));
         model.addAttribute("nextFeed", feedRepository.lagFeedId(feed.getId(), feed.getTag().getId()));
         model.addAttribute("feed", feed);
         model.addAttribute("replies", replies);
-        feedService.updateView(feed.getId());
 
         return "feed/view";
     }
