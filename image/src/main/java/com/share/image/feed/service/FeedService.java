@@ -22,7 +22,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -54,7 +53,7 @@ public class FeedService {
         Feed feed = Feed.builder()
                 .title(feedRequestDto.getTitle())
                 .description(feedRequestDto.getDescription())
-                .view(0)
+//                .view(0)
                 .tag(feedRequestDto.getTag())
                 .writer(user)
                 .build();
@@ -114,11 +113,6 @@ public class FeedService {
         Page<Feed> feedList = feedRepository.findByTitleContaining(keyword, pageable);
 
         return feedList;
-    }
-
-
-    public void updateView(Long feedId){
-        feedRepository.updateView(feedId);
     }
 
 

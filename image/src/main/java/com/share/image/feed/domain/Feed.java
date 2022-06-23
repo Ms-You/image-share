@@ -28,8 +28,6 @@ public class Feed {
 
     private String feedImageUrl;
 
-    private int view;
-
     @CreatedDate
     private LocalDateTime createdDate;
 
@@ -47,13 +45,15 @@ public class Feed {
     @OneToMany(mappedBy = "feed", cascade = CascadeType.ALL)
     private List<Reply> replies = new ArrayList<>();
 
+    @OneToMany(mappedBy = "feed", cascade = CascadeType.ALL)
+    private List<View> views = new ArrayList<>();
+
 
     @Builder
-    public Feed(Long id, String title, String description, int view, Tag tag, User writer){
+    public Feed(Long id, String title, String description, Tag tag, User writer){
         this.id = id;
         this.title = title;
         this.description = description;
-        this.view = view;
         this.tag = tag;
         this.writer = writer;
         this.createdDate = LocalDateTime.now();
