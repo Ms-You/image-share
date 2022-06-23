@@ -10,6 +10,7 @@ import com.share.image.feed.repository.FeedRepository;
 import com.share.image.feed.repository.ReplyRepository;
 import com.share.image.feed.repository.TagRepository;
 import com.share.image.feed.service.FeedService;
+import com.share.image.feed.service.LikeService;
 import com.share.image.user.domain.User;
 import com.share.image.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -39,6 +40,8 @@ public class FeedController {
 
     private final FeedDtoValidator feedDtoValidator;
     private final FeedService feedService;
+
+    private final LikeService likeService;
     private final TagRepository tagRepository;
     private final UserRepository userRepository;
     private final FeedRepository feedRepository;
@@ -98,12 +101,25 @@ public class FeedController {
 
 
     @GetMapping("/feed/{feed_id}")
-    public String tags(@PathVariable(name = "feed_id") Long feedId, Model model){
+    public String tags(@AuthenticationPrincipal PrincipalDetails principalDetails,
+                        @PathVariable(name = "feed_id") Long feedId, Model model){
+
+        User user = userRepository.findById(principalDetails.getUser().getId()).orElseThrow(()->{
+            return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
+        });
+
         Feed feed = feedRepository.findById(feedId).orElseThrow(()->{
             return new IllegalArgumentException("존재하지 않는 피드입니다.");
         });
 
         List<Reply> replies = replyRepository.findByFeed(feed);
+
+        // 좋아요 O → 좋아요 X
+        if (likeService.isUserLikeFeed(feedId, user.getId())) {
+            model.addAttribute("likeStatus", "/img/full_heart.png");
+        } else {
+            model.addAttribute("likeStatus", "/img/empty_heart.png");
+        }
 
         model.addAttribute("prevFeed", feedRepository.leadFeedId(feed.getId(), feed.getTag().getId()));
         model.addAttribute("nextFeed", feedRepository.lagFeedId(feed.getId(), feed.getTag().getId()));

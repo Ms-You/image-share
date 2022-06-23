@@ -1,6 +1,7 @@
 package com.share.image.feed.domain;
 
 import com.share.image.user.domain.User;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -23,6 +24,13 @@ public class Like {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "feed_id")
     private Feed feed;
+
+    @Builder
+    public Like(Long id, User user, Feed feed) {
+        this.id = id;
+        this.user = user;
+        this.feed = feed;
+    }
 
 
 

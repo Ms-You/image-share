@@ -54,9 +54,9 @@
             <div th:if="${not #strings.isEmpty(prevFeed)}">
                 <button class="carousel-control-prev" type="button" data-bs-slide="prev">❮</button>
             </div>
-                <div th:unless="${not #strings.isEmpty(prevFeed)}">
-                    <button class="carousel-control-prev" type="button" data-bs-slide="prev" disabled>❮</button>
-                </div>
+            <div th:unless="${not #strings.isEmpty(prevFeed)}">
+                <button class="carousel-control-prev" type="button" data-bs-slide="prev" disabled>❮</button>
+            </div>
         </a>
         <!--  다음 피드로 이동  -->
         <a th:href="@{/user/feed/{id}(id=${nextFeed})}">
@@ -78,6 +78,17 @@
     <div th:if="${feed.writer.id.equals(#authentication.getPrincipal().getUser().id)}">
         <button class="btn btn-primary" th:onclick="deleteFeed('[[${feed.id}]]','[[${feed.title}]]')"/>삭제하기</button>
     </div>
+
+    <!--  좋아요 start  -->
+    <div class="area-desc">
+        <input type="hidden" id="feedId" th:value="${feed.id}">
+        <input type="hidden" id="likeStatus" th:value="${likeStatus}">
+        <a href="#">
+            <span><img th:src="@{${likeStatus}}" alt="좋아요" width="30" height="30" class="d-inline-block align-text-top"></span>
+        </a>
+        <span id="likeCount" th:text="${#lists.size(feed.likes)}"></span>
+    </div>
+    <!--  좋아요 end  -->
 
     <hr>
 
@@ -108,7 +119,10 @@
         </a>
     </div>
 
+
 </div>
+
+<script src="/js/like.js"></script>
 </body>
 
 
