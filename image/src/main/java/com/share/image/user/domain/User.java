@@ -1,7 +1,7 @@
 package com.share.image.user.domain;
 
 import com.share.image.feed.domain.Feed;
-import com.share.image.feed.domain.Like;
+import com.share.image.feed.domain.FeedLike;
 import com.share.image.feed.domain.Reply;
 import com.share.image.feed.domain.Subscribe;
 import lombok.AllArgsConstructor;
@@ -53,7 +53,7 @@ public class User {
     private List<Feed> feeds = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<Like> likes = new ArrayList<>();
+    private List<FeedLike> likes = new ArrayList<>();
 
     @OneToMany(mappedBy = "writer", cascade = CascadeType.ALL)
     private List<Reply> replies = new ArrayList<>();

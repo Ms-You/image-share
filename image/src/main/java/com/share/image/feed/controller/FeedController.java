@@ -10,7 +10,7 @@ import com.share.image.feed.repository.FeedRepository;
 import com.share.image.feed.repository.ReplyRepository;
 import com.share.image.feed.repository.TagRepository;
 import com.share.image.feed.service.FeedService;
-import com.share.image.feed.service.LikeService;
+import com.share.image.feed.service.FeedLikeService;
 import com.share.image.feed.service.ViewService;
 import com.share.image.user.domain.User;
 import com.share.image.user.repository.UserRepository;
@@ -42,7 +42,7 @@ public class FeedController {
     private final FeedDtoValidator feedDtoValidator;
     private final FeedService feedService;
     private final ViewService viewService;
-    private final LikeService likeService;
+    private final FeedLikeService feedLikeService;
     private final TagRepository tagRepository;
     private final UserRepository userRepository;
     private final FeedRepository feedRepository;
@@ -116,10 +116,10 @@ public class FeedController {
         List<Reply> replies = replyRepository.findByFeed(feed);
 
         // 좋아요 O → 좋아요 X
-        if (likeService.isUserLikeFeed(feedId, user.getId())) {
-            model.addAttribute("likeStatus", "/img/full_heart.png");
+        if (feedLikeService.isUserLikeFeed(feedId, user.getId())) {
+            model.addAttribute("feedLikeStatus", "/img/full_heart.png");
         } else {
-            model.addAttribute("likeStatus", "/img/empty_heart.png");
+            model.addAttribute("feedLikeStatus", "/img/empty_heart.png");
         }
 
         // 피드를 안 본 경우 조회수 1 증가

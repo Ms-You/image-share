@@ -40,7 +40,7 @@ public class Feed {
     private Tag tag;
 
     @OneToMany(mappedBy = "feed", cascade = CascadeType.ALL)
-    private List<Like> likes = new ArrayList<>();
+    private List<FeedLike> feedLikes = new ArrayList<>();
 
     @OneToMany(mappedBy = "feed", cascade = CascadeType.ALL)
     private List<Reply> replies = new ArrayList<>();

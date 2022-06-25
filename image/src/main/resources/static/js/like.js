@@ -1,18 +1,18 @@
 $(".area-desc").click(function() {
     var feedId = $("#feedId").val();
     var arrowImage = $(this).children("a").children("span").children("img");
-    var likeCount = $("#likeCount").text();
+    var feedLikeCount = $("#feedLikeCount").text();
 
-    likeCount *= 1; // (string -> number)
+    feedLikeCount *= 1; // (string -> number)
 
     arrowImage.attr("src", function(index, attr){
       if (attr.match('full')) {
-        $('#likeCount').text(likeCount-1);
+        $('#feedLikeCount').text(feedLikeCount-1);
         btnUnLike(feedId);
         return attr.replace("full", "empty");
       }
       else {
-        $('#likeCount').text(likeCount+1);
+        $('#feedLikeCount').text(feedLikeCount+1);
         btnLike(feedId);
         return attr.replace("empty", "full");
       }

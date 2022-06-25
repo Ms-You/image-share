@@ -10,11 +10,11 @@ import javax.persistence.*;
 @Getter
 @NoArgsConstructor
 @Entity
-@Table(name = "likes")
-public class Like {
+@Table(name = "feed_like")
+public class FeedLike {
 
     @Id @GeneratedValue
-    @Column(name = "like_id")
+    @Column(name = "feed_like_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -26,7 +26,7 @@ public class Like {
     private Feed feed;
 
     @Builder
-    public Like(Long id, User user, Feed feed) {
+    public FeedLike(Long id, User user, Feed feed) {
         this.id = id;
         this.user = user;
         this.feed = feed;

@@ -82,11 +82,11 @@
     <!--  좋아요 start  -->
     <div class="area-desc">
         <input type="hidden" id="feedId" th:value="${feed.id}">
-        <input type="hidden" id="likeStatus" th:value="${likeStatus}">
+        <input type="hidden" id="feedLikeStatus" th:value="${feedLikeStatus}">
         <a href="#">
-            <span><img th:src="@{${likeStatus}}" alt="좋아요" width="30" height="30" class="d-inline-block align-text-top"></span>
+            <span><img th:src="@{${feedLikeStatus}}" alt="좋아요" width="30" height="30" class="d-inline-block align-text-top"></span>
         </a>
-        <span id="likeCount" th:text="${#lists.size(feed.likes)}"></span>
+        <span id="feedLikeCount" th:text="${#lists.size(feed.feedLikes)}"></span>
     </div>
     <!--  좋아요 end  -->
 

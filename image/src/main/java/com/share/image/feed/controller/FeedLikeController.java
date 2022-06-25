@@ -1,7 +1,7 @@
 package com.share.image.feed.controller;
 
 import com.share.image.config.PrincipalDetails;
-import com.share.image.feed.service.LikeService;
+import com.share.image.feed.service.FeedLikeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequiredArgsConstructor
 @Controller
 @RequestMapping("/user")
-public class LikeController {
+public class FeedLikeController {
 
-    private final LikeService likeService;
+    private final FeedLikeService likeService;
 
     @PostMapping("/like/feed/{feed_id}")
     public String likeFeed(@PathVariable(name = "feed_id") Long feedId, @AuthenticationPrincipal PrincipalDetails principalDetails) {
