@@ -80,10 +80,9 @@
     </div>
 
     <!--  좋아요 start  -->
-    <div class="area-desc">
+    <div>
         <input type="hidden" id="feedId" th:value="${feed.id}">
-        <input type="hidden" id="feedLikeStatus" th:value="${feedLikeStatus}">
-        <a href="#">
+        <a href="#" class="feed-like">
             <span><img th:src="@{${feedLikeStatus}}" alt="좋아요" width="30" height="30" class="d-inline-block align-text-top"></span>
         </a>
         <span id="feedLikeCount" th:text="${#lists.size(feed.feedLikes)}"></span>
@@ -93,12 +92,19 @@
     <hr>
 
     <div th:if="${replies!=null and !replies.empty}">
-        <h3>Comment</h3>
         <div th:each="reply: ${replies}">
             <img th:src="@{/profile_imgs/} + ${reply.writer.profileImageUrl}" onerror="this.src='/img/default_profile.png';" width="30" height="30" style="border-radius: 100%;" />
             <span th:text="${reply.writer.nickName}" style="font-size: 30px;"></span>
             <h4 th:text="${reply.content}"></h4>
             <h6 th:text="${reply.createdDate}"></h6>
+            <!--  댓글 좋아요 start  -->
+            <div>
+                <a href="#" th:onclick="replyLikeFunc('[[${feed.id}]]','[[${reply.id}]]')">
+                    <span><img th:id="'replyImage'+${reply.id}" th:value="${reply.id}" th:src="@{${reply.replyLikeStatus}}" alt="좋아요" width="30" height="30" class="d-inline-block align-text-top"></span>
+                </a>
+                <span th:id="'replyLikeCount'+${reply.id}" th:text="${#lists.size(reply.replyLikes)}"></span>
+            </div>
+            <!--  댓글 좋아요 end  -->
             <!--  댓글 삭제  -->
             <div th:if="${reply.writer.id.equals(#authentication.getPrincipal().getUser().id)}">
                 <button th:onclick="deleteReply('[[${reply.id}]]')"/>삭제</button>
@@ -122,7 +128,8 @@
 
 </div>
 
-<script src="/js/like.js"></script>
+<script src="/js/feedLike.js"></script>
+<script src="/js/replyLike.js"></script>
 </body>
 
 
