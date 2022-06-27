@@ -39,6 +39,7 @@ public class ReplyService {
     public void createReply(User user, ReplyRequestDto replyRequestDto, Feed feed) {
         Reply reply = Reply.builder()
                 .content(replyRequestDto.getContent())
+                .replyLikeStatus("/img/empty_heart.png")
                 .writer(user)
                 .feed(feed)
                 .build();
