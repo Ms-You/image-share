@@ -1,6 +1,6 @@
-$(".area-desc").click(function() {
+$(".feed-like").click(function() {
     var feedId = $("#feedId").val();
-    var arrowImage = $(this).children("a").children("span").children("img");
+    var arrowImage = $(this).children("span").children("img");
     var feedLikeCount = $("#feedLikeCount").text();
 
     feedLikeCount *= 1; // (string -> number)
@@ -8,12 +8,12 @@ $(".area-desc").click(function() {
     arrowImage.attr("src", function(index, attr){
       if (attr.match('full')) {
         $('#feedLikeCount').text(feedLikeCount-1);
-        btnUnLike(feedId);
+        btnFeedUnLike(feedId);
         return attr.replace("full", "empty");
       }
       else {
         $('#feedLikeCount').text(feedLikeCount+1);
-        btnLike(feedId);
+        btnFeedLike(feedId);
         return attr.replace("empty", "full");
       }
     });
@@ -21,7 +21,7 @@ $(".area-desc").click(function() {
   });
 
 
-  function btnLike(feedId){
+  function btnFeedLike(feedId){
   	$.ajax({
   		type: "POST",
   		url: `/user/like/feed/${feedId}`,
@@ -33,7 +33,7 @@ $(".area-desc").click(function() {
   	});
   }
 
-  function btnUnLike(feedId){
+  function btnFeedUnLike(feedId){
       $.ajax({
           type: "POST",
           url: `/user/unLike/feed/${feedId}`,
