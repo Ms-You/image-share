@@ -319,7 +319,7 @@ public class FeedController {
     }
 
     // 최신순
-    @GetMapping("/feed/likesCount")
+    @GetMapping("/feed/recently")
     public String searchFeedByRecently(Model model, @PageableDefault(size = 5) Pageable pageable) {
         int offset = pageable.getPageNumber()*5;
         List<Long> findIds = feedRepository.findFeedIdByCreatedDateDesc(offset); // 조건에 맞는 순서대로 feed_id 리스트를 찾아옴
