@@ -22,5 +22,8 @@ public interface FeedRepository extends JpaRepository<Feed, Long> {
 
     Page<Feed> findByTitleContaining(String keyword, Pageable pageable);
     @Query(value = "select feed_id from Views group by feed_id order by count(feed_id) desc, feed_id desc limit 5 offset :offset", nativeQuery = true)
-    List<Long> findFeedIdByDesc(@Param(value = "offset") int offset);
+    List<Long> findFeedIdByViewsDesc(@Param(value = "offset") int offset);
+
+    @Query(value = "select feed_id from Feed_like group by feed_id order by count(feed_id) desc, feed_id desc limit 5 offset :offset", nativeQuery = true)
+    List<Long> findFeedIdByLikesDesc(@Param(value = "offset") int offset);
 }
