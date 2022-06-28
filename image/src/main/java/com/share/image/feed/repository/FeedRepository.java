@@ -26,4 +26,7 @@ public interface FeedRepository extends JpaRepository<Feed, Long> {
 
     @Query(value = "select feed_id from Feed_like group by feed_id order by count(feed_id) desc, feed_id desc limit 5 offset :offset", nativeQuery = true)
     List<Long> findFeedIdByLikesDesc(@Param(value = "offset") int offset);
+
+    @Query(value = "select feed_id from Feed order by createdDate desc limit 5 offset :offset", nativeQuery = true)
+    List<Long> findFeedIdByCreatedDateDesc(@Param(value = "offset") int offset);
 }

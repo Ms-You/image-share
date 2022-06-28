@@ -318,5 +318,31 @@ public class FeedController {
         return "feed/likesDesc";
     }
 
+    // 최신순
+    @GetMapping("/feed/likesCount")
+    public String searchFeedByRecently(Model model, @PageableDefault(size = 5) Pageable pageable) {
+        int offset = pageable.getPageNumber()*5;
+        List<Long> findIds = feedRepository.findFeedIdByCreatedDateDesc(offset); // 조건에 맞는 순서대로 feed_id 리스트를 찾아옴
+        int totalFeedsCount = feedRepository.findAll().size(); // 총 게시물 수를 알아옴
+
+        List<Feed> findFeeds = new ArrayList<>();
+        for (Long id: findIds){
+            findFeeds.add(feedRepository.findById(id).orElseGet(null));
+        }
+
+        int totalPages = (int)(Math.ceil(totalFeedsCount * 1.0 / 5));
+
+        int startPage = (int) (Math.floor(pageable.getPageNumber() / pageable.getPageSize()) * pageable.getPageSize() + 1);
+        int tempEndPage = startPage + pageable.getPageSize() - 1;
+        int endPage = tempEndPage > totalPages ? totalPages : tempEndPage;
+
+        model.addAttribute("feeds", findFeeds);
+        model.addAttribute("pageNum", pageable.getPageNumber());
+        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
+
+        return "feed/recently";
+    }
 
 }
