@@ -48,12 +48,11 @@ public class FeedService {
     @Value("${feedImg.path}")
     private String uploadFolder;
 
-    public void createFeed(User user, FeedRequestDto feedRequestDto, MultipartFile multipartFile) throws UnsupportedEncodingException {
+    public Feed createFeed(User user, FeedRequestDto feedRequestDto, MultipartFile multipartFile) throws UnsupportedEncodingException {
 
         Feed feed = Feed.builder()
                 .title(feedRequestDto.getTitle())
                 .description(feedRequestDto.getDescription())
-//                .view(0)
                 .tag(feedRequestDto.getTag())
                 .writer(user)
                 .build();
@@ -79,6 +78,8 @@ public class FeedService {
         }
 
         feedRepository.save(feed);
+
+        return feed;
     }
 
     public void updateFeed(User user, Feed feed, FeedRequestDto feedRequestDto, MultipartFile multipartFile) throws UnsupportedEncodingException {

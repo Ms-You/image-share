@@ -96,7 +96,9 @@ public class FeedController {
             return "feed/create";
         }
 
-        feedService.createFeed(user, feedRequestDto, file);
+        Feed createdFeed = feedService.createFeed(user, feedRequestDto, file);
+        // 피드 작성자는 피드 봤다고 침
+        viewService.viewFeed(createdFeed.getId(), user.getId());
 
         return "redirect:/user";
 
