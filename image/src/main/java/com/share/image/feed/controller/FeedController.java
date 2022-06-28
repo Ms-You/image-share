@@ -264,14 +264,21 @@ public class FeedController {
     }
 
 
-    // 조회수 순
-    @GetMapping("/feed/viewCount")
-    public String searchFeedByCountDesc(Model model, @PageableDefault(size = 5) Pageable pageable) {
+    // 서치 타입 별 피드 조회
+    @GetMapping("/feed/searchType")
+    public String searchFeedByRecently(@RequestParam String searchType, Model model, @PageableDefault(size = 5) Pageable pageable) {
         int offset = pageable.getPageNumber()*5;
-        List<Long> findIds = feedRepository.findFeedIdByViewsDesc(offset); // 조건에 맞는 순서대로 feed_id 리스트를 찾아옴
         int totalFeedsCount = feedRepository.findAll().size(); // 총 게시물 수를 알아옴
 
+        List<Long> findIds;
         List<Feed> findFeeds = new ArrayList<>();
+        if (searchType.equals("최신순"))
+            findIds = feedRepository.findFeedIdByCreatedDateDesc(offset);
+        else if (searchType.equals("조회수 순"))
+            findIds = feedRepository.findFeedIdByViewsDesc(offset);
+        else
+            findIds = feedRepository.findFeedIdByLikesDesc(offset);
+
         for (Long id: findIds){
             findFeeds.add(feedRepository.findById(id).orElseGet(null));
         }
@@ -288,61 +295,7 @@ public class FeedController {
         model.addAttribute("startPage", startPage);
         model.addAttribute("endPage", endPage);
 
-        return "feed/viewsDesc";
-    }
-
-    // 좋아요 순
-    @GetMapping("/feed/likesCount")
-    public String searchFeedByLikesDesc(Model model, @PageableDefault(size = 5) Pageable pageable) {
-        int offset = pageable.getPageNumber()*5;
-        List<Long> findIds = feedRepository.findFeedIdByLikesDesc(offset); // 조건에 맞는 순서대로 feed_id 리스트를 찾아옴
-        int totalFeedsCount = feedRepository.findAll().size(); // 총 게시물 수를 알아옴
-
-        List<Feed> findFeeds = new ArrayList<>();
-        for (Long id: findIds){
-            findFeeds.add(feedRepository.findById(id).orElseGet(null));
-        }
-
-        int totalPages = (int)(Math.ceil(totalFeedsCount * 1.0 / 5));
-
-        int startPage = (int) (Math.floor(pageable.getPageNumber() / pageable.getPageSize()) * pageable.getPageSize() + 1);
-        int tempEndPage = startPage + pageable.getPageSize() - 1;
-        int endPage = tempEndPage > totalPages ? totalPages : tempEndPage;
-
-        model.addAttribute("feeds", findFeeds);
-        model.addAttribute("pageNum", pageable.getPageNumber());
-        model.addAttribute("totalPages", totalPages);
-        model.addAttribute("startPage", startPage);
-        model.addAttribute("endPage", endPage);
-
-        return "feed/likesDesc";
-    }
-
-    // 최신순
-    @GetMapping("/feed/recently")
-    public String searchFeedByRecently(Model model, @PageableDefault(size = 5) Pageable pageable) {
-        int offset = pageable.getPageNumber()*5;
-        List<Long> findIds = feedRepository.findFeedIdByCreatedDateDesc(offset); // 조건에 맞는 순서대로 feed_id 리스트를 찾아옴
-        int totalFeedsCount = feedRepository.findAll().size(); // 총 게시물 수를 알아옴
-
-        List<Feed> findFeeds = new ArrayList<>();
-        for (Long id: findIds){
-            findFeeds.add(feedRepository.findById(id).orElseGet(null));
-        }
-
-        int totalPages = (int)(Math.ceil(totalFeedsCount * 1.0 / 5));
-
-        int startPage = (int) (Math.floor(pageable.getPageNumber() / pageable.getPageSize()) * pageable.getPageSize() + 1);
-        int tempEndPage = startPage + pageable.getPageSize() - 1;
-        int endPage = tempEndPage > totalPages ? totalPages : tempEndPage;
-
-        model.addAttribute("feeds", findFeeds);
-        model.addAttribute("pageNum", pageable.getPageNumber());
-        model.addAttribute("totalPages", totalPages);
-        model.addAttribute("startPage", startPage);
-        model.addAttribute("endPage", endPage);
-
-        return "feed/recently";
+        return "feed/searchTypeFeeds";
     }
 
 }

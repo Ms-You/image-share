@@ -42,17 +42,18 @@
   </div>
   <!--  image slide show end -->
 
-  <div>
-    <a th:href="@{/user/feed/viewCount}">
-      <button class="btn btn-primary">조회수 높은순으로 피드 보기</button>
-    </a>
-    <a th:href="@{/user/feed/likesCount}">
-      <button class="btn btn-primary">좋아요 높은순으로 피드 보기</button>
-    </a>
-    <a th:href="@{/user/feed/recently}">
-      <button class="btn btn-primary">최신순으로 피드 보기</button>
-    </a>
-  </div>
+  <!--  서치 타입 별 피드 조회  -->
+  <form th:action="@{/user/feed/searchType}" method="get">
+    <div>
+      <select class="form-select" name="searchType">
+        <option value="최신순">최신순</option>
+        <option value="조회수 순">조회수 순</option>
+        <option value="좋아요 순">좋아요 순</option>
+      </select>
+      <button class="btn btn-primary" type="submit">검색</button>
+    </div>
+
+  </form>
 
 
   <!--  tag start  -->
