@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+
 
 public interface FeedRepository extends JpaRepository<Feed, Long> {
     Page<Feed> findByTag(Tag tag, Pageable pageable);
@@ -19,5 +21,6 @@ public interface FeedRepository extends JpaRepository<Feed, Long> {
     Long leadFeedId(@Param(value = "feedId") Long feedId, @Param(value = "tagId") Long tagId);
 
     Page<Feed> findByTitleContaining(String keyword, Pageable pageable);
-
+    @Query(value = "select feed_id from Views group by feed_id order by count(feed_id) desc, feed_id desc limit 5 offset :offset", nativeQuery = true)
+    List<Long> findFeedIdByDesc(@Param(value = "offset") int offset);
 }

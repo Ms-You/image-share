@@ -42,6 +42,12 @@
   </div>
   <!--  image slide show end -->
 
+
+  <a th:href="@{/user/feed/viewCount}">
+    <button class="btn btn-primary">조회수 높은순으로 피드 보기</button>
+  </a>
+
+
   <!--  tag start  -->
   <div th:each="tag: ${tags}">
     <a th:href="@{/user/tag/(tag_id=${tag.id})}">
