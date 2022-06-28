@@ -33,6 +33,9 @@
         <span th:text="${feed.writer.nickName}" style="font-size: 30px;"></span>
         <h6 th:text="${feed.createdDate}"></h6>
         조회수: <span th:text="${#lists.size(feed.views)}"></span>
+        <a th:href="@{/user/tag/(tag_id=${feed.tag.id})}">
+            <div th:text="${feed.tag.name}"></div>
+        </a>
     </div>
     <hr>
     <!--  제목  -->
