@@ -9,6 +9,10 @@ import com.share.image.feed.domain.Tag;
 import com.share.image.feed.repository.TagRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -33,9 +37,15 @@ public class AdminTagController {
 
     // 태그 모음 페이지로 이동
     @GetMapping("/tags")
-    public String tags(Model model){
-        List<Tag> tags = tagRepository.findAll();
+    public String tags(Model model, @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.ASC) Pageable pageable){
+        Page<Tag> tags = tagRepository.findAll(pageable);
+        int startPage = (int) (Math.floor(pageable.getPageNumber() / pageable.getPageSize()) * pageable.getPageSize() + 1);
+        int tempEndPage = startPage + pageable.getPageSize() - 1;
+        int endPage = tempEndPage > tags.getTotalPages() ? tags.getTotalPages() : tempEndPage;
+
         model.addAttribute("tags", tags);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
 
         return "/admin/tag/tags";
     }
