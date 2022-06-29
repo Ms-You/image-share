@@ -36,7 +36,7 @@
             <th>태그 명</th>
             <th>삭제</th>
         </tr>
-        <tr th:each="feed: ${feeds}">
+        <tr th:each="feed: ${feeds.content}">
             <td th:text="${feed.id}"></td>
             <td th:text="${feed.title}"></td>
             <td th:text="${feed.writer.nickName}"></td>
@@ -51,6 +51,52 @@
             </td>
         </tr>
     </table>
+
+    <div th:if="${feeds.isEmpty()}">
+        <h2>
+            피드가 없습니다.<br/>
+        </h2>
+    </div>
+
+
+    <!-- 페이징처리 시작 -->
+    <div th:if="${!feeds.isEmpty()}">
+        <ul class="pagination justify-content-center">
+
+            <li class="page-item" th:classappend="${!feeds.hasPrevious} ? 'disabled'">
+                <a class="page-link" th:href="@{/admin/tag/(tag_id=${tag.id}, page='0')}" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+
+            <li class="page-item" th:classappend="${!feeds.hasPrevious} ? 'disabled'">
+                <a class="page-link" th:href="@{/admin/tag/(tag_id=${tag.id}, page=${feeds.number-1})}">
+                    <span>&lt;</span>
+                </a>
+            </li>
+
+            <li th:each="page: ${#numbers.sequence(startPage, endPage)}"
+                th:classappend="${page == feeds.number + 1} ? 'active'" class="page-item">
+                <a th:text="${page}" class="page-link" th:href="@{/admin/tag/(tag_id=${tag.id}, page=${page-1})}"></a>
+            </li>
+
+            <li class="page-item" th:classappend="${!feeds.hasNext} ? 'disabled'">
+                <a class="page-link" th:href="@{/admin/tag/(tag_id=${tag.id}, page=${feeds.number+1})}">
+                    <span>&gt;</span>
+                </a>
+            </li>
+
+            <li class="page-item" th:classappend="${!feeds.hasNext} ? 'disabled'">
+                <a class="page-link" th:href="@{/admin/tag/(tag_id=${tag.id}, page=${feeds.totalPages-1})}" aria-label="Previous">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+
+        </ul>
+    </div>
+    <!-- 페이징처리 끝 -->
+
+
 </div>
 </body>
 <footer th:replace="layout/footer::footerFragment"></footer>

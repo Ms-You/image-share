@@ -6,6 +6,7 @@ import com.share.image.admin.dto.TagRequestDto;
 import com.share.image.admin.service.AdminTagService;
 import com.share.image.feed.domain.Feed;
 import com.share.image.feed.domain.Tag;
+import com.share.image.feed.repository.FeedRepository;
 import com.share.image.feed.repository.TagRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,6 +35,7 @@ public class AdminTagController {
     private final TagDtoUpdateValidator tagDtoUpdateValidator;
     private final AdminTagService adminTagService;
     private final TagRepository tagRepository;
+    private final FeedRepository feedRepository;
 
     // 태그 모음 페이지로 이동
     @GetMapping("/tags")
@@ -144,24 +146,38 @@ public class AdminTagController {
 
     // 태그 목록 보기 (이후 태그 목록 확인 가능)
     @GetMapping("/tag/list")
-    public String tagList(Model model){
-        List<Tag> tagList = tagRepository.findAll();
-        model.addAttribute("tagList", tagList);
+    public String tagList(Model model, @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.ASC) Pageable pageable){
+        Page<Tag> tags = tagRepository.findAll(pageable);
+        int startPage = (int) (Math.floor(pageable.getPageNumber() / pageable.getPageSize()) * pageable.getPageSize() + 1);
+        int tempEndPage = startPage + pageable.getPageSize() - 1;
+        int endPage = tempEndPage > tags.getTotalPages() ? tags.getTotalPages() : tempEndPage;
+
+        model.addAttribute("tags", tags);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
 
         return "admin/tag/tagList";
     }
 
 
     // 피드 모음 페이지로 이동
-    @GetMapping("/tag/{tag_id}")
-    public String feeds(@PathVariable(name = "tag_id") Long tagId, Model model){
-
+    @GetMapping("/tag")
+    public String tags(@RequestParam(name = "tag_id") Long tagId, Model model, @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable){
         Tag tag = tagRepository.findById(tagId).orElseThrow(()->{
             return new IllegalArgumentException("존재하지 않는 태그입니다.");
         });
 
-        List<Feed> feeds = tag.getFeeds();
+        Page<Feed> feeds = feedRepository.findByTag(tag, pageable);
+
+        int startPage = (int) (Math.floor(pageable.getPageNumber() / pageable.getPageSize()) * pageable.getPageSize() + 1);
+        int tempEndPage = startPage + pageable.getPageSize() - 1;
+        int endPage = tempEndPage > feeds.getTotalPages() ? feeds.getTotalPages() : tempEndPage;
+
+        model.addAttribute("tag", tag);
         model.addAttribute("feeds", feeds);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
+
 
         return "admin/feed/feeds";
     }

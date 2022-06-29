@@ -42,7 +42,7 @@ public class AdminFeedController {
         feedRepository.deleteById(feedId);
         Long tagId = feed.getTag().getId();
 
-        return "redirect:/admin/tag/"+ tagId;
+        return "redirect:/admin/tag/?tag_id="+ tagId;
     }
 
 }
