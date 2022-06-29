@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<!-- head.html -->
+<th:block th:replace="layout/head::headFragment"></th:block>
+
+<!-- layout/admin_header.html -->
+<header th:replace="layout/admin_header::admin_headerFragment"></header>
+
+<script type="text/javascript">
+    function deleteFeed(feedId, feedTitle){
+        var result = confirm(feedTitle + " 피드를 정말로 삭제하시겠습니까?");
+            if (result) {
+                location.href = "delete/feed/" + feedId;
+            }
+    }
+</script>
+
+<body layout:fragment="content">
+<div class="container">
+
+    <div>
+        <a th:href="@{/admin/tag/list}">
+            <button type="button" class="btn btn-primary" style="border-radius:25px;">뒤로 가기</button>
+        </a>
+    </div>
+
+    <div>
+        <form th:action="@{/admin/feed/search}" method="get" class="d-flex">
+            <input class="form-control me-2" type="search" name="keyword" placeholder="피드 검색" aria-label="Search">
+            <button class="btn btn-outline-secondary" type="submit">
+                <img th:src="@{/img/search.png}" alt="검색" width="20" height="20" class="d-inline-block align-text-top">
+            </button>
+        </form>
+    </div>
+
+    <h1>피드 목록</h1>
+    <table>
+        <tr>
+            <th>번호</th>
+            <th>타이틀</th>
+            <th>생성자</th>
+            <th>피드 이미지</th>
+            <th>태그 명</th>
+            <th>삭제</th>
+        </tr>
+        <tr th:each="feed: ${feedList.content}">
+            <td th:text="${feed.id}"></td>
+            <td th:text="${feed.title}"></td>
+            <td th:text="${feed.writer.nickName}"></td>
+            <td>
+                <a th:href="@{/admin/feed/{id}(id=${feed.id})}">
+                    <img th:src="@{/feed_imgs/} + ${feed.feedImageUrl}" width="150" height="150" style="border-radius: 100%;" />
+                </a>
+            </td>
+            <td th:text="${feed.tag.name}"></td>
+            <td>
+                <button th:onclick="deleteFeed('[[${feed.id}]]','[[${feed.title}]]')"/>삭제</button>
+            </td>
+        </tr>
+    </table>
+
+    <div th:if="${feedList.isEmpty()}">
+        <h2>
+            피드가 없습니다.<br/>
+        </h2>
+    </div>
+
+
+    <!-- 페이징처리 시작 -->
+    <div th:if="${!feedList.isEmpty()}">
+        <ul class="pagination justify-content-center">
+
+            <li class="page-item" th:classappend="${!feedList.hasPrevious} ? 'disabled'">
+                <a class="page-link" th:href="@{/admin/feed/search(page='0')}" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+
+            <li class="page-item" th:classappend="${!feedList.hasPrevious} ? 'disabled'">
+                <a class="page-link" th:href="@{/admin/feed/search/(page=${feedList.number-1})}">
+                    <span>&lt;</span>
+                </a>
+            </li>
+
+            <li th:each="page: ${#numbers.sequence(startPage, endPage)}"
+                th:classappend="${page == feedList.number + 1} ? 'active'" class="page-item">
+                <a th:text="${page}" class="page-link" th:href="@{/admin/feed/search/(page=${page-1})}"></a>
+            </li>
+
+            <li class="page-item" th:classappend="${!feedList.hasNext} ? 'disabled'">
+                <a class="page-link" th:href="@{/admin/feed/search/(page=${feedList.number+1})}">
+                    <span>&gt;</span>
+                </a>
+            </li>
+
+            <li class="page-item" th:classappend="${!feedList.hasNext} ? 'disabled'">
+                <a class="page-link" th:href="@{/admin/feed/search/(page=${feedList.totalPages-1})}" aria-label="Previous">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+
+        </ul>
+    </div>
+    <!-- 페이징처리 끝 -->
+
+
+</div>
+</body>
+<footer th:replace="layout/footer::footerFragment"></footer>
