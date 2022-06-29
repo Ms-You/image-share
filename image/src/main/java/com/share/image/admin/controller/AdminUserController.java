@@ -62,4 +62,23 @@ public class AdminUserController {
     }
 
 
+    // 사용자 검색
+    @GetMapping("/user/search")
+    public String searchUser(String keyword, Model model, @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
+        Page<User> userList = userRepository.findByNickNameContaining(keyword, pageable);
+
+        int startPage = (int) (Math.floor(pageable.getPageNumber() / pageable.getPageSize()) * pageable.getPageSize() + 1);
+        int tempEndPage = startPage + pageable.getPageSize() - 1;
+        int endPage = tempEndPage > userList.getTotalPages() ? userList.getTotalPages() : tempEndPage;
+
+        model.addAttribute("userList", userList);
+        model.addAttribute("keyword", keyword);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
+
+        return "admin/user/searchPage";
+    }
+
+
+
 }

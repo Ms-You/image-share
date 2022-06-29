@@ -17,6 +17,15 @@
         </a>
     </div>
 
+    <div>
+        <form th:action="@{/admin/user/search}" method="get" class="d-flex">
+            <input class="form-control me-2" type="search" name="keyword" placeholder="사용자 검색" aria-label="Search">
+            <button class="btn btn-outline-secondary" type="submit">
+                <img th:src="@{/img/search.png}" alt="검색" width="20" height="20" class="d-inline-block align-text-top">
+            </button>
+        </form>
+    </div>
+
     <h1>사용자 목록</h1>
     <table>
         <tr>

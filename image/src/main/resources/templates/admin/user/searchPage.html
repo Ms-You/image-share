@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<!-- head.html -->
+<th:block th:replace="layout/head::headFragment"></th:block>
+
+<!-- layout/admin_header.html -->
+<header th:replace="layout/admin_header::admin_headerFragment"></header>
+
+<body layout:fragment="content">
+<div class="container">
+
+  <div>
+    <a th:href="@{/admin/}">
+      <button type="button" class="btn btn-primary" style="border-radius:25px;">뒤로 가기</button>
+    </a>
+  </div>
+
+  <div>
+    <form th:action="@{/admin/user/search}" method="get" class="d-flex">
+      <input class="form-control me-2" type="search" name="keyword" placeholder="사용자 검색" aria-label="Search">
+      <button class="btn btn-outline-secondary" type="submit">
+        <img th:src="@{/img/search.png}" alt="검색" width="20" height="20" class="d-inline-block align-text-top">
+      </button>
+    </form>
+  </div>
+
+  <h1>사용자 목록</h1>
+  <table>
+    <tr>
+      <th>번호</th>
+      <th>닉네임</th>
+      <th>이메일</th>
+      <th>권한</th>
+      <th>프로필 이미지</th>
+      <th>보기</th>
+    </tr>
+    <tr th:each="user: ${userList.content}">
+      <td th:text="${user.id}"></td>
+      <td th:text="${user.nickName}"></td>
+      <td th:text="${user.email}"></td>
+      <td th:text="${user.role}"></td>
+      <td>
+        <img th:src="@{/profile_imgs/} + ${user.profileImageUrl}" width="150" height="150" style="border-radius: 100%;" />
+      </td>
+      <td>
+        <a th:href="@{/admin/user/{id}(id=${user.id})}">
+          <button type="button" class="btn btn-primary" style="border-radius:25px;">보기</button>
+        </a>
+      </td>
+    </tr>
+  </table>
+
+
+  <!-- 페이징처리 시작 -->
+  <div th:if="${!userList.isEmpty()}">
+    <ul class="pagination justify-content-center">
+
+      <li class="page-item" th:classappend="${!userList.hasPrevious} ? 'disabled'">
+        <a class="page-link" th:href="@{/admin/user/search/(page='0')}" aria-label="Previous">
+          <span aria-hidden="true">&laquo;</span>
+        </a>
+      </li>
+
+      <li class="page-item" th:classappend="${!userList.hasPrevious} ? 'disabled'">
+        <a class="page-link" th:href="@{/admin/user/search/(page=${userList.number-1})}">
+          <span>&lt;</span>
+        </a>
+      </li>
+
+      <li th:each="page: ${#numbers.sequence(startPage, endPage)}"
+          th:classappend="${page == userList.number + 1} ? 'active'" class="page-item">
+        <a th:text="${page}" class="page-link" th:href="@{/admin/user/search/(page=${page-1})}"></a>
+      </li>
+
+      <li class="page-item" th:classappend="${!userList.hasNext} ? 'disabled'">
+        <a class="page-link" th:href="@{/admin/user/search/(page=${userList.number+1})}">
+          <span>&gt;</span>
+        </a>
+      </li>
+
+      <li class="page-item" th:classappend="${!userList.hasNext} ? 'disabled'">
+        <a class="page-link" th:href="@{/admin/user/search/(page=${userList.totalPages-1})}" aria-label="Previous">
+          <span aria-hidden="true">&raquo;</span>
+        </a>
+      </li>
+
+    </ul>
+  </div>
+  <!-- 페이징처리 끝 -->
+
+
+</div>
+</body>
+<footer th:replace="layout/footer::footerFragment"></footer>
