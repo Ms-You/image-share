@@ -263,6 +263,35 @@ public class FeedController {
         return "feed/searchPage";
     }
 
+    @GetMapping("/feeds/likes")
+    public String manageFeedsLikes(@AuthenticationPrincipal PrincipalDetails principalDetails, Model model, @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable){
+        User user = userRepository.findById(principalDetails.getUser().getId()).orElseThrow(()->{
+            return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
+        });
+
+        int offset = pageable.getPageNumber()*5;
+
+        List<Long> findIds = feedRepository.findFeedIdByUserIdAndLikesDesc(user.getId(), offset);
+        List<Feed> findFeeds = new ArrayList<>();
+
+        for (Long id: findIds){
+            findFeeds.add(feedRepository.findById(id).orElseGet(null));
+        }
+
+        int totalPages = (int)(Math.ceil(findFeeds.size() * 1.0 / 5));
+
+        int startPage = (int) (Math.floor(pageable.getPageNumber() / pageable.getPageSize()) * pageable.getPageSize() + 1);
+        int tempEndPage = startPage + pageable.getPageSize() - 1;
+        int endPage = tempEndPage > totalPages ? totalPages : tempEndPage;
+
+        model.addAttribute("feeds", findFeeds);
+        model.addAttribute("pageNum", pageable.getPageNumber());
+        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
+
+        return "user/likeFeeds";
+    }
 
     // 서치 타입 별 피드 조회
     @GetMapping("/feed/searchType")
