@@ -9,10 +9,7 @@ import com.share.image.feed.dto.FeedRequestDto;
 import com.share.image.feed.repository.FeedRepository;
 import com.share.image.feed.repository.ReplyRepository;
 import com.share.image.feed.repository.TagRepository;
-import com.share.image.feed.service.FeedService;
-import com.share.image.feed.service.FeedLikeService;
-import com.share.image.feed.service.ReplyLikeService;
-import com.share.image.feed.service.ViewService;
+import com.share.image.feed.service.*;
 import com.share.image.user.domain.User;
 import com.share.image.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -46,6 +43,7 @@ public class FeedController {
     private final ViewService viewService;
     private final FeedLikeService feedLikeService;
     private final ReplyLikeService replyLikeService;
+    private final SubscribeService subscribeService;
     private final TagRepository tagRepository;
     private final UserRepository userRepository;
     private final FeedRepository feedRepository;
@@ -119,6 +117,12 @@ public class FeedController {
         });
 
         List<Reply> replies = replyRepository.findByFeed(feed);
+
+        // 구독 상태 변경
+        if (subscribeService.isUserSubscribe(feedId, user.getId()))
+            model.addAttribute("subscribeStatus", "/img/do_sub.png");
+        else
+            model.addAttribute("subscribeStatus", "/img/un_sub.png");
 
         // 피드 좋아요 변경
         if (feedLikeService.isUserLikeFeed(feedId, user.getId()))
