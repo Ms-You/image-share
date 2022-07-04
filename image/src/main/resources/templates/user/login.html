@@ -8,26 +8,35 @@
 <header th:replace="layout/header::headerFragment"></header>
 
 <body>
-<div class="container">
-    <h2>로그인</h2>
-    <form th:action="@{/auth/login}" method="post" class="was-validated">
-        <div class="form-group">
-            <input type="email" class="form-control" id="email" placeholder="이메일" name="email" required>
-        </div>
-        <div class="form-group">
-            <input type="password" class="form-control" id="password" placeholder="비밀번호" name="password" required>
-        </div>
-        <button class="btn btn-primary">로그인</button>
+<div class="masthead text-center cover">
+    <div class="container d-flex align-items-center flex-column">
 
-        <div th:if="${#strings.isEmpty(error)}"></div>
-        <div th:if="${not #strings.isEmpty(error)}">
-            <p id="valid" class="alert alert-danger" th:text="${exception}"></p>
+        <div class="social-icons">
+            <a href="#"><img th:src="@{/img/fb.png}" alt="facebook"></a>
+            <a href="#"><img th:src="@{/img/tw.png}" alt="twitter"></a>
+            <a href="#"><img th:src="@{/img/gl.png}" alt="google"></a>
         </div>
 
-    </form>
+        <form th:action="@{/auth/login}" method="post" class="was-validated" id="login">
+            <input type="email" class="input-field" id="email" placeholder="Email" name="email" required>
+            <input type="password" class="input-field" id="password" placeholder="Enter Password" name="password" required>
+            <input type="checkbox" class="checkbox"><span class="box-word">Remember Me</span>
+            <button class="submit">Login</button>
 
+            <a href="#" class="forgot-password">Forgot password?</a>
+            <span style="font-size: 20px; margin-left: 3rem;">Don't have an account? <a th:href="@{/auth/join}" class="not-joined">Sign-Up</a></span>
+
+            <div th:if="${#strings.isEmpty(error)}"></div>
+            <div th:if="${not #strings.isEmpty(error)}" style="margin: 3rem;">
+                <span id="valid" class="alert alert-danger" th:text="${exception}" style="font-size: 22px;"></span>
+            </div>
+        </form>
+
+    </div>
 </div>
+
 </body>
 
 <!-- layout/footer.html -->
 <footer th:replace="layout/footer::footerFragment"></footer>
+
