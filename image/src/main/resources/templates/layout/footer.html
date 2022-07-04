@@ -1,17 +1,47 @@
 <!doctype html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <th:block th:fragment="footerFragment">
-    <footer style="position: fixed; bottom: 0; width: 100%;">
-        <div class="text-center" style="margin-bottom:0">
-            <h4>
-                <a class="navbar-brand" href="https://github.com/Ms-You/image-share">
-                    <img th:src="@{/img/github.png}" alt="깃허브" width="30" height="30" class="d-inline-block align-text-top">
-                </a>
-            </h4>
-            <h6>Yu Myeongsu</h6>
-            <h6>msu122005@hs.ac.kr</h6>
+    <!-- blank space -->
+    <section class="masthead bg-white text-white text-center" id="space2">
+        <div class="container d-flex align-items-center flex-column">
+        </div>
+    </section>
+
+    <!-- Footer-->
+    <footer class="footer text-center">
+        <div class="container">
+            <div class="row">
+                <!-- Footer Director-->
+                <div class="col-lg-4 mb-5 mb-lg-0">
+                    <h4 class="text-uppercase mb-4">Director</h4>
+                    <p class="lead mb-0">
+                        Yu Myeongsu
+                        <br />
+                        msu122005@hs.ac.kr
+                    </p>
+                </div>
+                <!-- Footer Social Icons-->
+                <div class="col-lg-4 mb-5 mb-lg-0">
+                    <h4 class="text-uppercase mb-4">Around the Web</h4>
+                    <a class="btn btn-outline-light btn-social mx-1" href="#!"><i class="fab fa-fw fa-facebook-f"></i></a>
+                    <a class="btn btn-outline-light btn-social mx-1" href="#!"><i class="fab fa-fw fa-twitter"></i></a>
+                    <a class="btn btn-outline-light btn-social mx-1" href="#!"><i class="fab fa-fw fa-linkedin-in"></i></a>
+                    <a class="btn btn-outline-light btn-social mx-1" href="#!"><i class="fab fa-fw fa-dribbble"></i></a>
+                    <a class="btn btn-outline-light btn-social mx-1" href="https://github.com/Ms-You/image-share">
+                        <img th:src="@{/img/github.png}" alt="깃허브" width="30" height="30" class="d-inline-block align-text-top">
+                    </a>
+                </div>
+            </div>
         </div>
     </footer>
+
+    <!-- Copyright Section-->
+    <div class="copyright py-4 text-center text-white">
+        <div class="container">
+            <small>Copyright &copy; Image Share 2022</small></div>
+    </div>
+
+
 </th:block>
 </body>
 </html>

@@ -1,53 +1,56 @@
 <!doctype html>
 <html lang="ko"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+      xmlns:th="http://www.thymeleaf.org">
 <!-- head.html -->
 <th:block th:replace="layout/head::headFragment"></th:block>
 
 <!-- layout/header.html -->
 <header th:replace="layout/header::headerFragment"></header>
 
-<body layout:fragment="content">
-    <!-- content -->
-    <div class="container">
-        <!--  image slide show  -->
-        <div class="slideshow-container">
-
-            <div class="mySlides">
-                <div class="numbertext">1 / 3</div>
-                <img th:src="@{/img/sample1.jpg}" style="width:100%">
+<!-- content -->
+<div>
+    <!--  one page scroll  -->
+    <header class="masthead bg-primary text-white text-center move" id="intro">
+        <div class="container d-flex align-items-center flex-column">
+            <!-- Masthead Avatar Image-->
+            <img class="masthead-avatar mb-5" th:src="@{/img/avataars.svg}" alt="..." />
+            <!-- Masthead Heading-->
+            <h1 class="masthead-heading text-uppercase mb-0">WELCOME TO IMAGE SHARE</h1>
+            <!-- Icon Divider-->
+            <div class="divider-custom divider-light">
+                <div class="divider-custom-line"></div>
+                <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
+                <div class="divider-custom-line"></div>
             </div>
-
-            <div class="mySlides">
-                <div class="numbertext">2 / 3</div>
-                <img th:src="@{/img/sample2.jpg}" style="width:100%">
-            </div>
-
-            <div class="mySlides">
-                <div class="numbertext">3 / 3</div>
-                <img th:src="@{/img/sample3.jpg}" style="width:100%">
-            </div>
-
-            <a class="prev" onclick="plusSlides(-1)">❮</a>
-            <a class="next" onclick="plusSlides(1)">❯</a>
-
+            <!-- Masthead Subheading-->
+            <a class="btn btn-xl btn-outline-light" href="#instruction">처음이신가요?</a>
         </div>
-        <br>
+    </header>
 
-        <div style="text-align:center">
-            <span class="dot" onclick="currentSlide(1)"></span>
-            <span class="dot" onclick="currentSlide(2)"></span>
-            <span class="dot" onclick="currentSlide(3)"></span>
+    <div class="move" id="notice" style="background-color: pink;">공지사항</div>
+    <div class="masthead text-center move" id="instruction" style="color: #006B6C; background-color: #DAFFF6;">
+        <div class="container d-flex align-items-center flex-column">
+            <h1 class="masthead-heading text-uppercase py-5">사용법</h1>
+            <p class="masthead-subheading font-weight-light py-5">
+                이미지 쉐어는 자신이 찍은 사진, 그림들을 다른 사람들과 공유하는 플랫폼입니다.<br/>
+                업로드할 이미지의 제목, 간단한 설명, 태그를 선택해 피드를 공유할 수 있습니다.<br/>
+                (피드 업로드 이미지)<br/>
+                물론 다른 사람들이 올린 이미지도 구경하고 저장할 수 있습니다.<br/>
+                여러분의 이미지를 맘껏 뽐내보세요!
+            </p>
+            <a class="btn btn-xl btn-outline-secondary" th:href="@{/auth/join}">지금 시작하기</a>
         </div>
-        <!--  image slide show end -->
-
     </div>
-</body>
+    <!-- 사용법 2 마지막에 지금 시작하기 -> 회원가입 이동 버튼 생성 -->
 
-<!--  index.js  -->
-<script type="text/javascript" th:src="@{/js/index.js}"></script>
+    <!-- layout/footer.html -->
+    <footer th:replace="layout/footer::footerFragment"></footer>
+
+</div>
+
+<script>
+    $('#space').remove();
+    $('#space2').remove();
+</script>
 
 
-<!-- layout/footer.html -->
-<footer th:replace="layout/footer::footerFragment"></footer>

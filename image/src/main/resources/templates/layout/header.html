@@ -1,10 +1,10 @@
 <!doctype html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<body id="page-top">
 <th:block th:fragment="headerFragment">
-    <!--  navbar  -->
-    <nav class="navbar navbar-expand-lg navbar-light">
-        <div class="container-fluid">
-
+    <!-- Navigation-->
+    <nav class="navbar navbar-expand-lg bg-secondary text-uppercase fixed-top" id="mainNav">
+        <div class="container">
             <a sec:authorize="isAnonymous()" class="navbar-brand" href="/">
                 <img th:src="@{/img/logo.png}" alt="로고" width="30" height="30" class="d-inline-block align-text-top">
                 <span style="color:#237375; font-size: 25px;">Image Share</span>
@@ -15,64 +15,43 @@
                 <span style="color:#237375; font-size: 25px;">Image Share</span>
             </a>
 
-            <!--  로그아웃 상태  -->
-            <ul sec:authorize="isAnonymous()" class="navbar-nav justify-content-end mt-3">
-                <li class="nav-item">
-                    <a class="nav-link" href="#">소개</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">공지사항</a>
-                </li>
-                <li class="nav-item ml-4">
-                    <a th:href="@{/auth/login}">
-                        <button type="button" class="btn btn-outline-success" style="border-radius:25px;">로그인</button>
-                    </a>
-                </li>
-                <li class="nav-item ml-3">
-                    <a th:href="@{/auth/join}">
-                        <button type="button" class="btn btn-outline-secondary" style="border-radius:25px;">회원가입</button>
-                    </a>
-                </li>
-            </ul>
-            <!--  로그인 상태  -->
-            <ul sec:authorize="isAuthenticated()" class="navbar-nav justify-content-end mt-3">
-                <!--  ADMIN 권한  -->
-                <span sec:authorize="hasRole('ADMIN')">
-                    <a th:href="@{/admin}">관리자 홈</a>
-                </span>
-                <!--  ADMIN 권한  -->
-                <li class="nav-item">
-                    <form th:action="@{/user/feed/search}" method="get" class="d-flex">
-                        <input class="form-control me-2" type="search" name="keyword" placeholder="검색" aria-label="Search">
-                        <button class="btn btn-outline-secondary" type="submit">
-                            <img th:src="@{/img/search.png}" alt="검색" width="20" height="20" class="d-inline-block align-text-top">
-                        </button>
-                    </form>
-                </li>
-                <li class="nav-item ml-3">
-                    <a class="nav-link" th:href="@{/user/new/feed}">
-                        <img th:src="@{/img/plus.png}" alt="피드생성" width="30" height="30" class="d-inline-block align-text-top">
-                    </a>
-                </li>
-                <li class="nav-item ml-4">
-                    <a class="nav-link" href="#">
-                        <img th:src="@{/img/bell.png}" alt="알림" width="30" height="30" class="d-inline-block align-text-top">
-                    </a>
-                </li>
-                <li class="nav-item ml-3">
-                    <a th:href="@{/user/profile}">
-                        <img th:src="@{/profile_imgs/} + ${#authentication.getPrincipal().getUser().getProfileImageUrl}" onerror="this.src='/img/default_profile.png';" width="30" height="30" style="border-radius: 100%">
-                    </a>
-                </li>
-                <li class="nav-item ml-3">
-                    <a th:href="@{/auth/logout}">
-                        <button type="button" class="btn btn-outline-danger" style="border-radius:25px;" >로그아웃</button>
-                    </a>
-                </li>
-            </ul>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <!--  로그아웃 상태  -->
+                <ul sec:authorize="isAnonymous()" class="navbar-nav ms-auto">
+                    <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="#instruction">소개</a></li>
+                    <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="#about">공지사항</a></li>
+                    <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" th:href="@{/auth/login}">로그인</a></li>
+                    <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" th:href="@{/auth/join}">회원가입</a></li>
+                </ul>
+
+                <!--  로그인 상태  -->
+                <ul sec:authorize="isAuthenticated()" class="navbar-nav ms-auto">
+                    <!--  ADMIN 권한  -->
+                    <li sec:authorize="hasRole('ADMIN')" class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" th:href="@{/admin}">관리자 홈</a></li>
+
+                    <li class="nav-item mx-0 mx-lg-1">
+                        <form action="/user/feed/search" method="get" class="d-flex">
+                            <div class="nav-link py-3 px-0 px-lg-3 rounded">
+                                <input class="form-control me-2" type="search" name="keyword" placeholder="검색" aria-label="Search">
+                            </div>
+                            <button class="btn btn-outline-secondary" type="submit">
+                                <img src="/img/search.png" alt="검색" width="20" height="20" class="d-inline-block align-text-top">
+                            </button>
+                        </form>
+                    </li>
+                    <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" th:href="@{/user/new/feed}"><img th:src="@{/img/plus.png}" alt="피드생성" width="30" height="30" class="d-inline-block align-text-top"></a></li>
+                    <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="#"><img th:src="@{/img/bell.png}" alt="알림" width="30" height="30" class="d-inline-block align-text-top"></a></li>
+                    <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" th:href="@{/user/profile}"><img th:src="@{/profile_imgs/} + ${#authentication.getPrincipal().getUser().getProfileImageUrl}" onerror="this.src='/img/default_profile.png';" width="30" height="30" style="border-radius: 100%"></a></li>
+                    <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" th:href="@{/auth/logout}">로그아웃</a></li>
+                </ul>
+            </div>
         </div>
     </nav>
-    <!--  navbar end  -->
+
+    <!-- blank space -->
+    <section class="masthead bg-white text-white text-center" id="space">
+        <div class="container d-flex align-items-center flex-column">
+        </div>
+    </section>
 
 </th:block>
-</html>
