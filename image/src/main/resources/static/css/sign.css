@@ -83,3 +83,8 @@ input[type=checkbox] {
     text-decoration: none;
 }
 
+.already-join{
+    color: #0056B3;
+    font-size: 22px;
+    text-decoration: none;
+}

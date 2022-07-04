@@ -8,31 +8,31 @@
 <header th:replace="layout/header::headerFragment"></header>
 
 <body>
-    <div class="container">
-        <form th:action="@{/auth/join}" method="post" modelAttribute="joinRequestDto" class="sign-up">
-            <div class="form-group fone mt-2"><i class="fas fa-envelope"></i>
-                <input type="text" name="email" th:value="${joinRequestDto.email}" placeholder="이메일을 입력해주세요." class="form-control">
-                <span th:style="${'color: red; font-size:11px;'}" th:text="${valid_email}"></span>
-            </div>
+<div class="masthead text-center cover">
+    <div class="container d-flex align-items-center flex-column">
 
-            <div class="form-group fone mt-2"><i class="fas fa-user"></i>
-                <input type="text" name="nickName" th:value="${joinRequestDto.nickName}" placeholder="닉네임을 입력해주세요." class="form-control">
-                <span th:style="${'color: red; font-size:11px;'}" th:text="${valid_nickName}"></span>
-            </div>
+        <div class="social-icons">
+            <a href="#"><img th:src="@{/img/fb.png}" alt="facebook"></a>
+            <a href="#"><img th:src="@{/img/tw.png}" alt="twitter"></a>
+            <a href="#"><img th:src="@{/img/gl.png}" alt="google"></a>
+        </div>
 
-            <div class="form-group fone mt-2"><i class="fas fa-lock"></i>
-                <input type="password" name="password" placeholder="비밀번호" class="form-control">
-                <span th:style="${'color: red; font-size:11px;'}" th:text="${valid_password}"></span>
-            </div>
+        <form th:action="@{/auth/join}" method="post" modelAttribute="joinRequestDto" id="register" class="form-input-group">
+            <input type="email" name="email" th:value="${joinRequestDto.email}" class="input-field" placeholder="Enter your Email" required>
+            <span th:style="${'color: red; font-size:20px;'}" th:text="${valid_email}"></span>
+            <input type="text" name="nickName" th:value="${joinRequestDto.nickName}" class="input-field" placeholder="Enter your nickname" required>
+            <span th:style="${'color: red; font-size:20px;'}" th:text="${valid_nickName}"></span>
+            <input type="password" name="password" class="input-field" placeholder="Enter Password" required>
+            <span th:style="${'color: red; font-size:20px;'}" th:text="${valid_password}"></span>
+            <input type="password" name="password_confirm" class="input-field" placeholder="Check your Password" required>
+            <span th:style="${'color: red; font-size:20px;'}" th:text="${valid_password_confirm}"></span>
 
-            <div class="form-group fone mt-2"><i class="fas fa-lock"></i>
-                <input type="password" name="password_confirm" placeholder="비밀번호 확인" class="form-control" required>
-                <span th:style="${'color: red; font-size:11px;'}" th:text="${valid_password_confirm}"></span>
-            </div>
-
-            <button type="submit" class="btn btn-block btn-bold btn-primary mt-2">회원가입</button>
+            <button class="submit">Register</button>
+            <span style="font-size: 20px;">Already have an account? <a th:href="@{/auth/login}" class="already-join">Sign-In</a></span>
         </form>
+
     </div>
+</div>
 </body>
 
 <!-- layout/footer.html -->
