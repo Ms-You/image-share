@@ -1,76 +1,43 @@
 <!doctype html>
 <html lang="ko"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+      xmlns:th="http://www.thymeleaf.org">
 <!-- head.html -->
 <th:block th:replace="layout/head::headFragment"></th:block>
 
 <!-- layout/header.html -->
 <header th:replace="layout/header::headerFragment"></header>
 
-<body layout:fragment="content">
 <!-- content -->
-<div class="container">
-  <!--  image slide show  -->
-  <div class="slideshow-container">
+<section class="page-section portfolio" id="portfolio" style="background-color:#ECFAFB;">
+  <div class="container">
 
-    <div class="mySlides">
-      <div class="numbertext">1 / 3</div>
-      <img th:src="@{/img/sample1.jpg}" style="width:100%">
+    <!--  서치 타입 별 피드 조회  -->
+    <form th:action="@{/user/feed/searchType}" method="get" style="text-align: end; margin-bottom: 3rem;">
+      <div>
+        <select class="select-box" name="searchType" style="width: 20%;">
+          <option value="최신순">최신순</option>
+          <option value="조회수 순">조회수 순</option>
+          <option value="좋아요 순">좋아요 순</option>
+        </select>
+        <button class="btn btn-primary" type="submit">피드 검색</button>
+      </div>
+    </form>
+
+    <!--  tag start  -->
+    <div class="row" style="padding: 3rem 0rem 30rem 0rem;">
+      <div th:each="tag: ${tags}" class="col-md-6 col-lg-4 mb-4">
+        <a th:href="@{/user/tag/(tag_id=${tag.id})}">
+          <div class="portfolio-item mx-auto" style="position: relative">
+            <img class="img-fluid" th:src="@{/tag_imgs/} + ${tag.tagImageUrl}" width="100%" height="100%" />
+            <span class="tag-text" th:text="${tag.name}"></span>
+          </div>
+        </a>
+      </div>
     </div>
-
-    <div class="mySlides">
-      <div class="numbertext">2 / 3</div>
-      <img th:src="@{/img/sample2.jpg}" style="width:100%">
-    </div>
-
-    <div class="mySlides">
-      <div class="numbertext">3 / 3</div>
-      <img th:src="@{/img/sample3.jpg}" style="width:100%">
-    </div>
-
-    <a class="prev" onclick="plusSlides(-1)">❮</a>
-    <a class="next" onclick="plusSlides(1)">❯</a>
+    <!--  tag end  -->
 
   </div>
-  <br>
-
-  <div style="text-align:center">
-    <span class="dot" onclick="currentSlide(1)"></span>
-    <span class="dot" onclick="currentSlide(2)"></span>
-    <span class="dot" onclick="currentSlide(3)"></span>
-  </div>
-  <!--  image slide show end -->
-
-  <!--  서치 타입 별 피드 조회  -->
-  <form th:action="@{/user/feed/searchType}" method="get">
-    <div>
-      <select class="form-select" name="searchType">
-        <option value="최신순">최신순</option>
-        <option value="조회수 순">조회수 순</option>
-        <option value="좋아요 순">좋아요 순</option>
-      </select>
-      <button class="btn btn-primary" type="submit">검색</button>
-    </div>
-
-  </form>
-
-
-  <!--  tag start  -->
-  <div th:each="tag: ${tags}">
-    <a th:href="@{/user/tag/(tag_id=${tag.id})}">
-        <span th:text="${tag.name}"></span>
-        <img th:src="@{/tag_imgs/} + ${tag.tagImageUrl}" width="150" height="150" style="border-radius: 100%;" />
-    </a>
-  </div>
-  <!--  tag end  -->
-
-</div>
-</body>
-
-<!--  index.js  -->
-<script type="text/javascript" th:src="@{/js/index.js}"></script>
-
+</section>
 
 <!-- layout/footer.html -->
 <footer th:replace="layout/footer::footerFragment"></footer>

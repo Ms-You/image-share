@@ -17,7 +17,7 @@
             <a href="#"><img th:src="@{/img/gl.png}" alt="google"></a>
         </div>
 
-        <form th:action="@{/auth/join}" method="post" modelAttribute="joinRequestDto" id="register" class="form-input-group">
+        <form th:action="@{/auth/join}" method="post" modelAttribute="joinRequestDto" id="register">
             <input type="email" name="email" th:value="${joinRequestDto.email}" class="input-field" placeholder="Enter your Email" required>
             <span th:style="${'color: red; font-size:20px;'}" th:text="${valid_email}"></span>
             <input type="text" name="nickName" th:value="${joinRequestDto.nickName}" class="input-field" placeholder="Enter your nickname" required>

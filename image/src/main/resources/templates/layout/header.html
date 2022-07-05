@@ -7,12 +7,12 @@
         <div class="container">
             <a sec:authorize="isAnonymous()" class="navbar-brand" href="/">
                 <img th:src="@{/img/logo.png}" alt="로고" width="30" height="30" class="d-inline-block align-text-top">
-                <span style="color:#237375; font-size: 25px;">Image Share</span>
+                <span style="color:#ffffff; font-size: 25px;">Image Share</span>
             </a>
 
             <a sec:authorize="isAuthenticated()" class="navbar-brand" th:href="@{/user}">
                 <img th:src="@{/img/logo.png}" alt="로고" width="30" height="30" class="d-inline-block align-text-top">
-                <span style="color:#237375; font-size: 25px;">Image Share</span>
+                <span style="color:#ffffff; font-size: 25px;">Image Share</span>
             </a>
 
             <div class="collapse navbar-collapse" id="navbarResponsive">
@@ -32,7 +32,7 @@
                     <li class="nav-item mx-0 mx-lg-1">
                         <form action="/user/feed/search" method="get" class="d-flex">
                             <div class="nav-link py-3 px-0 px-lg-3 rounded">
-                                <input class="form-control me-2" type="search" name="keyword" placeholder="검색" aria-label="Search">
+                                <input class="form-control me-2" type="search" name="keyword" placeholder="피드 검색" aria-label="Search">
                             </div>
                             <button class="btn btn-outline-secondary" type="submit">
                                 <img src="/img/search.png" alt="검색" width="20" height="20" class="d-inline-block align-text-top">
