@@ -10,65 +10,82 @@
 
 <body layout:fragment="content">
 <!-- content -->
-<div class="container">
+<section class="page-section portfolio">
+
 
     <!--  feed list start  -->
-    <div th:each="feed: ${feeds.content}">
-        <a th:href="@{/user/feed/{id}(id=${feed.id})}">
-            <img th:src="@{/feed_imgs/} + ${feed.feedImageUrl}" width="150" height="150" style="border-radius: 100%;" />
-        </a>
+    <div th:if="${!feeds.isEmpty()}" class="row" style="padding: 3rem 0rem 30rem 0rem; margin: 0rem 10rem 0rem 10rem;" id="columns">
+        <div th:each="feed: ${feeds.content}" class="col-md-6 col-lg-4 mb-4" style="width: 100%;">
+            <a th:href="@{/user/feed/{id}(id=${feed.id})}">
+                <figure>
+                    <img th:src="@{/feed_imgs/} + ${feed.feedImageUrl}">
+                    <figcaption th:text="${feed.title}"></figcaption>
+                </figure>
+            </a>
+            <a href="#"> <!-- 클릭 시 해당 사용자 페이지 이동 -->
+                <figure>
+                    <figcaption>
+                        <img th:src="@{/profile_imgs/} + ${feed.writer.profileImageUrl}" onerror="this.src='/img/default_profile.png';" style="width: 40px; height: 40px; border-radius: 100%">
+                        <span class="user-name" th:text="${feed.writer.nickName}"></span>
+                    </figcaption>
+                </figure>
+            </a>
+        </div>
     </div>
     <!--  feed list end  -->
-    <div th:if="${feeds.isEmpty()}">
-        <h2>
-            피드가 없습니다.<br/>
-            새로운 피드를 작성해보세요.
-            <a class="nav-link" th:href="@{/user/new/feed}">
-                <button class="btn btn-primary">생성하러 가기</button>
-            </a>
-        </h2>
+
+    <div class="container">
+        <!--        <div class="row" style="padding: 3rem 0rem 30rem 0rem;">-->
+        <div th:if="${feeds.isEmpty()}" class="row" style="padding: 3rem 0rem 30rem 0rem; text-align: center;">
+            <h2>
+                피드가 없습니다.<br/>
+                새로운 피드를 작성해보세요.
+                <a class="nav-link" th:href="@{/user/new/feed}">
+                    <button class="btn btn-primary">생성하러 가기</button>
+                </a>
+            </h2>
+        </div>
+        <!--        </div>-->
+
+        <!-- 페이징처리 시작 -->
+        <div th:if="${!feeds.isEmpty()}">
+            <ul class="pagination justify-content-center">
+
+                <li class="page-item" th:classappend="${!feeds.hasPrevious} ? 'disabled'">
+                    <a class="page-link" th:href="@{/user/tag/(tag_id=${tag.id}, page='0')}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+
+                <li class="page-item" th:classappend="${!feeds.hasPrevious} ? 'disabled'">
+                    <a class="page-link" th:href="@{/user/tag/(tag_id=${tag.id}, page=${feeds.number-1})}">
+                        <span>&lt;</span>
+                    </a>
+                </li>
+
+                <li th:each="page: ${#numbers.sequence(startPage, endPage)}"
+                    th:classappend="${page == feeds.number + 1} ? 'active'" class="page-item">
+                    <a th:text="${page}" class="page-link" th:href="@{/user/tag/(tag_id=${tag.id}, page=${page-1})}"></a>
+                </li>
+
+                <li class="page-item" th:classappend="${!feeds.hasNext} ? 'disabled'">
+                    <a class="page-link" th:href="@{/user/tag/(tag_id=${tag.id}, page=${feeds.number+1})}">
+                        <span>&gt;</span>
+                    </a>
+                </li>
+
+                <li class="page-item" th:classappend="${!feeds.hasNext} ? 'disabled'">
+                    <a class="page-link" th:href="@{/user/tag/(tag_id=${tag.id}, page=${feeds.totalPages-1})}" aria-label="Previous">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+
+            </ul>
+        </div>
+        <!-- 페이징처리 끝 -->
+
     </div>
-
-
-    <!-- 페이징처리 시작 -->
-    <div th:if="${!feeds.isEmpty()}">
-        <ul class="pagination justify-content-center">
-
-            <li class="page-item" th:classappend="${!feeds.hasPrevious} ? 'disabled'">
-                <a class="page-link" th:href="@{/user/tag/(tag_id=${tag.id}, page='0')}" aria-label="Previous">
-                    <span aria-hidden="true">&laquo;</span>
-                </a>
-            </li>
-
-            <li class="page-item" th:classappend="${!feeds.hasPrevious} ? 'disabled'">
-                <a class="page-link" th:href="@{/user/tag/(tag_id=${tag.id}, page=${feeds.number-1})}">
-                    <span>&lt;</span>
-                </a>
-            </li>
-
-            <li th:each="page: ${#numbers.sequence(startPage, endPage)}"
-                th:classappend="${page == feeds.number + 1} ? 'active'" class="page-item">
-                <a th:text="${page}" class="page-link" th:href="@{/user/tag/(tag_id=${tag.id}, page=${page-1})}"></a>
-            </li>
-
-            <li class="page-item" th:classappend="${!feeds.hasNext} ? 'disabled'">
-                <a class="page-link" th:href="@{/user/tag/(tag_id=${tag.id}, page=${feeds.number+1})}">
-                    <span>&gt;</span>
-                </a>
-            </li>
-
-            <li class="page-item" th:classappend="${!feeds.hasNext} ? 'disabled'">
-                <a class="page-link" th:href="@{/user/tag/(tag_id=${tag.id}, page=${feeds.totalPages-1})}" aria-label="Previous">
-                    <span aria-hidden="true">&raquo;</span>
-                </a>
-            </li>
-
-        </ul>
-    </div>
-    <!-- 페이징처리 끝 -->
-
-
-</div>
+</section>
 </body>
 
 

@@ -37,7 +37,7 @@ public class TagController {
 
 
     @GetMapping("/tag")
-    public String tags(@RequestParam(name = "tag_id") Long tagId, Model model, @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable){
+    public String tags(@RequestParam(name = "tag_id") Long tagId, Model model, @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable){
         Tag tag = tagRepository.findById(tagId).orElseThrow(()->{
             return new IllegalArgumentException("존재하지 않는 태그입니다.");
         });

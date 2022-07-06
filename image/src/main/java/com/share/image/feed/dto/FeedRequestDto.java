@@ -16,7 +16,7 @@ public class FeedRequestDto {
     private Long id;
 
     @NotBlank(message = "제목은 필수 입력 값입니다.")
-    @Size(min = 1, max = 10, message = "제목은 최대 10자까지 입력해주세요.")
+    @Size(min = 1, max = 20, message = "제목은 최대 20자까지 입력해주세요.")
     private String title;
 
     @NotBlank(message = "설명은 필수 입력 값입니다.")

@@ -28,6 +28,37 @@
   box-shadow: 0 1px 0 1px rgba(0,0,0,.04);
 }
 
+/* feed image */
+#columns{
+  column-width: 345px;
+  column-gap: 15px;
+  display: inline-block;
+  width: 100%;
+}
+
+#columns figure{
+  display: inline-block;
+  border-radius: 1.5rem;
+  margin:0;
+  width: 100%;
+}
+
+#columns figure img{
+  width:100%;
+  border-radius: 1.5rem;
+}
+
+#columns figure figcaption{
+  text-align: left;
+  font-weight: bold;
+  font-size: 18px;
+  margin-top:6px;
+}
+
+.user-name{
+  font-weight: normal;
+  font-size: 22px;
+}
 
 @charset "UTF-8";
 /*!
@@ -267,11 +298,11 @@ sup {
 }
 
 a {
-  color: #0056B3;
-  text-decoration: underline;
+  color: black;
 }
 a:hover {
-  color: #15967d;
+  color: blue;
+  text-decoration: underline;
 }
 
 a:not([href]):not([class]), a:not([href]):not([class]):hover {
