@@ -10,41 +10,56 @@
 
 <body layout:fragment="content">
 <!-- content -->
-<div class="container">
+<section class="page-section portfolio">
+    <div class="container">
 
-    <form th:action="@{/user/new/feed}" method="post" modelAttribute="feedRequestDto" name="form" enctype="multipart/form-data" accept-charset="UTF-8">
-        <!--  제목  -->
-        <div>제목</div>
-        <div>
-            <input type="text" name="title" placeholder="제목을 입력해주세요."/>
-            <span th:style="${'color: red; font-size:11px;'}" th:text="${valid_title}"></span>
-        </div>
-        <!--  설명  -->
-        <div>설명</div>
-        <div>
-            <input type="text" name="description" placeholder="간단한 설명을 입력해주세요."/>
-            <span th:style="${'color: red; font-size:11px;'}" th:text="${valid_description}"></span>
-        </div>
+        <form th:action="@{/user/new/feed}" method="post" modelAttribute="feedRequestDto" name="form" enctype="multipart/form-data" accept-charset="UTF-8"  style="padding: 3rem 0rem 30rem 0rem;">
 
-        <!--  피드 이미지  -->
-        <div>업로드 할 이미지</div>
-        <div>
-            <input type="file" name="file" multiple="multiple"/>
-            <span th:style="${'color: red; font-size:11px;'}" th:text="${valid_feedImageUrl}"></span>
-        </div>
+            <div id="feed-create">
+                <h2 class="title">피드 업로드</h2>
 
-        <div>업로드 할 태그</div>
-        <div>
-            <select class="form-select" name="tagName">
-                <option th:each="tag : ${tags}" th:value="${tag.name}" th:text="${tag.name}"></option>
-            </select>
-        </div>
+                <div class="contents">
+                    <div class="upload-box">
+                        <div>
+                            <input type="text" class="input-text" name="title" placeholder="제목을 입력해주세요."/>
+                            <span th:style="${'color: red; font-size:11px;'}" th:text="${valid_title}"></span>
+                        </div>
 
-        <button class="btn btn-primary" type="submit">생성</button>
-    </form>
+                        <div>
+                            <input type="text" class="input-text" name="description" placeholder="간단한 설명을 입력해주세요."/>
+                            <span th:style="${'color: red; font-size:11px;'}" th:text="${valid_description}"></span>
+                        </div>
 
-</div>
+                        <div style="width: 100%; margin-bottom: 3rem;">
+                            <select class="form-select" name="tagName">
+                                <option th:each="tag : ${tags}" th:value="${tag.name}" th:text="${tag.name}"></option>
+                            </select>
+                        </div>
+
+                        <div id="drop-file" class="drag-file">
+                            <img src="https://img.icons8.com/pastel-glyph/2x/image-file.png" alt="파일 아이콘" class="image" >
+                            <p class="message">이미지 업로드</p>
+                            <img src="" alt="미리보기 이미지" class="preview">
+                        </div>
+                        <label class="file-label" for="chooseFile" style="margin-bottom: 3rem;">이미지 선택</label>
+                        <input class="file" id="chooseFile" type="file" name="file" multiple="multiple" onchange="dropFile.handleFiles(this.files)" accept="image/png, image/jpeg, image/gif">
+                        <span th:style="${'color: red; font-size:11px;'}" th:text="${valid_feedImageUrl}"></span>
+                    </div>
+                </div>
+
+                <a th:href="@{/user}">
+                    <button class="button btnPush btnOrange" type="button" style="float: right;">취소</button>
+                </a>
+                <button class="button btnPush btnBlueGreen" type="submit" style="float: right; margin-right: 1rem;">생성</button>
+            </div>
+
+        </form>
+
+    </div>
+</section>
+
+
 </body>
-
+<script type="text/javascript" th:src="@{/js/feedCreate.js}"></script>
 <!-- layout/footer.html -->
 <footer th:replace="layout/footer::footerFragment"></footer>
