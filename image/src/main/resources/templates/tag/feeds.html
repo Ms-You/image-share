@@ -18,7 +18,7 @@
         <div th:each="feed: ${feeds.content}" class="col-md-6 col-lg-4 mb-4" style="width: 100%;">
             <a th:href="@{/user/feed/{id}(id=${feed.id})}">
                 <figure>
-                    <img th:src="@{/feed_imgs/} + ${feed.feedImageUrl}">
+                    <img th:src="@{/feed_imgs/} + ${feed.feedImageUrl}" class="feed-img">
                     <figcaption th:text="${feed.title}"></figcaption>
                 </figure>
             </a>

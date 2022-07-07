@@ -94,12 +94,12 @@ button.button {
   display: block;
   position: relative;
   float: left;
-  width: 120px;
+  width: 100px;
   padding: 0;
   margin: 10px 20px 10px 0;
   font-weight: 600;
   text-align: center;
-  line-height: 50px;
+  line-height: 40px;
   color: #FFF;
   border-radius: 5px;
   transition: all 0.2s ;
@@ -115,12 +115,28 @@ button.button {
    background: #FFAA40;
 }
 
+.btnLightBlue {
+  background: #5DC8CD;
+}
+
+.btnRed {
+  background: #FD3301;
+}
+
 .btnBlueGreen.btnPush {
   box-shadow: 0px 5px 0px 0px #007144;
 }
 
 .btnOrange.btnPush {
    box-shadow: 0px 5px 0px 0px #A66615;
+}
+
+.btnLightBlue.btnPush {
+  box-shadow: 0px 5px 0px 0px #1E8185;
+}
+
+.btnRed.btnPush {
+  box-shadow: 0px 5px 0px 0px #9E3301;
 }
 
 .btnPush:hover {
@@ -134,4 +150,20 @@ button.button {
 
 .btnOrange.btnPush:hover {
   box-shadow: 0px 0px 0px 0px #A66615;
+}
+
+.btnLightBlue.btnPush:hover {
+  box-shadow: 0px 0px 0px 0px #1E8185;
+}
+
+.btnRed.btnPush:hover {
+  box-shadow: 0px 0px 0px 0px #9E3301;
+}
+
+.feed-like:hover{
+  text-decoration: none;
+}
+
+.reply-like:hover{
+  text-decoration: none;
 }

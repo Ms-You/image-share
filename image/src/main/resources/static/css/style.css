@@ -60,6 +60,11 @@
   font-size: 22px;
 }
 
+a:hover .feed-img {
+  transition: transform 1s;
+  filter: brightness(70%);
+}
+
 @charset "UTF-8";
 /*!
 * Start Bootstrap - Freelancer v7.0.6 (https://startbootstrap.com/theme/freelancer)
