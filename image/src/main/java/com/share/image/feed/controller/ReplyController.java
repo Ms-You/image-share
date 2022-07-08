@@ -5,6 +5,7 @@ import com.share.image.feed.domain.Feed;
 import com.share.image.feed.domain.Reply;
 import com.share.image.feed.dto.ReplyRequestDto;
 import com.share.image.feed.repository.FeedRepository;
+import com.share.image.feed.repository.ReplyRepository;
 import com.share.image.feed.service.ReplyService;
 import com.share.image.user.domain.User;
 import com.share.image.user.repository.UserRepository;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -32,19 +34,7 @@ public class ReplyController {
     private final ReplyService replyService;
     private final UserRepository userRepository;
     private final FeedRepository feedRepository;
-
-
-    // 댓글 작성 페이지로 이동
-    @GetMapping("/reply/feed/{feed_id}")
-    public String createReply(@PathVariable(name = "feed_id") Long feedId, Model model) {
-        Feed feed = feedRepository.findById(feedId).orElseThrow(()->{
-            return new IllegalArgumentException("존재하지 않는 피드입니다.");
-        });
-
-        model.addAttribute("feed", feed);
-
-        return "reply/create";
-    }
+    private final ReplyRepository replyRepository;
 
     // 댓글 작성
     @PostMapping("/reply/feed/{feed_id}")
@@ -62,19 +52,25 @@ public class ReplyController {
         });
 
         if (errors.hasErrors()) {
+            List<Reply> replies = replyRepository.findByFeed(feed);
             model.addAttribute("replyRequestDto", replyRequestDto);
+            model.addAttribute("replies", replies);
             model.addAttribute("feed", feed);
 
             Map<String, String> validatorResult = replyService.validateHandling(errors);
             for (String key: validatorResult.keySet()) {
                 model.addAttribute(key, validatorResult.get(key));
             }
-            return "reply/create";
+            return "feed/view :: #replyList";
         }
 
         replyService.createReply(user, replyRequestDto, feed);
 
-        return "redirect:/user/feed/" + feed.getId();
+        List<Reply> replies = replyRepository.findByFeed(feed);
+        model.addAttribute("replies", replies);
+        model.addAttribute("feed", feed);
+
+        return "feed/view :: #replyList";
 
     }
 
