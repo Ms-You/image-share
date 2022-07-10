@@ -305,12 +305,18 @@ public class FeedController {
 
         List<Long> findIds;
         List<Feed> findFeeds = new ArrayList<>();
-        if (searchType.equals("최신순"))
+        if (searchType.equals("최신순")) {
             findIds = feedRepository.findFeedIdByCreatedDateDesc(offset);
-        else if (searchType.equals("조회수 순"))
+            model.addAttribute("searchType", "최신순");
+        }
+        else if (searchType.equals("조회수 순")) {
             findIds = feedRepository.findFeedIdByViewsDesc(offset);
-        else
+            model.addAttribute("searchType", "조회수 순");
+        }
+        else {
             findIds = feedRepository.findFeedIdByLikesDesc(offset);
+            model.addAttribute("searchType", "좋아요 순");
+        }
 
         for (Long id: findIds){
             findFeeds.add(feedRepository.findById(id).orElseGet(null));

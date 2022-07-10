@@ -1,88 +1,100 @@
 <!doctype html>
 <html lang="ko"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+      xmlns:th="http://www.thymeleaf.org">
 <!-- head.html -->
 <th:block th:replace="layout/head::headFragment"></th:block>
 
 <!-- layout/header.html -->
 <header th:replace="layout/header::headerFragment"></header>
 
-<body layout:fragment="content">
 <!-- content -->
-<div class="container">
-
-    <!--  서치 타입 별 피드 조회  -->
-    <form th:action="@{/user/feed/searchType}" method="get">
-        <div>
-            <select class="form-select" name="searchType">
-                <option value="최신순">최신순</option>
-                <option value="조회수 순">조회수 순</option>
-                <option value="좋아요 순">좋아요 순</option>
-            </select>
-            <button class="btn btn-primary" type="submit">검색</button>
-        </div>
-
-    </form>
+<section class="page-section portfolio">
+    <div class="container">
+        <!--  서치 타입 별 피드 조회  -->
+        <form th:action="@{/user/feed/searchType}" method="get" style="text-align: end; margin-bottom: 3rem;">
+            <div>
+                <select class="select-box" name="searchType" style="width: 20%;">
+                    <option value="최신순">최신순</option>
+                    <option value="조회수 순">조회수 순</option>
+                    <option value="좋아요 순">좋아요 순</option>
+                </select>
+                <button class="btn btn-primary" type="submit">검색</button>
+            </div>
+        </form>
+    </div>
 
     <!--  feed list start  -->
-    <div th:each="feed: ${feeds}">
-        <a th:href="@{/user/feed/{id}(id=${feed.id})}">
-            <img th:src="@{/feed_imgs/} + ${feed.feedImageUrl}" width="150" height="150" style="border-radius: 100%;" />
-        </a>
-    </div>
-    <!--  feed list end  -->
-    <div th:if="${#lists.size(feeds) == 0}">
-        <h2>
-            피드가 없습니다.<br/>
-            새로운 피드를 작성해보세요.
-            <a class="nav-link" th:href="@{/user/new/feed}">
-                <button class="btn btn-primary">생성하러 가기</button>
+    <div th:if="${#lists.size(feeds) != 0}" class="row" style="padding: 3rem 20rem 30rem 20rem;margin: 0rem 0rem 0rem 0rem;" id="columns">
+        <div th:each="feed: ${feeds}" class="col-md-6 col-lg-4 mb-4" style="width: 100%;">
+            <a th:href="@{/user/feed/{id}(id=${feed.id})}">
+                <figure>
+                    <img th:src="@{/feed_imgs/} + ${feed.feedImageUrl}" class="feed-img" />
+                    <figcaption th:text="${feed.title}"></figcaption>
+                </figure>
             </a>
-        </h2>
+            <a href="#">
+                <figure>
+                    <figcaption>
+                        <img th:src="@{/profile_imgs/} + ${feed.writer.profileImageUrl}" onerror="this.src='/img/default_profile.png';" style="width: 40px; height: 40px; border-radius: 100%">
+                        <span class="user-name" th:text="${feed.writer.nickName}"></span>
+                    </figcaption>
+                </figure>
+            </a>
+        </div>
     </div>
 
-
-    <!-- 페이징처리 시작 -->
-    <div th:unless="${#lists.size(feeds) == 0}">
-        <ul class="pagination justify-content-center">
-
-            <li class="page-item" th:classappend="${pageNum <= 0} ? 'disabled'">
-                <a class="page-link" th:href="@{/user/feed/viewCount/(page='0')}" aria-label="Previous">
-                    <span aria-hidden="true">&laquo;</span>
+    <div class="container">
+        <!--  feed list end  -->
+        <div th:if="${#lists.size(feeds) == 0}" class="row" style="padding: 3rem 0rem 30rem 0rem; text-align: center;">
+            <h2>
+                피드가 없습니다.<br/>
+                새로운 피드를 작성해보세요.
+                <a class="nav-link" th:href="@{/user/new/feed}">
+                    <button class="btn btn-primary">생성하러 가기</button>
                 </a>
-            </li>
+            </h2>
+        </div>
 
-            <li class="page-item" th:classappend="${pageNum <= 0} ? 'disabled'">
-                <a class="page-link" th:href="@{/user/feed/viewCount/(page=${pageNum-1})}">
-                    <span>&lt;</span>
-                </a>
-            </li>
+        <!-- 페이징처리 시작 -->
+        <div th:unless="${#lists.size(feeds) == 0}">
+            <ul class="pagination justify-content-center">
 
-            <li th:each="page: ${#numbers.sequence(startPage, endPage)}"
-                th:classappend="${page == pageNum + 1} ? 'active'" class="page-item">
-                <a th:text="${page}" class="page-link" th:href="@{/user/feed/viewCount/(page=${page-1})}"></a>
-            </li>
+                <li class="page-item" th:classappend="${pageNum <= 0} ? 'disabled'">
+                    <a class="page-link" th:href="@{/user/feed/searchType/(searchType=${searchType}, page='0')}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
 
-            <li class="page-item" th:classappend="${pageNum + 1 >= totalPages} ? 'disabled'">
-                <a class="page-link" th:href="@{/user/feed/viewCount/(page=${pageNum+1})}">
-                    <span>&gt;</span>
-                </a>
-            </li>
+                <li class="page-item" th:classappend="${pageNum <= 0} ? 'disabled'">
+                    <a class="page-link" th:href="@{/user/feed/searchType/(searchType=${searchType}, page=${pageNum-1})}">
+                        <span>&lt;</span>
+                    </a>
+                </li>
 
-            <li class="page-item" th:classappend="${pageNum + 1 >= totalPages} ? 'disabled'">
-                <a class="page-link" th:href="@{/user/feed/viewCount/(page=${totalPages-1})}" aria-label="Previous">
-                    <span aria-hidden="true">&raquo;</span>
-                </a>
-            </li>
+                <li th:each="page: ${#numbers.sequence(startPage, endPage)}"
+                    th:classappend="${page == pageNum + 1} ? 'active'" class="page-item">
+                    <a th:text="${page}" class="page-link" th:href="@{/user/feed/searchType/(searchType=${searchType}, page=${page-1})}"></a>
+                </li>
 
-        </ul>
+                <li class="page-item" th:classappend="${pageNum + 1 >= totalPages} ? 'disabled'">
+                    <a class="page-link" th:href="@{/user/feed/searchType/(searchType=${searchType}, page=${pageNum+1})}">
+                        <span>&gt;</span>
+                    </a>
+                </li>
+
+                <li class="page-item" th:classappend="${pageNum + 1 >= totalPages} ? 'disabled'">
+                    <a class="page-link" th:href="@{/user/feed/searchType/(searchType=${searchType}, page=${totalPages-1})}" aria-label="Previous">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+
+            </ul>
+        </div>
+        <!-- 페이징처리 끝 -->
+
+
     </div>
-    <!-- 페이징처리 끝 -->
-
-
-</div>
-</body>
+</section>
 
 
 <!-- layout/footer.html -->

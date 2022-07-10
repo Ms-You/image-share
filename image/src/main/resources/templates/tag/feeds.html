@@ -14,7 +14,7 @@
 
 
     <!--  feed list start  -->
-    <div th:if="${!feeds.isEmpty()}" class="row" style="padding: 3rem 0rem 30rem 0rem; margin: 0rem 10rem 0rem 10rem;" id="columns">
+    <div th:if="${!feeds.isEmpty()}" class="row" style="padding: 3rem 20rem 30rem 20rem;margin: 0rem 0rem 0rem 0rem;" id="columns">
         <div th:each="feed: ${feeds.content}" class="col-md-6 col-lg-4 mb-4" style="width: 100%;">
             <a th:href="@{/user/feed/{id}(id=${feed.id})}">
                 <figure>
