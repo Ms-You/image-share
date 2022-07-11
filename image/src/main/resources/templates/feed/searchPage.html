@@ -1,76 +1,86 @@
 <!doctype html>
 <html lang="ko"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+      xmlns:th="http://www.thymeleaf.org">
 <!-- head.html -->
 <th:block th:replace="layout/head::headFragment"></th:block>
 
 <!-- layout/header.html -->
 <header th:replace="layout/header::headerFragment"></header>
 
-<body layout:fragment="content">
 <!-- content -->
-<div class="container">
+<section class="page-section portfolio">
+    <div style="font-size: 30px; font-weight: lighter; margin-left: 5rem;">
+        Search results for "<b><span th:text="${keyword}"></span></b>"<br/>
+        found "<b><span th:text="${#lists.size(searchList.content)}"></span></b>" results
+    </div>
 
     <!--  feed list start  -->
-    <div th:each="feed: ${searchList.content}">
-        <a th:href="@{/user/feed/{id}(id=${feed.id})}">
-            <img th:src="@{/feed_imgs/} + ${feed.feedImageUrl}" width="150" height="150" style="border-radius: 100%;" />
-        </a>
+    <div th:if="${!searchList.isEmpty()}" class="row" style="padding: 3rem 20rem 30rem 20rem;margin: 0rem 0rem 0rem 0rem;" id="columns">
+        <div th:each="feed: ${searchList.content}" class="col-md-6 col-lg-4 mb-4" style="width: 100%;">
+            <a th:href="@{/user/feed/{id}(id=${feed.id})}">
+                <figure>
+                    <img th:src="@{/feed_imgs/} + ${feed.feedImageUrl}" class="feed-img" />
+                    <figcaption th:text="${feed.title}"></figcaption>
+                </figure>
+            </a>
+            <a href="#">
+                <figure>
+                    <figcaption>
+                        <img th:src="@{/profile_imgs/} + ${feed.writer.profileImageUrl}" onerror="this.src='/img/default_profile.png';" style="width: 40px; height: 40px; border-radius: 100%">
+                        <span class="user-name" th:text="${feed.writer.nickName}"></span>
+                    </figcaption>
+                </figure>
+            </a>
+        </div>
     </div>
     <!--  feed list end  -->
-    <div th:if="${searchList.isEmpty()}">
-        <h2>
-            피드가 없습니다.<br/>
-            새로운 피드를 작성해보세요.
-            <a class="nav-link" th:href="@{/user/new/feed}">
-                <button class="btn btn-primary">생성하러 가기</button>
-            </a>
-        </h2>
+
+    <div class="container">
+        <div th:if="${searchList.isEmpty()}" class="row" style="padding: 3rem 0rem 32rem 0rem; text-align: center;">
+            <p style="font-size: 30px; font-weight: lighter;">
+                We couldn't find a match for "<b><span th:text="${keyword}"></span></b>"<br/>
+                Please try another search.
+            </p>
+        </div>
+
+        <!-- 페이징처리 시작 -->
+        <div th:if="${!searchList.isEmpty()}">
+            <ul class="pagination justify-content-center">
+
+                <li class="page-item" th:classappend="${!searchList.hasPrevious} ? 'disabled'">
+                    <a class="page-link" th:href="@{/user/feed/search/(keyword=${keyword}, page='0')}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+
+                <li class="page-item" th:classappend="${!searchList.hasPrevious} ? 'disabled'">
+                    <a class="page-link" th:href="@{/user/feed/search/(keyword=${keyword}, page=${searchList.number-1})}">
+                        <span>&lt;</span>
+                    </a>
+                </li>
+
+                <li th:each="page: ${#numbers.sequence(startPage, endPage)}"
+                    th:classappend="${page == searchList.number + 1} ? 'active'" class="page-item">
+                    <a th:text="${page}" class="page-link" th:href="@{/user/feed/search/(keyword=${keyword}, page=${page-1})}"></a>
+                </li>
+
+                <li class="page-item" th:classappend="${!searchList.hasNext} ? 'disabled'">
+                    <a class="page-link" th:href="@{/user/feed/search/(keyword=${keyword}, page=${searchList.number+1})}">
+                        <span>&gt;</span>
+                    </a>
+                </li>
+
+                <li class="page-item" th:classappend="${!searchList.hasNext} ? 'disabled'">
+                    <a class="page-link" th:href="@{/user/feed/search/(keyword=${keyword}, page=${searchList.totalPages-1})}" aria-label="Previous">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+
+            </ul>
+        </div>
+        <!-- 페이징처리 끝 -->
     </div>
-
-
-    <!-- 페이징처리 시작 -->
-    <div th:if="${!searchList.isEmpty()}">
-        <ul class="pagination justify-content-center">
-
-            <li class="page-item" th:classappend="${!searchList.hasPrevious} ? 'disabled'">
-                <a class="page-link" th:href="@{/user/feed/search/(keyword=${keyword}, page='0')}" aria-label="Previous">
-                    <span aria-hidden="true">&laquo;</span>
-                </a>
-            </li>
-
-            <li class="page-item" th:classappend="${!searchList.hasPrevious} ? 'disabled'">
-                <a class="page-link" th:href="@{/user/feed/search/(keyword=${keyword}, page=${searchList.number-1})}">
-                    <span>&lt;</span>
-                </a>
-            </li>
-
-            <li th:each="page: ${#numbers.sequence(startPage, endPage)}"
-                th:classappend="${page == searchList.number + 1} ? 'active'" class="page-item">
-                <a th:text="${page}" class="page-link" th:href="@{/user/feed/search/(keyword=${keyword}, page=${page-1})}"></a>
-            </li>
-
-            <li class="page-item" th:classappend="${!searchList.hasNext} ? 'disabled'">
-                <a class="page-link" th:href="@{/user/feed/search/(keyword=${keyword}, page=${searchList.number+1})}">
-                    <span>&gt;</span>
-                </a>
-            </li>
-
-            <li class="page-item" th:classappend="${!searchList.hasNext} ? 'disabled'">
-                <a class="page-link" th:href="@{/user/feed/search/(keyword=${keyword}, page=${searchList.totalPages-1})}" aria-label="Previous">
-                    <span aria-hidden="true">&raquo;</span>
-                </a>
-            </li>
-
-        </ul>
-    </div>
-    <!-- 페이징처리 끝 -->
-
-
-</div>
-</body>
-
+</section>
 
 <!-- layout/footer.html -->
 <footer th:replace="layout/footer::footerFragment"></footer>
