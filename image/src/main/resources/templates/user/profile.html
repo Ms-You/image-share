@@ -1,6 +1,5 @@
 <!doctype html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
 <!-- head.html -->
 <th:block th:replace="layout/head::headFragment"></th:block>
@@ -8,37 +7,54 @@
 <!-- layout/header.html -->
 <header th:replace="layout/header::headerFragment"></header>
 
-<body>
-<div class="container">
-  <!--  프로필 이미지  -->
-  <img th:src="@{/profile_imgs/} + ${user.profileImageUrl}" onerror="this.src='/img/default_profile.png';" width="150" height="150" style="border-radius: 100%;" />
-    <!--  닉네임  -->
-    <div>닉네임</div>
-    <div>
-      <h4 th:text="${user.nickName}"></h4>
-    </div>
-    <!--  소개말  -->
-    <div th:if="${#strings.isEmpty(user.intro)}"></div>
-    <div th:if="${not #strings.isEmpty(user.intro)}">
-        <div>소개말</div>
-        <div>
-          <h6 th:text="${user.intro}"></h6>
+<!-- content -->
+<section class="page-section portfolio">
+    <div class="container">
+        <div th:text="${user.nickName} + '의 프로필'" class="profile"></div>
+        <div style="margin-bottom: 3rem;">
+            <span class="profile-text" style="margin-right: 10rem;">프로필 사진</span>
+            <img th:src="@{/profile_imgs/} + ${user.profileImageUrl}" onerror="this.src='/img/default_profile.png';" class="profile-img" /><br/>
         </div>
+        <div style="margin-bottom: 3rem;">
+            <span class="profile-text">닉네임</span>
+            <span th:text="${user.nickName}" class="profile-info"></span><br/>
+        </div>
+        <div style="margin-bottom: 3rem;">
+            <span class="profile-text">이메일</span>
+            <span th:text="${user.email}" class="profile-info"></span><br/>
+        </div>
+
+        <span th:if="${#strings.isEmpty(user.intro)}">
+            <span class="profile-text">소개말</span>
+            <span class="profile-info">소개말이 없습니다. 친구들에게 자신을 소개해보세요~
+            </span>
+        </span>
+        <span th:if="${not #strings.isEmpty(user.intro)}">
+            <span class="profile-text">소개말</span>
+            <span th:text="${user.intro}" class="profile-info"></span>
+        </span>
+        <br/>
+
+        <div style="margin-top: 3rem;">
+            <a th:href="@{/user/update}">
+                <button class="button btnPush btnLightBlue" style="margin: 1rem 3rem 0rem 0rem;">프로필 수정</button>
+            </a>
+        </div>
+
+        <div style="margin-top: 3rem;">
+            <a th:href="@{/user/feeds/}">
+                <button class="button btnPush btnOrange" style="margin: 1rem 3rem 0rem 0rem;">내 피드</button>
+            </a>
+        </div>
+
+        <div style="margin-top: 3rem;">
+            <a th:href="@{/user/feeds/likes}">
+                <button class="button btnPush btnBlueGreen" style="margin: 1rem 3rem 0rem 0rem; width: 150px;">좋아요 표시한 피드</button>
+            </a>
+        </div>
+
     </div>
+</section>
 
-    <a th:href="@{/user/update}">
-      <button type="button" class="btn btn-primary" style="border-radius:25px;">프로필 수정</button>
-    </a>
-
-
-  <a th:href="@{/user/feeds/}">
-    <button type="button" class="btn btn-primary" style="border-radius:25px;">내 피드</button>
-  </a>
-  <a th:href="@{/user/feeds/likes}">
-    <button type="button" class="btn btn-primary" style="border-radius:25px;">좋아요 표시한 피드</button>
-  </a>
-
-
-</div>
-</body>
-</html>
+<!-- layout/footer.html -->
+<footer th:replace="layout/footer::footerFragment"></footer>

@@ -65,6 +65,29 @@ a:hover .feed-img {
   filter: brightness(70%);
 }
 
+.profile{
+  font-weight: bold;
+  font-size: 40px;
+  margin-bottom: 3rem;
+}
+
+.profile-text{
+  font-weight: bold;
+  font-size: 20px;
+  margin-right: 13rem;
+}
+
+.profile-img{
+  width: 150px;
+  height: 150px;
+  border-radius: 100%;
+}
+
+.profile-info{
+  font-weight: lighter;
+  font-size: 20px;
+}
+
 @charset "UTF-8";
 /*!
 * Start Bootstrap - Freelancer v7.0.6 (https://startbootstrap.com/theme/freelancer)

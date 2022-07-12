@@ -1,17 +1,14 @@
 <!doctype html>
-<html lang="ko"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
 <!-- head.html -->
 <th:block th:replace="layout/head::headFragment"></th:block>
 
 <!-- layout/header.html -->
 <header th:replace="layout/header::headerFragment"></header>
 
-<body layout:fragment="content">
 <!-- content -->
 <section class="page-section portfolio">
-
 
     <!--  feed list start  -->
     <div th:if="${!feeds.isEmpty()}" class="row" style="padding: 3rem 20rem 30rem 20rem;margin: 0rem 0rem 0rem 0rem;" id="columns">
@@ -85,7 +82,6 @@
 
     </div>
 </section>
-</body>
 
 
 <!-- layout/footer.html -->
