@@ -25,6 +25,7 @@ function DropFile(dropAreaId, fileListId) {
       let img = dropArea.getElementsByClassName("preview")[0];
       img.src = reader.result;
       img.style.display = "block";
+      document.getElementById('basic_img').remove();
     };
   }
 

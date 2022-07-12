@@ -88,6 +88,81 @@ a:hover .feed-img {
   font-size: 20px;
 }
 
+.profile-contents {
+  display: flex;
+  flex-direction: row;
+  margin-top: 30px;
+}
+
+.profile-contents .upload-box {
+  width: 100%;
+  margin-right: 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.profile-contents .upload-box .drag-file {
+  position: relative;
+  width: 180px;
+  height: 180px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.profile-contents .upload-box .drag-file.highlight {
+  border: 3px dashed red;
+}
+
+.profile-contents .upload-box .drag-file .image {
+  width: 180px;
+  height: 180px;
+  border-radius: 100%;
+}
+
+.profile-contents .upload-box .drag-file .message {
+  margin-bottom: 0;
+}
+
+.profile-contents .upload-box .drag-file .preview {
+  display: none;
+  position: absolute;
+  left: 0;
+  height: 0;
+  width: 180px;
+  height: 180px;
+  border-radius: 100%;
+}
+
+.profile-contents .upload-box .file-label {
+  margin-top: 30px;
+  background-color: #5b975b;
+  color: #fff;
+  text-align: center;
+  padding: 10px 0;
+  width: 65%;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.profile-contents .upload-box .file {
+  display: none;
+}
+
+.profile-input{
+  width: 50%;
+  height: 50px;
+  font-size: 23px;
+  border: 0;
+  border-radius: 50px;
+  outline: none;
+  padding-left: 10px;
+  background-color: rgb(233, 233, 233);
+}
+
 @charset "UTF-8";
 /*!
 * Start Bootstrap - Freelancer v7.0.6 (https://startbootstrap.com/theme/freelancer)
