@@ -288,7 +288,10 @@ public class FeedController {
             findFeeds.add(feedRepository.findById(id).orElseGet(null));
         }
 
-        int totalPages = (int)(Math.ceil(findFeeds.size() * 1.0 / 5));
+        // totalPages 를 알아오기 위해 사용
+        List<Long> feedSize = feedRepository.findSizeOfFeedByUserId(user.getId());
+
+        int totalPages = (int)(Math.ceil(feedSize.size() * 1.0 / 5));
 
         int startPage = (int) (Math.floor(pageable.getPageNumber() / pageable.getPageSize()) * pageable.getPageSize() + 1);
         int tempEndPage = startPage + pageable.getPageSize() - 1;
