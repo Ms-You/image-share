@@ -1,6 +1,5 @@
 <!doctype html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
 <!-- head.html -->
 <th:block th:replace="layout/head::headFragment"></th:block>
@@ -8,41 +7,80 @@
 <!-- layout/header.html -->
 <header th:replace="layout/header::headerFragment"></header>
 
-<body>
-<div class="container">
-
-    <div th:if="${feeds.isEmpty()}">
-        <h2>
-            작성한 피드가 없습니다.<br/>
-        </h2>
+<!-- content -->
+<section class="page-section portfolio">
+    <div style="margin-left: 20rem;">
+        <a th:href="@{/user/profile}">
+            <button type="button" class="button btnPush btnBlueGreen" >돌아가기</button>
+        </a>
     </div>
 
-    <div th:unless="${feeds.isEmpty()}">
-        <h1>피드 목록</h1>
-        <table>
-            <tr>
-                <th>번호</th>
-                <th>제목</th>
-                <th>피드</th>
-                <th>태그</th>
-            </tr>
-            <tr th:each="feed: ${feeds}">
-                <td th:text="${feed.id}"></td>
-                <td th:text="${feed.title}"></td>
-                <td th:text="${feed.tag.name}"></td>
-                <td>
-                    <a th:href="@{/user/feed/{id}(id=${feed.id})}">
-                        <img th:src="@{/feed_imgs/} + ${feed.feedImageUrl}" width="150" height="150" style="border-radius: 100%;" />
+    <!--  feed list start  -->
+    <div th:if="${!feeds.isEmpty()}" class="row" style="padding: 3rem 20rem 30rem 20rem;margin: 0rem 0rem 0rem 0rem;" id="columns">
+        <div th:each="feed: ${feeds}" class="col-md-6 col-lg-4 mb-4" style="width: 100%;">
+            <a th:href="@{/user/feed/{id}(id=${feed.id})}">
+                <figure>
+                    <img th:src="@{/feed_imgs/} + ${feed.feedImageUrl}" class="feed-img">
+                    <figcaption th:text="${feed.title}"></figcaption>
+                </figure>
+            </a>
+        </div>
+    </div>
+    <!--  feed list end  -->
+
+    <div class="container">
+        <div th:if="${feeds.isEmpty()}" class="row" style="padding: 3rem 0rem 30rem 0rem; text-align: center;">
+            <h2>
+                작성한 피드가 없습니다.<br/>
+                새로운 피드를 작성해보세요.
+            </h2>
+            <a class="nav-link" th:href="@{/user/new/feed}" style="margin-bottom: 3rem;">
+                <button class="button btnPush btnLightBlue" style="width: 15%; float: initial; display: inline;">피드 만들기</button>
+            </a>
+            <a th:href="@{/user/profile/}">
+                <button type="button" class="button btnPush btnBlueGreen" style="width: 10%; float: initial; display: inline;">돌아가기</button>
+            </a>
+        </div>
+
+        <!-- 페이징처리 시작 -->
+        <div th:if="${!feeds.isEmpty()}">
+            <ul class="pagination justify-content-center">
+
+                <li class="page-item" th:classappend="${!feeds.hasPrevious} ? 'disabled'">
+                    <a class="page-link" th:href="@{/user/feeds/(page='0')}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
                     </a>
-                </td>
-            </tr>
-        </table>
+                </li>
+
+                <li class="page-item" th:classappend="${!feeds.hasPrevious} ? 'disabled'">
+                    <a class="page-link" th:href="@{/user/feeds/(page=${feeds.number-1})}">
+                        <span>&lt;</span>
+                    </a>
+                </li>
+
+                <li th:each="page: ${#numbers.sequence(startPage, endPage)}"
+                    th:classappend="${page == feeds.number + 1} ? 'active'" class="page-item">
+                    <a th:text="${page}" class="page-link" th:href="@{/user/feeds/(page=${page-1})}"></a>
+                </li>
+
+                <li class="page-item" th:classappend="${!feeds.hasNext} ? 'disabled'">
+                    <a class="page-link" th:href="@{/user/feeds/(page=${feeds.number+1})}">
+                        <span>&gt;</span>
+                    </a>
+                </li>
+
+                <li class="page-item" th:classappend="${!feeds.hasNext} ? 'disabled'">
+                    <a class="page-link" th:href="@{/user/feeds/(page=${feeds.totalPages-1})}" aria-label="Previous">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+
+            </ul>
+        </div>
+        <!-- 페이징처리 끝 -->
+
     </div>
+</section>
 
-    <a th:href="@{/user/profile/}">
-        <button type="button" class="btn btn-primary" style="border-radius:25px;">돌아가기</button>
-    </a>
-
-</div>
-</body>
-</html>
+<!-- layout/footer.html -->
+<footer th:replace="layout/footer::footerFragment"></footer>

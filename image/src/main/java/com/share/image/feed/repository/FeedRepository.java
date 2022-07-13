@@ -2,6 +2,7 @@ package com.share.image.feed.repository;
 
 import com.share.image.feed.domain.Feed;
 import com.share.image.feed.domain.Tag;
+import com.share.image.user.domain.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -35,4 +36,6 @@ public interface FeedRepository extends JpaRepository<Feed, Long> {
 
     @Query(value = "select user_id from Feed where feed_id = :feedId", nativeQuery = true)
     Long findUserIdByFeedId(@Param(value = "feedId") Long feedId);
+
+    Page<Feed> findByWriter(User writer, Pageable pageable);
 }

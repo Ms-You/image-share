@@ -236,15 +236,21 @@ public class FeedController {
 
     // 특정 사용자의 피드 관리
     @GetMapping("/feeds")
-    public String manageFeeds(@AuthenticationPrincipal PrincipalDetails principalDetails, Model model){
+    public String manageFeeds(@AuthenticationPrincipal PrincipalDetails principalDetails, Model model, @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC)Pageable pageable){
 
         User user = userRepository.findById(principalDetails.getUser().getId()).orElseThrow(()->{
             return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
         });
 
-        List<Feed> feeds = user.getFeeds();
+        Page<Feed> feeds = feedRepository.findByWriter(user, pageable);
+
+        int startPage = (int) (Math.floor(pageable.getPageNumber() / pageable.getPageSize()) * pageable.getPageSize() + 1);
+        int tempEndPage = startPage + pageable.getPageSize() - 1;
+        int endPage = tempEndPage > feeds.getTotalPages() ? feeds.getTotalPages() : tempEndPage;
 
         model.addAttribute("feeds", feeds);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
 
         return "/user/feeds";
     }

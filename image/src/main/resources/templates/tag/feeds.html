@@ -36,12 +36,12 @@
             <h2>
                 피드가 없습니다.<br/>
                 새로운 피드를 작성해보세요.
-                <a class="nav-link" th:href="@{/user/new/feed}">
-                    <button class="btn btn-primary">생성하러 가기</button>
-                </a>
             </h2>
+            <a class="nav-link" th:href="@{/user/new/feed}">
+                <button class="button btnPush btnLightBlue" style="width: 15%; float: initial; display: inline;">피드 만들기</button>
+            </a>
         </div>
-        <!--        </div>-->
+
 
         <!-- 페이징처리 시작 -->
         <div th:if="${!feeds.isEmpty()}">
