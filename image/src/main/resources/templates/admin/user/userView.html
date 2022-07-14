@@ -1,56 +1,53 @@
 <!doctype html>
-<html lang="ko"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
 <!-- head.html -->
 <th:block th:replace="layout/head::headFragment"></th:block>
 
 <!-- layout/admin_header.html -->
 <header th:replace="layout/admin_header::admin_headerFragment"></header>
 
-<body layout:fragment="content">
-<div class="container">
-
-    <div>
-        <a th:href="@{/admin/users}">
-            <button type="button" class="btn btn-primary" style="border-radius:25px;">뒤로 가기</button>
+<!-- content -->
+<section class="page-section portfolio">
+    <div style="margin-left: 24.5%; margin-bottom: 8rem;">
+        <a th:href="@{/admin/users}" style="margin-bottom: 3rem;">
+            <button type="button" class="button btnPush btnBlueGreen">뒤로 가기</button>
         </a>
     </div>
 
-    <table>
-        <tr>
-            <th>닉네임</th>
-            <th>이메일</th>
-            <th>프로필</th>
-        </tr>
-        <tr>
-            <td th:text="${user.nickName}"></td>
-            <td th:text="${user.email}"></td>
-            <td>
-                <img th:src="@{/profile_imgs/} + ${user.profileImageUrl}" width="150" height="150" style="border-radius: 100%;" />
-            </td>
-        </tr>
-    </table>
+    <div class="container">
+        <div th:text="${user.nickName} + '의 프로필'" class="profile"></div>
+        <div style="margin-bottom: 3rem;">
+            <span class="profile-text" style="margin-right: 10rem;">프로필 사진</span>
+            <img th:src="@{/profile_imgs/} + ${user.profileImageUrl}" onerror="this.src='/img/default_profile.png';" class="profile-img" /><br/>
+        </div>
+        <div style="margin-bottom: 3rem;">
+            <span class="profile-text">닉네임</span>
+            <span th:text="${user.nickName}" class="profile-info"></span><br/>
+        </div>
+        <div style="margin-bottom: 3rem;">
+            <span class="profile-text">이메일</span>
+            <span th:text="${user.email}" class="profile-info"></span><br/>
+        </div>
 
-    <h1>피드 목록</h1>
-    <table>
-        <tr>
-            <th>번호</th>
-            <th>제목</th>
-            <th>피드</th>
-            <th>태그</th>
-        </tr>
-        <tr th:each="feed: ${feeds}">
-            <td th:text="${feed.id}"></td>
-            <td th:text="${feed.title}"></td>
-            <td th:text="${feed.tag.name}"></td>
-            <td>
-                <a th:href="@{/admin/feed/{id}(id=${feed.id})}">
-                    <img th:src="@{/feed_imgs/} + ${feed.feedImageUrl}" width="150" height="150" style="border-radius: 100%;" />
-                </a>
-            </td>
-        </tr>
-    </table>
-</div>
-</body>
+        <span th:if="${#strings.isEmpty(user.intro)}">
+            <span class="profile-text">소개말</span>
+            <span class="profile-info">소개말이 없습니다. 친구들에게 자신을 소개해보세요~
+            </span>
+        </span>
+        <span th:if="${not #strings.isEmpty(user.intro)}">
+            <span class="profile-text">소개말</span>
+            <span th:text="${user.intro}" class="profile-info"></span>
+        </span>
+        <br/>
+
+        <div style="margin-top: 3rem;">
+            <a th:href="@{/user/feeds/{id}(id=${user.id})}">
+                <button class="button btnPush btnOrange" style="margin: 1rem 3rem 0rem 0rem;">생성한 피드</button>
+            </a>
+        </div>
+
+    </div>
+</section>
+
 <footer th:replace="layout/footer::footerFragment"></footer>
