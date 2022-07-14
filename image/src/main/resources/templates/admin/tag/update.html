@@ -1,35 +1,48 @@
 <!doctype html>
-<html lang="ko"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
 <!-- head.html -->
 <th:block th:replace="layout/head::headFragment"></th:block>
 
 <!-- layout/admin_header.html -->
 <header th:replace="layout/admin_header::admin_headerFragment"></header>
-<body layout:fragment="content">
 
-<div class="container">
-    <form th:action="@{/admin/tag/update/{id}(id=${tag.id})}" method="post" modelAttribute="tagRequestDto" enctype="multipart/form-data" accept-charset="UTF-8">
-        <input type="hidden" name="_method" value="put"/>
-        <!--  태그명  -->
-        <div class="form-group fone mt-2">
-            <div>태그명</div>
-            <input name="name" th:value="${tag.name}" placeholder="태그명을 적어주세요."/>
-            <span th:style="${'color: red; font-size:11px;'}" th:text="${valid_name}"></span>
-        </div>
+<!-- content -->
+<section class="page-section portfolio">
+    <div class="container">
 
-        <!--  태그 이미지  -->
-        <div class="form-group fone mt-2">
-            <div>태그 이미지</div>
-            <input type="file" name="file" multiple="multiple"/>
-            <span th:style="${'color: red; font-size:11px;'}" th:text="${valid_tagImageUrl}"></span>
-            <img th:src="@{/tag_imgs/} + ${tag.tagImageUrl}" width="150" height="150" style="border-radius: 100%;" />
-        </div>
+        <form th:action="@{/admin/tag/update/{id}(id=${tag.id})}" method="post" modelAttribute="tagRequestDto" enctype="multipart/form-data" accept-charset="UTF-8" style="padding: 3rem 0rem 30rem 0rem;">
+            <input type="hidden" name="_method" value="put"/>
+            <div id="feed-create">
+                <h2 class="title">태그 수정</h2>
 
-        <input type="submit" id="submit" value="수정"/>
-    </form>
-</div>
+                <div class="contents">
+                    <div class="upload-box">
+                        <div>
+                            <input type="text" class="input-text" name="name" th:value="${tag.name}" placeholder="태그 명을 적어주세요."/>
+                            <span th:style="${'color: red; font-size:11px;'}" th:text="${valid_name}"></span>
+                        </div>
 
-</body>
+                        <div id="drop-file" class="drag-file">
+                            <img th:src="@{/tag_imgs/} + ${tag.tagImageUrl}" class="image" id="basic_img" style="width: 100%; height: 100%; position: absolute;">
+                            <p class="message">이미지 업로드</p>
+                            <img src="" alt="미리보기 이미지" class="preview">
+                        </div>
+                        <label class="file-label" for="chooseFile" style="margin-bottom: 3rem;">태그 이미지를 업로드 해주세요.</label>
+                        <input class="file" id="chooseFile" type="file" name="file" multiple="multiple" onchange="dropFile.handleFiles(this.files)" accept="image/png, image/jpeg, image/gif">
+                        <span th:style="${'color: red; font-size:11px;'}" th:text="${valid_tagImageUrl}"></span>
+                    </div>
+                </div>
+
+                <a th:href="@{/admin/tags/}">
+                    <button class="button btnPush btnOrange" type="button" style="float: right;">취소</button>
+                </a>
+                <button class="button btnPush btnBlueGreen" type="submit" style="float: right; margin-right: 1rem;">수정</button>
+            </div>
+        </form>
+    </div>
+</section>
+
+<script type="text/javascript" th:src="@{/js/feedCreate.js}"></script>
+<!-- layout/footer.html -->
 <footer th:replace="layout/footer::footerFragment"></footer>
