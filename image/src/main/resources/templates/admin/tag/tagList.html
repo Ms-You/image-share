@@ -1,89 +1,104 @@
 <!doctype html>
-<html lang="ko"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
 <!-- head.html -->
 <th:block th:replace="layout/head::headFragment"></th:block>
 
 <!-- layout/admin_header.html -->
 <header th:replace="layout/admin_header::admin_headerFragment"></header>
 
-<body layout:fragment="content">
-<div class="container">
+<!-- content -->
+<section class="page-section portfolio">
+    <div class="container" style="margin-bottom: 10rem;">
+        <div style="display: flex; margin-bottom: 4rem;">
+            <a th:href="@{/admin/}">
+                <button type="button" class="button btnPush btnBlueGreen">뒤로 가기</button>
+            </a>
+        </div>
 
-    <div>
-        <form th:action="@{/admin/feed/search}" method="get" class="d-flex">
-            <input class="form-control me-2" type="search" name="keyword" placeholder="피드 검색" aria-label="Search">
+        <form th:action="@{/admin/feed/search}" method="get" class="d-flex" style="margin-bottom: 3rem;">
+            <input class="form-control me-2" type="search" name="keyword" placeholder="피드 검색" aria-label="Search" style="width: 20%;">
             <button class="btn btn-outline-secondary" type="submit">
                 <img th:src="@{/img/search.png}" alt="검색" width="20" height="20" class="d-inline-block align-text-top">
             </button>
         </form>
+
+        <div th:if="${!tags.isEmpty()}">
+            <h1>태그 목록</h1>
+            <table class="user-table">
+                <thead>
+                <tr>
+                    <th>번호</th>
+                    <th>태그 명</th>
+                    <th>태그</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="tag: ${tags.content}">
+                    <td th:text="${tag.id}"></td>
+                    <td th:text="${tag.name}"></td>
+                    <td>
+                        <a th:href="@{/admin/tag/(tag_id=${tag.id})}">
+                            <img th:src="@{/tag_imgs/} + ${tag.tagImageUrl}" style="border-radius: 100%; width: 80px; height: 80px;" />
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 
-    <h1>태그 목록</h1>
-    <table>
-        <tr>
-            <th>번호</th>
-            <th>태그 명</th>
-            <th>태그</th>
-        </tr>
-        <tr th:each="tag: ${tags.content}">
-            <td th:text="${tag.id}"></td>
-            <td th:text="${tag.name}"></td>
-            <td>
-                <a th:href="@{/admin/tag/(tag_id=${tag.id})}">
-                    <img th:src="@{/tag_imgs/} + ${tag.tagImageUrl}" width="150" height="150" style="border-radius: 100%;" />
-                </a>
-            </td>
-        </tr>
-    </table>
 
-    <div th:if="${tags.isEmpty()}">
-        <h2>
-            태그가 없습니다.<br/>
-            새로운 태그를 작성해보세요.
-        </h2>
+    <div class="container">
+        <div th:if="${tags.isEmpty()}" class="row" style="padding: 3rem 0rem 30rem 0rem; text-align: center;">
+            <h2>
+                태그가 없습니다.<br/>
+                새로운 태그를 작성해보세요.
+            </h2>
+            <a th:href="@{/admin/tags}">
+                <button class="button btnPush btnOrange" style="width: 15%; float: initial; display: inline;">태그 생성하러 가기</button>
+            </a>
+        </div>
+
+        <!-- 페이징처리 시작 -->
+        <div th:if="${!tags.isEmpty()}">
+            <ul class="pagination justify-content-center">
+
+                <li class="page-item" th:classappend="${!tags.hasPrevious} ? 'disabled'">
+                    <a class="page-link" th:href="@{/admin/tag/list/(page='0')}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+
+                <li class="page-item" th:classappend="${!tags.hasPrevious} ? 'disabled'">
+                    <a class="page-link" th:href="@{/admin/tag/list/(page=${tags.number-1})}">
+                        <span>&lt;</span>
+                    </a>
+                </li>
+
+                <li th:each="page: ${#numbers.sequence(startPage, endPage)}"
+                    th:classappend="${page == tags.number + 1} ? 'active'" class="page-item">
+                    <a th:text="${page}" class="page-link" th:href="@{/admin/tag/list/(page=${page-1})}"></a>
+                </li>
+
+                <li class="page-item" th:classappend="${!tags.hasNext} ? 'disabled'">
+                    <a class="page-link" th:href="@{/admin/tag/list/(page=${tags.number+1})}">
+                        <span>&gt;</span>
+                    </a>
+                </li>
+
+                <li class="page-item" th:classappend="${!tags.hasNext} ? 'disabled'">
+                    <a class="page-link" th:href="@{/admin/tag/list/(page=${tags.totalPages-1})}" aria-label="Previous">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+
+            </ul>
+        </div>
+        <!-- 페이징처리 끝 -->
+
+
     </div>
+</section>
 
-
-    <!-- 페이징처리 시작 -->
-    <div th:if="${!tags.isEmpty()}">
-        <ul class="pagination justify-content-center">
-
-            <li class="page-item" th:classappend="${!tags.hasPrevious} ? 'disabled'">
-                <a class="page-link" th:href="@{/admin/tag/list/(page='0')}" aria-label="Previous">
-                    <span aria-hidden="true">&laquo;</span>
-                </a>
-            </li>
-
-            <li class="page-item" th:classappend="${!tags.hasPrevious} ? 'disabled'">
-                <a class="page-link" th:href="@{/admin/tag/list/(page=${tags.number-1})}">
-                    <span>&lt;</span>
-                </a>
-            </li>
-
-            <li th:each="page: ${#numbers.sequence(startPage, endPage)}"
-                th:classappend="${page == tags.number + 1} ? 'active'" class="page-item">
-                <a th:text="${page}" class="page-link" th:href="@{/admin/tag/list/(page=${page-1})}"></a>
-            </li>
-
-            <li class="page-item" th:classappend="${!tags.hasNext} ? 'disabled'">
-                <a class="page-link" th:href="@{/admin/tag/list/(page=${tags.number+1})}">
-                    <span>&gt;</span>
-                </a>
-            </li>
-
-            <li class="page-item" th:classappend="${!tags.hasNext} ? 'disabled'">
-                <a class="page-link" th:href="@{/admin/tag/list/(page=${tags.totalPages-1})}" aria-label="Previous">
-                    <span aria-hidden="true">&raquo;</span>
-                </a>
-            </li>
-
-        </ul>
-    </div>
-    <!-- 페이징처리 끝 -->
-
-
-</div>
-</body>
 <footer th:replace="layout/footer::footerFragment"></footer>
