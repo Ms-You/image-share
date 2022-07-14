@@ -9,13 +9,13 @@
 
 <!-- content -->
 <section class="page-section portfolio">
-    <div style="margin-left: 24.5%; margin-bottom: 8rem;">
-        <a th:href="@{/admin/users}" style="margin-bottom: 3rem;">
-            <button type="button" class="button btnPush btnBlueGreen">뒤로 가기</button>
-        </a>
-    </div>
-
     <div class="container">
+        <div style="display: flex; margin-bottom: 4rem;">
+            <a th:href="@{/admin/users}">
+                <button type="button" class="button btnPush btnBlueGreen">뒤로 가기</button>
+            </a>
+        </div>
+
         <div th:text="${user.nickName} + '의 프로필'" class="profile"></div>
         <div style="margin-bottom: 3rem;">
             <span class="profile-text" style="margin-right: 10rem;">프로필 사진</span>

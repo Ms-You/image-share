@@ -9,13 +9,13 @@
 
 <!-- content -->
 <section class="page-section portfolio">
-    <div style="margin-left: 24.5%; margin-bottom: 8rem;">
-        <a th:href="@{/admin/}" style="margin-bottom: 3rem;">
-            <button type="button" class="button btnPush btnBlueGreen">뒤로 가기</button>
-        </a>
-    </div>
-
     <div class="container" style="margin-bottom: 10rem;">
+        <div style="display: flex; margin-bottom: 4rem;">
+            <a th:href="@{/admin/}">
+                <button type="button" class="button btnPush btnBlueGreen">뒤로 가기</button>
+            </a>
+        </div>
+
         <form th:action="@{/admin/user/search}" method="get" class="d-flex" style="margin-bottom: 3rem;">
             <input class="form-control me-2" type="search" name="keyword" placeholder="사용자 검색" aria-label="Search" style="width: 20%;">
             <button class="btn btn-outline-secondary" type="submit">
