@@ -17,8 +17,7 @@
         </div>
 
         <div style="font-size: 26px; font-weight: lighter; margin-bottom: 4rem;">
-            Search results for "<b><span th:text="${keyword}"></span></b>"<br/>
-            found "<b><span th:text="${#lists.size(userList.content)}"></span></b>" results
+            Search results for "<b><span th:text="${keyword}"></span></b>"
         </div>
 
         <form th:action="@{/admin/user/search}" method="get" class="d-flex" style="margin-bottom: 3rem;">
