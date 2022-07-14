@@ -234,7 +234,7 @@ public class FeedController {
     }
 
 
-    // 특정 사용자의 피드 관리
+    // 현재 사용자의 피드 관리
     @GetMapping("/feeds")
     public String manageFeeds(@AuthenticationPrincipal PrincipalDetails principalDetails, Model model, @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC)Pageable pageable){
 
@@ -253,6 +253,28 @@ public class FeedController {
         model.addAttribute("endPage", endPage);
 
         return "/user/feeds";
+    }
+
+    // 특정 사용자의 피드 관리
+    @GetMapping("/feeds/{user_id}")
+    public String feedsView(@PathVariable(name = "user_id") Long userId, Model model, @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC)Pageable pageable){
+
+        User user = userRepository.findById(userId).orElseThrow(()->{
+            return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
+        });
+
+        Page<Feed> feeds = feedRepository.findByWriter(user, pageable);
+
+        int startPage = (int) (Math.floor(pageable.getPageNumber() / pageable.getPageSize()) * pageable.getPageSize() + 1);
+        int tempEndPage = startPage + pageable.getPageSize() - 1;
+        int endPage = tempEndPage > feeds.getTotalPages() ? feeds.getTotalPages() : tempEndPage;
+
+        model.addAttribute("user", user);
+        model.addAttribute("feeds", feeds);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
+
+        return "/user/feedsView";
     }
 
 
