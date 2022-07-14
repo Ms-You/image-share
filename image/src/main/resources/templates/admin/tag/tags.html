@@ -1,7 +1,6 @@
 <!doctype html>
-<html lang="ko"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
 <!-- head.html -->
 <th:block th:replace="layout/head::headFragment"></th:block>
 
@@ -17,86 +16,100 @@
     }
 </script>
 
-<body layout:fragment="content">
-<div class="container">
-    <div>
-        <a th:href="@{/admin/new/tag}">
-            <button type="button" class="btn btn-primary" style="border-radius:25px;">태그 생성</button>
-        </a>
+<!-- content -->
+<section class="page-section portfolio">
+    <div class="container" style="margin-bottom: 10rem;">
+        <div style="margin-bottom: 4rem;">
+            <a th:href="@{/admin/}">
+                <button type="button" class="button btnPush btnOrange">뒤로 가기</button>
+            </a>
+        </div>
+
+        <div style="display: flex; margin-bottom: 4rem;">
+            <a th:href="@{/admin/new/tag}">
+                <button type="button" class="button btnPush btnOrange" style="background-color: #FFCC88;">태그 생성</button>
+            </a>
+        </div>
+
+        <div th:if="${!tags.isEmpty()}">
+            <h1>태그 목록</h1>
+            <table class="user-table">
+                <thead style="background-color: #FFAA40;">
+                <tr>
+                    <th>번호</th>
+                    <th>태그 이미지</th>
+                    <th>태그 명</th>
+                    <th>수정</th>
+                    <th>삭제</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="tag: ${tags.content}">
+                    <td th:text="${tag.id}"></td>
+                    <td>
+                        <img th:src="@{/tag_imgs/} + ${tag.tagImageUrl}" style="border-radius: 100%; width: 80px; height: 80px;" />
+                    </td>
+                    <td th:text="${tag.name}"></td>
+                    <td>
+                        <a th:href="@{/admin/tag/update/{id}(id=${tag.id})}">
+                            <button type="button" class="btn btn-info">수정</button>
+                        </a>
+                    </td>
+                    <td>
+                        <button class="btn btn-danger" th:onclick="deleteTag('[[${tag.id}]]','[[${tag.name}]]')"/>삭제</button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 
-    <h1>태그 목록</h1>
-    <table>
-        <tr>
-            <th>번호</th>
-            <th>이름</th>
-            <th>태그 이미지</th>
-            <th>수정</th>
-            <th>삭제</th>
-        </tr>
-        <tr th:each="tag: ${tags.content}">
-            <td th:text="${tag.id}"></td>
-            <td th:text="${tag.name}"></td>
-            <td>
-                <img th:src="@{/tag_imgs/} + ${tag.tagImageUrl}" width="150" height="150" style="border-radius: 100%;" />
-            </td>
-            <td>
-                <a th:href="@{/admin/tag/update/{id}(id=${tag.id})}">
-                    <button>수정</button>
-                </a>
-            </td>
-            <td>
-                <button th:onclick="deleteTag('[[${tag.id}]]','[[${tag.name}]]')"/>삭제</button>
-            </td>
-        </tr>
-    </table>
+    <div class="container">
+        <div th:if="${tags.isEmpty()}">
+            <h2>
+                태그가 없습니다.<br/>
+                새로운 태그를 작성해보세요.
+            </h2>
+        </div>
 
-    <div th:if="${tags.isEmpty()}">
-        <h2>
-            태그가 없습니다.<br/>
-            새로운 태그를 작성해보세요.
-        </h2>
+        <!-- 페이징처리 시작 -->
+        <div th:if="${!tags.isEmpty()}">
+            <ul class="pagination justify-content-center">
+
+                <li class="page-item" th:classappend="${!tags.hasPrevious} ? 'disabled'">
+                    <a class="page-link" th:href="@{/admin/tags/(page='0')}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+
+                <li class="page-item" th:classappend="${!tags.hasPrevious} ? 'disabled'">
+                    <a class="page-link" th:href="@{/admin/tags/(page=${tags.number-1})}">
+                        <span>&lt;</span>
+                    </a>
+                </li>
+
+                <li th:each="page: ${#numbers.sequence(startPage, endPage)}"
+                    th:classappend="${page == tags.number + 1} ? 'active'" class="page-item">
+                    <a th:text="${page}" class="page-link" th:href="@{/admin/tags/(page=${page-1})}"></a>
+                </li>
+
+                <li class="page-item" th:classappend="${!tags.hasNext} ? 'disabled'">
+                    <a class="page-link" th:href="@{/admin/tags/(page=${tags.number+1})}">
+                        <span>&gt;</span>
+                    </a>
+                </li>
+
+                <li class="page-item" th:classappend="${!tags.hasNext} ? 'disabled'">
+                    <a class="page-link" th:href="@{/admin/tags/(page=${tags.totalPages-1})}" aria-label="Previous">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+
+            </ul>
+        </div>
+        <!-- 페이징처리 끝 -->
+
     </div>
+</section>
 
-
-    <!-- 페이징처리 시작 -->
-    <div th:if="${!tags.isEmpty()}">
-        <ul class="pagination justify-content-center">
-
-            <li class="page-item" th:classappend="${!tags.hasPrevious} ? 'disabled'">
-                <a class="page-link" th:href="@{/admin/tags/(page='0')}" aria-label="Previous">
-                    <span aria-hidden="true">&laquo;</span>
-                </a>
-            </li>
-
-            <li class="page-item" th:classappend="${!tags.hasPrevious} ? 'disabled'">
-                <a class="page-link" th:href="@{/admin/tags/(page=${tags.number-1})}">
-                    <span>&lt;</span>
-                </a>
-            </li>
-
-            <li th:each="page: ${#numbers.sequence(startPage, endPage)}"
-                th:classappend="${page == tags.number + 1} ? 'active'" class="page-item">
-                <a th:text="${page}" class="page-link" th:href="@{/admin/tags/(page=${page-1})}"></a>
-            </li>
-
-            <li class="page-item" th:classappend="${!tags.hasNext} ? 'disabled'">
-                <a class="page-link" th:href="@{/admin/tags/(page=${tags.number+1})}">
-                    <span>&gt;</span>
-                </a>
-            </li>
-
-            <li class="page-item" th:classappend="${!tags.hasNext} ? 'disabled'">
-                <a class="page-link" th:href="@{/admin/tags/(page=${tags.totalPages-1})}" aria-label="Previous">
-                    <span aria-hidden="true">&raquo;</span>
-                </a>
-            </li>
-
-        </ul>
-    </div>
-    <!-- 페이징처리 끝 -->
-
-
-</div>
-</body>
 <footer th:replace="layout/footer::footerFragment"></footer>
