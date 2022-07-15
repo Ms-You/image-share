@@ -53,10 +53,7 @@ public class AdminUserController {
 
         });
 
-        List<Feed> feeds = user.getFeeds();
-
         model.addAttribute("user", user);
-        model.addAttribute("feeds", feeds);
 
         return "admin/user/userView";
     }

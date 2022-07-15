@@ -2,12 +2,15 @@ package com.share.image.admin.controller;
 
 import com.share.image.feed.domain.Feed;
 import com.share.image.feed.repository.FeedRepository;
+import com.share.image.user.domain.User;
+import com.share.image.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/admin")
 public class AdminFeedController {
 
+    private final UserRepository userRepository;
     private final FeedRepository feedRepository;
 
     // 특정 피드 보기
@@ -78,6 +82,28 @@ public class AdminFeedController {
         model.addAttribute("endPage", endPage);
 
         return "admin/feed/searchPage";
+    }
+
+    // 관리자 페이지에서 특정 사용자의 피드 관리
+    @GetMapping("/feeds/{user_id}")
+    public String feedsView(@PathVariable(name = "user_id") Long userId, Model model, @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC)Pageable pageable){
+
+        User user = userRepository.findById(userId).orElseThrow(()->{
+            return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
+        });
+
+        Page<Feed> feeds = feedRepository.findByWriter(user, pageable);
+
+        int startPage = (int) (Math.floor(pageable.getPageNumber() / pageable.getPageSize()) * pageable.getPageSize() + 1);
+        int tempEndPage = startPage + pageable.getPageSize() - 1;
+        int endPage = tempEndPage > feeds.getTotalPages() ? feeds.getTotalPages() : tempEndPage;
+
+        model.addAttribute("user", user);
+        model.addAttribute("feeds", feeds);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
+
+        return "/admin/user/feedsView";
     }
 
 

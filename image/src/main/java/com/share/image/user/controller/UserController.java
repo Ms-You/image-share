@@ -1,6 +1,7 @@
 package com.share.image.user.controller;
 
 import com.share.image.config.PrincipalDetails;
+import com.share.image.feed.domain.Feed;
 import com.share.image.user.domain.User;
 import com.share.image.user.dto.JoinRequestDto;
 import com.share.image.user.dto.UpdateRequestDto;
@@ -19,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -96,6 +98,19 @@ public class UserController {
 
     }
 
+    // 특정 사용자 보기
+    @GetMapping("/user/{user_id}")
+    public String userView(@PathVariable(name = "user_id") Long userId, Model model){
+
+        User user = userRepository.findById(userId).orElseThrow(()->{
+            return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
+
+        });
+
+        model.addAttribute("user", user);
+
+        return "user/view";
+    }
 
 
 }
