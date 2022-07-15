@@ -29,7 +29,13 @@
                     </li>
                     <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" th:href="@{/user/new/feed}"><img th:src="@{/img/plus.png}" alt="피드생성" width="30" height="30" class="d-inline-block align-text-top"></a></li>
                     <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="#"><img th:src="@{/img/bell.png}" alt="알림" width="30" height="30" class="d-inline-block align-text-top"></a></li>
-                    <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" th:href="@{/user/profile}"><img th:src="@{/profile_imgs/} + ${#authentication.getPrincipal().getUser().getProfileImageUrl}" onerror="this.src='/img/default_profile.png';" width="30" height="30" style="border-radius: 100%"></a></li>
+                    <li class="nav-item dropdown mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="#" data-toggle="dropdown"><img th:src="@{/profile_imgs/} + ${#authentication.getPrincipal().getUser().getProfileImageUrl}" onerror="this.src='/img/default_profile.png';" width="30" height="30" style="border-radius: 100%"></a>
+                        <div class="dropdown-menu" style="padding: 0; border-radius: 0; border: 1px solid black;">
+                            <a class="dropdown-item" th:href="@{/user/profile}" style="border-bottom: 2px solid black; height: 3rem; font-size: 20px;">프로필</a>
+                            <a class="dropdown-item" th:href="@{/user/feeds/}" style="border-bottom: 2px solid black; height: 3rem; font-size: 20px;">내 피드</a>
+                            <a class="dropdown-item" th:href="@{/user/feeds/likes}" style="height: 3rem; font-size: 20px;">'좋아요'한 피드</a>
+                        </div>
+                    </li>
                     <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" th:href="@{/auth/logout}">로그아웃</a></li>
                 </ul>
             </div>
