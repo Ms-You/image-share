@@ -31,12 +31,14 @@
 
                     <li class="nav-item mx-0 mx-lg-1">
                         <form action="/user/feed/search" method="get" class="d-flex">
-                            <div class="nav-link py-3 px-0 px-lg-3 rounded">
-                                <input class="form-control me-2" type="search" name="keyword" placeholder="피드 검색" aria-label="Search">
+                            <div class="search-wrapper" style="margin-right: 3rem;">
+                                <div class="input-holder">
+                                    <input type="search" name="keyword" class="search-input" placeholder="피드 검색" />
+                                    <button class="search-icon" type="submit" onclick="searchToggle(this, event);"><span></span></button>
+                                </div>
+                                <span class="close" onclick="searchToggle(this, event);"></span>
                             </div>
-                            <button class="btn btn-outline-secondary" type="submit">
-                                <img src="/img/search.png" alt="검색" width="20" height="20" class="d-inline-block align-text-top">
-                            </button>
+
                         </form>
                     </li>
                     <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" th:href="@{/user/new/feed}"><img th:src="@{/img/plus.png}" alt="피드생성" width="30" height="30" class="d-inline-block align-text-top"></a></li>
