@@ -19,7 +19,7 @@
                     <figcaption th:text="${feed.title}"></figcaption>
                 </figure>
             </a>
-            <a href="#"> <!-- 클릭 시 해당 사용자 페이지 이동 -->
+            <a th:href="@{/user/{id}(id=${feed.writer.id})}"> <!-- 클릭 시 해당 사용자 페이지 이동 -->
                 <figure>
                     <figcaption>
                         <img th:src="@{/profile_imgs/} + ${feed.writer.profileImageUrl}" onerror="this.src='/img/default_profile.png';" style="width: 40px; height: 40px; border-radius: 100%">
