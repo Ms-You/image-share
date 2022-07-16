@@ -33,7 +33,7 @@
 
                     <div class="profile-text">소개말</div>
                     <div style="margin-bottom: 1.5rem;">
-                        <textarea class="form-control" name="intro" th:value="${user.intro}" placeholder="자신을 소개해보세요."
+                        <textarea class="form-control" name="intro" th:text="${user.intro}" placeholder="자신을 소개해보세요."
                                   style="height: 110px; background-color: rgb(233, 233, 233); width: 50%; font-size: 23px; border-radius: 15px;"></textarea>
                     </div>
 
