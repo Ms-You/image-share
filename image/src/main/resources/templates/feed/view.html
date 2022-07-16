@@ -34,12 +34,15 @@
             <span th:text="${feed.writer.nickName}" style="font-size: 30px;"></span>
             <!--  구독 start  -->
             <div>
+                <a th:href="@{/download/{feed_id}(feed_id=${feed.id})}">
+                    <img th:src="@{/img/save.png}" alt="피드 저장" width="40" height="40" class="d-inline-block align-text-top" style="float: right;">
+                </a>
                 <a href="#a" class="subscribe">
                     <span><img th:src="@{${subscribeStatus}}" alt="구독" width="80" height="60" class="d-inline-block align-text-top"></span>
                 </a>
             </div>
             <!--  구독 end  -->
-            <h6 th:text="${feed.createdDate}"></h6>
+            <h6 th:text="${#temporals.format(feed.createdDate, 'yyyy-MM-dd')}"></h6>
             조회수: <span th:text="${#lists.size(feed.views)}"></span>
             <a th:href="@{/user/tag/(tag_id=${feed.tag.id})}">
                 <div th:text="${feed.tag.name}" style="color: orange;"></div>
@@ -118,7 +121,7 @@
                 <div th:each="reply: ${replies}" class="replies">
                     <div class="reply">
                         <div class="content">
-                            <header class="top">
+                            <header class="top" style="margin-bottom: 2rem;">
                                 <img th:src="@{/profile_imgs/} + ${reply.writer.profileImageUrl}" onerror="this.src='/img/default_profile.png';" width="30" height="30" style="border-radius: 100%;" />
                                 <span class="username" th:text="${reply.writer.nickName}"></span>
                                 <!--  댓글 삭제  -->
@@ -128,7 +131,7 @@
                             </header>
                             <p th:text="${reply.content}"></p>
                             <ul class="bottom">
-                                <li th:text="${reply.createdDate}"></li>
+                                <li th:text="${#temporals.format(reply.createdDate, 'yyyy-MM-dd')}"></li>
                                 <li class="divider"></li>
                                 <!--  댓글 좋아요 start  -->
                                 <li>
