@@ -48,6 +48,8 @@ public class Feed {
     @OneToMany(mappedBy = "feed", cascade = CascadeType.ALL)
     private List<View> views = new ArrayList<>();
 
+    @OneToMany(mappedBy = "feed", cascade = CascadeType.ALL)
+    private List<Report> reports = new ArrayList<>();
 
     @Builder
     public Feed(Long id, String title, String description, Tag tag, User writer){
