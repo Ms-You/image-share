@@ -32,11 +32,16 @@
         <div>
             <img th:src="@{/profile_imgs/} + ${feed.writer.profileImageUrl}" onerror="this.src='/img/default_profile.png';" width="30" height="30" style="border-radius: 100%;" />
             <span th:text="${feed.writer.nickName}" style="font-size: 30px;"></span>
-            <!--  구독 start  -->
             <div>
+                <!--  report a feed  -->
+                <a th:href="@{/user/report/feed/{feed_id}(feed_id=${feed.id})}">
+                    <img th:src="@{/img/siren.png}" alt="신고" width="40" height="40" id="myBtn" class="d-inline-block align-text-top" style="float: right; margin-left: 2rem; cursor: pointer;">
+                </a>
+
                 <a th:href="@{/download/{feed_id}(feed_id=${feed.id})}">
                     <img th:src="@{/img/save.png}" alt="피드 저장" width="40" height="40" class="d-inline-block align-text-top" style="float: right;">
                 </a>
+            <!--  구독 start  -->
                 <a href="#a" class="subscribe">
                     <span><img th:src="@{${subscribeStatus}}" alt="구독" width="80" height="60" class="d-inline-block align-text-top"></span>
                 </a>
