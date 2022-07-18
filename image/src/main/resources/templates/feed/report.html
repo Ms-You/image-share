@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<!-- head.html -->
+<th:block th:replace="layout/head::headFragment"></th:block>
+
+<!-- layout/header.html -->
+<header th:replace="layout/header::headerFragment"></header>
+
+<!-- content -->
+<section class="page-section portfolio">
+    <div class="container">
+
+        <form th:action="@{/user/report/feed/{feed_id}(feed_id=${feedId})}" method="post" th:object="${reportRequestDto}"  style="padding: 3rem 0rem 30rem 0rem;">
+
+            <div id="feed-create">
+                <h2 class="title">부적절한 피드 신고</h2>
+                <div class="row" style="margin-bottom: 3rem;">
+                    <div style="font-size: 20px; font-weight: bold; margin-bottom: 1rem;">신고 사유</div>
+                    <div th:each="type : ${reportTypes}" class="form-check">
+                        <input type="radio" th:field="*{reportType}" th:value="${type.name()}" class="form-check-input">
+                        <label th:for="${#ids.prev('reportType')}" th:text="${type.reason}" class="form-check-label"></label>
+                    </div>
+                    <span style="color: red; font-size: 18px;" th:text="${valid_reportType}"></span>
+                </div>
+
+                <div>
+                    <textarea id="input" name="content" placeholder="신고 내용을 입력해주세요." type="text" class="form-control" style="height: 110px; margin-bottom: 1rem;"></textarea>
+                    <div class="field-error" th:errors="*{content}" style="color: red; font-size: 18px;">최대 글자수 초과</div>
+                </div>
+
+                <a th:href="@{/user}">
+                    <button class="button btnPush btnLightBlue" type="button" style="float: right;">취소</button>
+                </a>
+                <button class="button btnPush btnRed" type="submit" style="float: right; margin-right: 1rem;">신고하기</button>
+            </div>
+
+        </form>
+
+    </div>
+</section>
+
+<script type="text/javascript" th:src="@{/js/feedCreate.js}"></script>
+<!-- layout/footer.html -->
+<footer th:replace="layout/footer::footerFragment"></footer>
