@@ -75,8 +75,10 @@ public class ReportController {
         }
 
         reportService.reportingFeed(fromUser, reportRequestDto, feed);
+        model.addAttribute("message", "신고가 접수되었습니다.");
+        model.addAttribute("feedId", feedId);
 
-        return "redirect:/user/feed/" + feedId;
+        return "feed/report";
     }
 
 

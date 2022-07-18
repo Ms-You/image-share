@@ -41,5 +41,17 @@
 </section>
 
 <script type="text/javascript" th:src="@{/js/feedCreate.js}"></script>
+<script th:inline="javascript">
+	window.onload = function() {
+		var message = [[${message}]];
+        var feedId = [[${feedId}]];
+
+		if (message !== null) {
+			alert(message);
+			location.href= `/user/feed/${feedId}`;
+		}
+
+	}
+</script>
 <!-- layout/footer.html -->
 <footer th:replace="layout/footer::footerFragment"></footer>
