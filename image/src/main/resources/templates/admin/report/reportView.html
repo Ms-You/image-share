@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<!-- head.html -->
+<th:block th:replace="layout/head::headFragment"></th:block>
+
+<!-- layout/admin_header.html -->
+<header th:replace="layout/admin_header::admin_headerFragment"></header>
+
+<!-- content -->
+<section class="page-section portfolio">
+    <div class="container">
+        <div style="display: flex; margin-bottom: 4rem;">
+            <a th:href="@{/admin/report}">
+                <button type="button" class="button btnPush btnRed">뒤로 가기</button>
+            </a>
+        </div>
+
+        <h3 style="color: #9e3301">신고</h3>
+            <table class="user-table" style="margin-bottom: 5rem;">
+                <thead style="background-color: #FD3301;">
+                <tr>
+                    <th>신고 번호</th>
+                    <th>신고 사유</th>
+                    <th>신고 내용</th>
+                    <th>신고 유저</th>
+                    <th>신고 받는 유저</th>
+                    <th>신고 날짜</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td th:text="${report.id}"></td>
+                    <td th:text="${report.reason}"></td>
+                    <td th:text="${report.content}" style="width: 50%;"></td>
+                    <td th:text="${report.fromUser.nickName}"></td>
+                    <td th:text="${report.toUser.nickName}"></td>
+                    <td th:text="${#temporals.format(report.reportDate, 'yyyy-MM-dd')}"></td>
+                </tr>
+                </tbody>
+            </table>
+        <br/>
+        <h4 style="color: #9e3301">신고 받는 내용</h4>
+    </div>
+
+    <div class="container" style="padding: 3rem 0rem 10rem 0rem; max-width: 960px;">
+        <img th:src="@{/profile_imgs/} + ${report.toUser.profileImageUrl}" onerror="this.src='/img/default_profile.png';" width="30" height="30" style="border-radius: 100%;" />
+        <span th:text="${report.toUser.nickName}" style="font-size: 30px;"></span>
+        <h6 th:text="${#temporals.format(report.feed.createdDate, 'yyyy-MM-dd')}"></h6>
+        조회수: <span th:text="${#lists.size(report.feed.views)}"></span>
+        <a th:href="@{/admin/tag/(tag_id=${report.feed.tag.id})}">
+            <div th:text="${report.feed.tag.name}" style="color: orange;"></div>
+        </a>
+
+        <hr>
+        <h3 th:text="${report.feed.title}"></h3>
+        <div>
+            <h5 th:text="${report.feed.description}"></h5>
+        </div>
+        <div class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img th:src="@{/feed_imgs/} + ${report.feed.feedImageUrl}" class="d-block w-100"/>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- layout/footer.html -->
+<footer th:replace="layout/footer::footerFragment"></footer>

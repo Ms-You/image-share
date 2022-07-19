@@ -19,7 +19,7 @@
         <div>
             <img th:src="@{/profile_imgs/} + ${feed.writer.profileImageUrl}" onerror="this.src='/img/default_profile.png';" width="30" height="30" style="border-radius: 100%;" />
             <span th:text="${feed.writer.nickName}" style="font-size: 30px;"></span>
-            <h6 th:text="${feed.createdDate}"></h6>
+            <h6 th:text="${#temporals.format(feed.createdDate, 'yyyy-MM-dd')}"></h6>
             조회수: <span th:text="${#lists.size(feed.views)}"></span>
             <a th:href="@{/admin/tag/(tag_id=${feed.tag.id})}">
                 <div th:text="${feed.tag.name}" style="color: orange;"></div>
