@@ -26,6 +26,7 @@
                     <th>신고 유저</th>
                     <th>신고 받는 유저</th>
                     <th>신고 날짜</th>
+                    <th>정지 여부</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -36,6 +37,9 @@
                     <td th:text="${report.fromUser.nickName}"></td>
                     <td th:text="${report.toUser.nickName}"></td>
                     <td th:text="${#temporals.format(report.reportDate, 'yyyy-MM-dd')}"></td>
+                    <td>
+                        <button type="button" class="button btnPush btnRed" th:id="'account'+${report.toUser.id}" th:onclick="suspendAccount('[[${report.toUser.id}]]')" th:text="${report.toUser.locked}"></button>
+                    </td>
                 </tr>
                 </tbody>
             </table>
@@ -66,6 +70,27 @@
         </div>
     </div>
 </section>
+<script>
+    function suspendAccount(userId){
+        var accountStatus = $("#account"+userId).text();
 
+        if (accountStatus == "정지하기"){
+            $("#account"+userId).text("해제하기");
+        } else {
+            $("#account"+userId).text("정지하기");
+        }
+
+        $.ajax({
+            type: "GET",
+            url: `/admin/report/disable/user/${userId}`,
+            dataType: "text"
+        }).done(res=>{
+            console.log("OK");
+        }).fail(error=>{
+            console.log("오류", error);
+        });
+
+    }
+</script>
 <!-- layout/footer.html -->
 <footer th:replace="layout/footer::footerFragment"></footer>
