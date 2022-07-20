@@ -34,9 +34,11 @@
             <span th:text="${feed.writer.nickName}" style="font-size: 30px;"></span>
             <div>
                 <!--  report a feed  -->
-                <a th:href="@{/user/report/feed/{feed_id}(feed_id=${feed.id})}">
-                    <img th:src="@{/img/siren.png}" alt="신고" width="40" height="40" id="myBtn" class="d-inline-block align-text-top" style="float: right; margin-left: 2rem; cursor: pointer;">
-                </a>
+                <div th:if="${feed.writer.role.toString().equals('ROLE_USER')}">
+                    <a th:href="@{/user/report/feed/{feed_id}(feed_id=${feed.id})}">
+                        <img th:src="@{/img/siren.png}" alt="신고" width="40" height="40" id="myBtn" class="d-inline-block align-text-top" style="float: right; margin-left: 2rem; cursor: pointer;">
+                    </a>
+                </div>
 
                 <a th:href="@{/download/{feed_id}(feed_id=${feed.id})}">
                     <img th:src="@{/img/save.png}" alt="피드 저장" width="40" height="40" class="d-inline-block align-text-top" style="float: right;">
