@@ -46,6 +46,8 @@ public class User {
     @CreatedDate
     private LocalDateTime createdDate;
 
+    private Boolean locked;
+
     @OneToMany
     private List<Subscribe> subscribes = new ArrayList<>();
 
@@ -78,4 +80,7 @@ public class User {
         this.intro = intro;
     }
 
+    public void setLocked(Boolean locked){
+        this.locked = locked;
+    }
 }
