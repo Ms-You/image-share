@@ -27,6 +27,7 @@
                 <th>신고 받는 유저</th>
                 <th>신고 세부사항</th>
                 <th>신고 시간</th>
+                <th>계정 정지</th>
             </tr>
             </thead>
             <tbody>
@@ -41,6 +42,11 @@
                     </a>
                 </td>
                 <td th:text="${#temporals.format(report.reportDate, 'yyyy-MM-dd')}"></td>
+                <td>
+                    <a th:href="@{/admin/report/disable/user/{user_id}(user_id=${report.toUser.id})}">
+                        <button type="button" class="button btnPush btnRed">계정 정지하기</button>
+                    </a>
+                </td>
             </tr>
             </tbody>
         </table>
