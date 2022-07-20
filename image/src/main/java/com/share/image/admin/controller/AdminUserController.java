@@ -77,5 +77,22 @@ public class AdminUserController {
     }
 
 
+    // 정지된 사용자 관리
+    @GetMapping("/user/suspend")
+    public String suspendedUser(@PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable, Model model){
+        Page<User> users = userRepository.findAllByLocked(pageable, "해제하기");
+
+        int startPage = (int) (Math.floor(pageable.getPageNumber() / pageable.getPageSize()) * pageable.getPageSize() + 1);
+        int tempEndPage = startPage + pageable.getPageSize() - 1;
+        int endPage = tempEndPage > users.getTotalPages() ? users.getTotalPages() : tempEndPage;
+
+        model.addAttribute("users", users);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
+
+        return "admin/user/suspend";
+    }
+
+
 
 }

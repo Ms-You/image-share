@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<!-- head.html -->
+<th:block th:replace="layout/head::headFragment"></th:block>
+
+<!-- layout/admin_header.html -->
+<header th:replace="layout/admin_header::admin_headerFragment"></header>
+
+<!-- content -->
+<section class="page-section portfolio">
+    <div class="container" style="margin-bottom: 10rem;">
+        <div style="display: flex; margin-bottom: 4rem;">
+            <a th:href="@{/admin/report/}">
+                <button type="button" class="button btnPush btnRed">뒤로 가기</button>
+            </a>
+        </div>
+
+        <h1>정지 유저 목록</h1>
+        <table class="user-table">
+            <thead style="background-color: #FD3301;">
+            <tr>
+                <th>번호</th>
+                <th>프로필 이미지</th>
+                <th>닉네임</th>
+                <th>이메일(계정)</th>
+                <th>정지 해제</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="user: ${users.content}">
+                <td th:text="${user.id}"></td>
+                <td>
+                    <img th:src="@{/profile_imgs/} + ${user.profileImageUrl}" style="border-radius: 100%; width: 80px; height: 80px;" />
+                </td>
+                <td th:text="${user.nickName}"></td>
+                <td th:text="${user.email}"></td>
+                <td>
+                    <a th:href="@{/admin/report/disable/user/{user_id}(user_id=${user.id})}">
+                        <button type="button" class="button btnPush btnRed" style="background-color: #FF7777;">정지 해제</button>
+                    </a>
+                </td>
+
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="container">
+        <!-- 페이징처리 시작 -->
+        <div th:if="${!users.isEmpty()}">
+            <ul class="pagination justify-content-center">
+
+                <li class="page-item" th:classappend="${!users.hasPrevious} ? 'disabled'">
+                    <a class="page-link" th:href="@{/admin/user/suspend/(page='0')}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+
+                <li class="page-item" th:classappend="${!users.hasPrevious} ? 'disabled'">
+                    <a class="page-link" th:href="@{/admin/user/suspend/(page=${users.number-1})}">
+                        <span>&lt;</span>
+                    </a>
+                </li>
+
+                <li th:each="page: ${#numbers.sequence(startPage, endPage)}"
+                    th:classappend="${page == users.number + 1} ? 'active'" class="page-item">
+                    <a th:text="${page}" class="page-link" th:href="@{/admin/user/suspend/(page=${page-1})}"></a>
+                </li>
+
+                <li class="page-item" th:classappend="${!users.hasNext} ? 'disabled'">
+                    <a class="page-link" th:href="@{/admin/user/suspend/(page=${users.number+1})}">
+                        <span>&gt;</span>
+                    </a>
+                </li>
+
+                <li class="page-item" th:classappend="${!users.hasNext} ? 'disabled'">
+                    <a class="page-link" th:href="@{/admin/user/suspend/(page=${users.totalPages-1})}" aria-label="Previous">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+
+            </ul>
+        </div>
+        <!-- 페이징처리 끝 -->
+
+
+    </div>
+</section>
+
+<footer th:replace="layout/footer::footerFragment"></footer>
