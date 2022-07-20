@@ -46,7 +46,7 @@ public class User {
     @CreatedDate
     private LocalDateTime createdDate;
 
-    private Boolean locked;
+    private String locked;
 
     @OneToMany
     private List<Subscribe> subscribes = new ArrayList<>();
@@ -70,6 +70,7 @@ public class User {
         this.intro = intro;
         this.profileImageUrl = profileImageUrl;
         this.createdDate = LocalDateTime.now();
+        this.locked = "정지하기";
     }
 
     public void updateProfileImageUrl(String profileImageUrl){
@@ -80,7 +81,7 @@ public class User {
         this.intro = intro;
     }
 
-    public void setLocked(Boolean locked){
+    public void setLocked(String locked){
         this.locked = locked;
     }
 }
