@@ -1,5 +1,6 @@
 package com.share.image.admin.controller;
 
+import com.share.image.admin.service.BlockUserService;
 import com.share.image.feed.domain.Report;
 import com.share.image.feed.repository.ReportRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,14 +15,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.List;
-
 @Slf4j
 @RequiredArgsConstructor
 @Controller
 @RequestMapping("/admin")
 public class AdminReportController {
-
+    private final BlockUserService blockUserService;
     private final ReportRepository reportRepository;
 
     // 신고 목록 페이지 이동
@@ -55,7 +54,13 @@ public class AdminReportController {
         return "admin/report/reportView";
     }
 
+    // 계정 정지하기
+    @GetMapping("/report/disable/user/{user_id}")
+    public String disableUser(@PathVariable(name = "user_id") Long userId){
+        blockUserService.blockUser(userId);
 
+        return "redirect:/admin/report";
+    }
 
 
 }
