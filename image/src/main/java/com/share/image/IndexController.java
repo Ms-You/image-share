@@ -4,6 +4,7 @@ import com.share.image.user.dto.JoinRequestDto;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
@@ -29,6 +30,12 @@ public class IndexController {
         model.addAttribute("exception", exception);
 
         return "/user/login";
+    }
+
+    // 로그인 실패 시 이동
+    @PostMapping("/auth/login")
+    public String fail(){
+        return "user/login";
     }
 
 }

@@ -1,13 +1,18 @@
 package com.share.image.config;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.web.servlet.ServletListenerRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @RequiredArgsConstructor
@@ -15,12 +20,31 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final PrincipalDetailsService principalDetailsService;
-    private final AuthenticationFailureHandler loginFailureHandler;
+
+    @Bean
+    public AuthenticationSuccessHandler successHandler(){
+        return new AccountLoginSuccessHandler();
+    }
+
+    @Bean
+    public AuthenticationFailureHandler failureHandler(){
+        return new AccountLoginFailureHandler();
+    }
 
 
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder(){
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public SessionRegistry sessionRegistry(){
+        return new SessionRegistryImpl();
+    }
+
+    @Bean
+    public static ServletListenerRegistrationBean httpSessionEventPublisher(){
+        return new ServletListenerRegistrationBean(new HttpSessionEventPublisher());
     }
 
     @Override
@@ -31,6 +55,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable();
+        http.sessionManagement().maximumSessions(1).sessionRegistry(sessionRegistry());
         http.authorizeRequests()
                 .antMatchers("/admin/**")
                     .access("hasRole('ROLE_ADMIN')")
@@ -39,12 +64,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/**", "/auth/**").permitAll()
                 .and()
                 .formLogin()
-                .loginPage("/auth/login")
-                .loginProcessingUrl("/auth/login")
-                .failureHandler(loginFailureHandler)
-                .usernameParameter("email")
-                .passwordParameter("password")
-                .defaultSuccessUrl("/user")
+                    .loginPage("/auth/login")
+                    .usernameParameter("email")
+                    .passwordParameter("password")
+                    .successHandler(successHandler())
+                    .failureHandler(failureHandler())
                 .and()
                 .logout()
                 .logoutRequestMatcher(new AntPathRequestMatcher("/auth/logout"))

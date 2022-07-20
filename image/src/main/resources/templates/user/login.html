@@ -36,7 +36,17 @@
 </div>
 
 </body>
+<script th:inline="javascript">
+	window.onload = function() {
+		var message = [[${errorMsg}]];
 
+		if (message !== null) {
+			alert(message);
+			location.href= `/auth/login`;
+		}
+
+	}
+</script>
 <!-- layout/footer.html -->
 <footer th:replace="layout/footer::footerFragment"></footer>
 
