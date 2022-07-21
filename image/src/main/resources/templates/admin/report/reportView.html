@@ -75,8 +75,10 @@
         var accountStatus = $("#account"+userId).text();
 
         if (accountStatus == "정지하기"){
+            alert("계정이 정지되었습니다");
             $("#account"+userId).text("해제하기");
         } else {
+            alert("계정 정지가 해제되었습니다");
             $("#account"+userId).text("정지하기");
         }
 
