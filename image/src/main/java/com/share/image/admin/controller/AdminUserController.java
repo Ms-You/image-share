@@ -1,6 +1,7 @@
 package com.share.image.admin.controller;
 
 import com.share.image.feed.domain.Feed;
+import com.share.image.feed.repository.ReportRepository;
 import com.share.image.user.domain.User;
 import com.share.image.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +26,7 @@ import java.util.List;
 public class AdminUserController {
 
     private final UserRepository userRepository;
-
+    private final ReportRepository reportRepository;
 
     // 사용자 리스트 보기
     @GetMapping("/users")
@@ -50,10 +51,10 @@ public class AdminUserController {
 
         User user = userRepository.findById(userId).orElseThrow(()->{
             return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
-
         });
 
         model.addAttribute("user", user);
+        model.addAttribute("reportCount", reportRepository.findReportCountByUserId(user.getId()));
 
         return "admin/user/userView";
     }

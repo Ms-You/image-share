@@ -40,6 +40,11 @@
             <span th:text="${user.intro}" class="profile-info"></span>
         </span>
         <br/>
+        <div style="margin-top: 3rem;">
+            <span class="profile-text" style="margin-right: 8.5rem;">신고 받은 횟수</span>
+            <span th:text="${reportCount} + '회'" class="profile-info"></span><br/>
+        </div>
+        <br/>
 
         <div style="margin-top: 3rem;">
             <a th:href="@{/admin/feeds/{id}(id=${user.id})}">
