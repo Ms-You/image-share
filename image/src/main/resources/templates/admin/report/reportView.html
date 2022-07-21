@@ -26,19 +26,23 @@
                     <th>신고 유저</th>
                     <th>신고 받는 유저</th>
                     <th>신고 날짜</th>
-                    <th>정지 여부</th>
+                    <th>일시 정지</th>
+                    <th>영구 정지</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr>
                     <td th:text="${report.id}"></td>
                     <td th:text="${report.reason}"></td>
-                    <td th:text="${report.content}" style="width: 50%;"></td>
+                    <td th:text="${report.content}" style="width: 30%;"></td>
                     <td th:text="${report.fromUser.nickName}"></td>
                     <td th:text="${report.toUser.nickName}"></td>
                     <td th:text="${#temporals.format(report.reportDate, 'yyyy-MM-dd')}"></td>
                     <td>
-                        <button type="button" class="button btnPush btnRed" th:id="'account'+${report.toUser.id}" th:onclick="suspendAccount('[[${report.toUser.id}]]')" th:text="${report.toUser.locked}"></button>
+                        <button type="button" class="button btnPush btnRed" th:id="'temporaryAccount'+${report.toUser.id}" th:onclick="temporarySuspendAccount('[[${report.toUser.id}]]')" th:text="${report.toUser.temporaryLocked}"></button>
+                    </td>
+                    <td>
+                        <button type="button" class="button btnPush btnRed" th:id="'permanentAccount'+${report.toUser.id}" th:onclick="permanentSuspendAccount('[[${report.toUser.id}]]')" th:text="${report.toUser.permanentLocked}"></button>
                     </td>
                 </tr>
                 </tbody>
@@ -71,20 +75,47 @@
     </div>
 </section>
 <script>
-    function suspendAccount(userId){
-        var accountStatus = $("#account"+userId).text();
+    function temporarySuspendAccount(userId){
+        var temporaryAccountStatus = $("#temporaryAccount"+userId).text();
+        var permanentAccountStatus = $("#permanentAccount"+userId).text();
 
-        if (accountStatus == "정지하기"){
-            alert("계정이 정지되었습니다");
-            $("#account"+userId).text("해제하기");
+        if (temporaryAccountStatus == "정지하기"){
+            alert("계정이 일시 정지되었습니다");
+            $("#temporaryAccount"+userId).text("해제하기");
+            $("#permanentAccount"+userId).text("정지하기");
         } else {
-            alert("계정 정지가 해제되었습니다");
-            $("#account"+userId).text("정지하기");
+            alert("계정 일시 정지가 해제되었습니다");
+            $("#temporaryAccount"+userId).text("정지하기");
         }
 
         $.ajax({
             type: "GET",
-            url: `/admin/report/disable/user/${userId}`,
+            url: `/admin/report/temporary/user/${userId}`,
+            dataType: "text"
+        }).done(res=>{
+            console.log("OK");
+        }).fail(error=>{
+            console.log("오류", error);
+        });
+
+    }
+
+    function permanentSuspendAccount(userId){
+        var temporaryAccountStatus = $("#temporaryAccount"+userId).text();
+        var permanentAccountStatus = $("#permanentAccount"+userId).text();
+
+        if (permanentAccountStatus == "정지하기"){
+            alert("계정이 영구 정지되었습니다");
+            $("#permanentAccount"+userId).text("해제하기");
+            $("#temporaryAccount"+userId).text("정지하기");
+        } else {
+            alert("계정 영구 정지가 해제되었습니다");
+            $("#permanentAccount"+userId).text("정지하기");
+        }
+
+        $.ajax({
+            type: "GET",
+            url: `/admin/report/permanent/user/${userId}`,
             dataType: "text"
         }).done(res=>{
             console.log("OK");

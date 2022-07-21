@@ -16,7 +16,7 @@
             </a>
         </div>
 
-        <h1>정지 유저 목록</h1>
+        <h1>일시 정지된 유저 목록</h1>
         <table class="user-table">
             <thead style="background-color: #FD3301;">
             <tr>
@@ -24,6 +24,7 @@
                 <th>프로필 이미지</th>
                 <th>닉네임</th>
                 <th>이메일(계정)</th>
+                <th>정지 날짜</th>
                 <th>정지 해제</th>
             </tr>
             </thead>
@@ -35,8 +36,9 @@
                 </td>
                 <td th:text="${user.nickName}"></td>
                 <td th:text="${user.email}"></td>
+                <td th:text="${#temporals.format(user.temporarySuspendedDate, 'yyyy-MM-dd HH:mm')}"></td>
                 <td>
-                    <a th:href="@{/admin/report/disable/user/{user_id}(user_id=${user.id})}">
+                    <a th:href="@{/admin/report/temporary/user/{user_id}(user_id=${user.id})}">
                         <button type="button" class="button btnPush btnRed" style="background-color: #FF7777;">정지 해제</button>
                     </a>
                 </td>
