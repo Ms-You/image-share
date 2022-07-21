@@ -54,10 +54,18 @@ public class AdminReportController {
         return "admin/report/reportView";
     }
 
-    // 계정 정지하기
-    @GetMapping("/report/disable/user/{user_id}")
-    public String disableUser(@PathVariable(name = "user_id") Long userId){
-        blockUserService.blockUser(userId);
+    // 계정 일시 정지하기
+    @GetMapping("/report/temporary/user/{user_id}")
+    public String temporarySuspendUser(@PathVariable(name = "user_id") Long userId){
+        blockUserService.temporaryBlockUser(userId);
+
+        return "redirect:/admin/report";
+    }
+
+    // 계정 영구 정지하기
+    @GetMapping("/report/permanent/user/{user_id}")
+    public String permanentSuspendUser(@PathVariable(name = "user_id") Long userId){
+        blockUserService.permanentBlockUser(userId);
 
         return "redirect:/admin/report";
     }

@@ -78,10 +78,10 @@ public class AdminUserController {
     }
 
 
-    // 정지된 사용자 관리
-    @GetMapping("/user/suspend")
-    public String suspendedUser(@PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable, Model model){
-        Page<User> users = userRepository.findAllByLocked(pageable, "해제하기");
+    // 일시 정지된 사용자 관리
+    @GetMapping("/user/temporary")
+    public String temporarySuspendedUser(@PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable, Model model){
+        Page<User> users = userRepository.findAllByTemporaryLocked(pageable, "해제하기");
 
         int startPage = (int) (Math.floor(pageable.getPageNumber() / pageable.getPageSize()) * pageable.getPageSize() + 1);
         int tempEndPage = startPage + pageable.getPageSize() - 1;
@@ -91,8 +91,25 @@ public class AdminUserController {
         model.addAttribute("startPage", startPage);
         model.addAttribute("endPage", endPage);
 
-        return "admin/user/suspend";
+        return "admin/user/temporary";
     }
+
+    // 영구 정지된 사용자 관리
+    @GetMapping("/user/permanent")
+    public String permanentSuspendedUser(@PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable, Model model){
+        Page<User> users = userRepository.findAllByPermanentLocked(pageable, "해제하기");
+
+        int startPage = (int) (Math.floor(pageable.getPageNumber() / pageable.getPageSize()) * pageable.getPageSize() + 1);
+        int tempEndPage = startPage + pageable.getPageSize() - 1;
+        int endPage = tempEndPage > users.getTotalPages() ? users.getTotalPages() : tempEndPage;
+
+        model.addAttribute("users", users);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
+
+        return "admin/user/permanent";
+    }
+
 
 
 

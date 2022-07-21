@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +47,15 @@ public class User {
     @CreatedDate
     private LocalDateTime createdDate;
 
-    private String locked;
+    private String temporaryLocked;
+
+    private String permanentLocked;
+
+    @CreatedDate
+    private LocalDateTime temporarySuspendedDate;
+
+    @CreatedDate
+    private LocalDateTime permanentSuspendedDate;
 
     @OneToMany
     private List<Subscribe> subscribes = new ArrayList<>();
@@ -70,7 +79,8 @@ public class User {
         this.intro = intro;
         this.profileImageUrl = profileImageUrl;
         this.createdDate = LocalDateTime.now();
-        this.locked = "정지하기";
+        this.permanentLocked = "정지하기";
+        this.temporaryLocked = "정지하기";
     }
 
     public void updateProfileImageUrl(String profileImageUrl){
@@ -81,7 +91,20 @@ public class User {
         this.intro = intro;
     }
 
-    public void setLocked(String locked){
-        this.locked = locked;
+    public void setTemporaryLocked(String locked){
+        this.temporaryLocked = locked;
     }
+
+    public void setPermanentLocked(String locked){
+        this.permanentLocked = locked;
+    }
+
+    public void recordTemporarySuspendTime(){
+        this.temporarySuspendedDate = LocalDateTime.now();
+    }
+
+    public void recordPermanentSuspendTime(){
+        this.permanentSuspendedDate = LocalDateTime.now();
+    }
+
 }

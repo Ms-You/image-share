@@ -16,5 +16,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Page<User> findAll(Pageable pageable);
 
-    Page<User> findAllByLocked(Pageable pageable, String locked);
+    Page<User> findAllByTemporaryLocked(Pageable pageable, String temporaryLocked);
+
+    Page<User> findAllByPermanentLocked(Pageable pageable, String permanentLocked);
 }

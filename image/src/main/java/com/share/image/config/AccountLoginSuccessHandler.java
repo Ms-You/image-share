@@ -30,7 +30,7 @@ public class AccountLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHa
         PrincipalDetails principal = (PrincipalDetails) authentication.getPrincipal();
 
 
-        if (principal.getUser().getLocked().equals("해제하기")){
+        if (principal.getUser().getTemporaryLocked().equals("해제하기") || principal.getUser().getPermanentLocked().equals("해제하기")){
             throw new LockedException("계정이 정지되었습니다. 관리자에게 문의하세요.");
         }
 
