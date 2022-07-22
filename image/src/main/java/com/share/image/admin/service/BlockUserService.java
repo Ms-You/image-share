@@ -80,15 +80,13 @@ public class BlockUserService {
 
     // 일시정지 7일 뒤 해제
     public void liftReportScheduler(){
-        List<User> users = userRepository.findAll();
+        // 정지 당한 사용자를 대상으로 체크
+        List<User> users = userRepository.findAllByTemporaryLocked("해제하기");
         for (User user : users) {
-            if (user.getTemporaryLocked().equals("해제하기")){   // 임시 정지된 사용자
-                Duration duration = Duration.between(user.getTemporarySuspendedDate(), LocalDateTime.now());
-                if (duration.getSeconds() >= 604800){   // 7일후 정지 해제
-                    temporaryBlockUser(user.getId());
-                }
+            Duration duration = Duration.between(user.getTemporarySuspendedDate(), LocalDateTime.now());
+            if (duration.getSeconds() >= 604800){   // 7일후 정지 해제
+                temporaryBlockUser(user.getId());
             }
-
         }
 
 
