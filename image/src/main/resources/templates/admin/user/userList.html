@@ -40,7 +40,7 @@
                 <tr th:each="user: ${users.content}">
                     <td th:text="${user.id}"></td>
                     <td>
-                        <img th:src="@{/profile_imgs/} + ${user.profileImageUrl}" style="border-radius: 100%; width: 80px; height: 80px;" />
+                        <img th:src="@{/profile_imgs/} + ${user.profileImageUrl}" onerror="this.src='/img/default_profile.png';" style="border-radius: 100%; width: 80px; height: 80px;" />
                     </td>
                     <td th:text="${user.nickName}"></td>
                     <td th:text="${user.email}"></td>

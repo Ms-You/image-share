@@ -26,6 +26,7 @@
 }
 
 .input-field {
+    font-family: 'Jua', sans-serif;
     width: 100%;
     padding: 10px 0;
     margin: 5px 0;
@@ -36,6 +37,7 @@
 }
 
 .submit {
+    font-family: 'Jua', sans-serif;
     width: 55%;
     padding: 10px 30px;
     cursor: pointer;
@@ -56,6 +58,7 @@ input[type=checkbox] {
 }
 
 .box-word {
+    font-family: 'Inconsolata', monospace;
     color: black;
     font-size: 22px;
     bottom: 68px;
@@ -71,6 +74,7 @@ input[type=checkbox] {
 }
 
 .forgot-password{
+    font-family: 'Inconsolata', monospace;
     color: #0056B3;
     margin-right: 3rem;
     font-size: 22px;
@@ -78,12 +82,14 @@ input[type=checkbox] {
 }
 
 .not-joined{
+    font-family: 'Inconsolata', monospace;
     color: #0056B3;
     font-size: 22px;
     text-decoration: none;
 }
 
 .already-join{
+    font-family: 'Inconsolata', monospace;
     color: #0056B3;
     font-size: 22px;
     text-decoration: none;
