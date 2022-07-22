@@ -31,7 +31,7 @@
         </span>
         <span th:if="${not #strings.isEmpty(user.intro)}">
             <span class="profile-text">소개말</span>
-            <span th:text="${user.intro}" class="profile-info"></span>
+            <span th:text="${user.intro}" class="profile-info" style="display: inline-flex; width: 800px; word-break:break-all;"></span>
         </span>
         <br/>
 

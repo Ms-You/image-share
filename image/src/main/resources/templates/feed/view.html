@@ -136,7 +136,7 @@
                                     <button th:onclick="deleteReply('[[${reply.id}]]')">삭제</button>
                                 </div>
                             </header>
-                            <p th:text="${reply.content}"></p>
+                            <p th:text="${reply.content}" style="word-break:break-all;"></p>
                             <ul class="bottom">
                                 <li th:text="${#temporals.format(reply.createdDate, 'yyyy-MM-dd')}"></li>
                                 <li class="divider"></li>
