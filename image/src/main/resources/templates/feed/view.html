@@ -117,7 +117,7 @@
             <span th:text="${#lists.size(replies)}" style="font-weight: bold; font-size: 22px; color: #6EC7B7"></span>
             <form class="card-text" modelAttribute="replyRequestDto">
                 <div style="margin-bottom: 10rem;">
-                    <textarea id="input" placeholder="여러분의 댓글은 큰 힘이 됩니다 (❁´◡`❁)" type="text" class="form-control" style="height: 110px; margin-bottom: 1rem;"></textarea>
+                    <textarea id="input" placeholder="댓글은 최대 500자까지 작성할 수 있습니다&#13;&#10;여러분의 댓글은 큰 힘이 됩니다 (❁´◡`❁)" type="text" class="form-control" style="height: 110px; margin-bottom: 1rem;"></textarea>
                     <span style="color: red; font-size: 18px;" th:text="${valid_content}"></span>
                     <input id="feed_id" type="hidden" th:value="${feed.id}">
                     <button class="btn btn-outline-secondary" style="float: right;" type="button" onclick="dataSend()">입력</button>

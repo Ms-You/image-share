@@ -87,7 +87,8 @@ public class User {
         this.profileImageUrl = profileImageUrl;
     }
 
-    public void updateProfile(String intro){
+    public void updateProfile(String nickName, String intro){
+        this.nickName = nickName;
         this.intro = intro;
     }
 

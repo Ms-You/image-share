@@ -18,20 +18,20 @@
         <div>제목</div>
         <div>
             <input type="text" name="title" th:value="${feed.title}" placeholder="제목을 입력해주세요."/>
-            <span th:style="${'color: red; font-size:11px;'}" th:text="${valid_title}"></span>
+            <span th:style="${'color: red; font-size:18px;'}" th:text="${valid_title}"></span>
         </div>
         <!--  설명  -->
         <div>설명</div>
         <div>
             <input type="text" name="description" th:value="${feed.description}" placeholder="간단한 설명을 입력해주세요."/>
-            <span th:style="${'color: red; font-size:11px;'}" th:text="${valid_description}"></span>
+            <span th:style="${'color: red; font-size:18px;'}" th:text="${valid_description}"></span>
         </div>
 
         <!--  피드 이미지  -->
         <div>업로드 할 이미지</div>
         <div>
             <input type="file" name="file" multiple="multiple"/>
-            <span th:style="${'color: red; font-size:11px;'}" th:text="${valid_feedImageUrl}"></span>
+            <span th:style="${'color: red; font-size:18px;'}" th:text="${valid_feedImageUrl}"></span>
             <img th:src="@{/feed_imgs/} + ${feed.feedImageUrl}" width="150" height="150" style="border-radius: 100%;" />
         </div>
 

@@ -87,7 +87,7 @@ public class UserService {
             user.updateProfileImageUrl(fileName);
         }
 
-        user.updateProfile(updateRequestDto.getIntro());
+        user.updateProfile(updateRequestDto.getNickName(), updateRequestDto.getIntro());
 
     }
 

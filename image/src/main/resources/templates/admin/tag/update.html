@@ -20,7 +20,7 @@
                     <div class="upload-box">
                         <div>
                             <input type="text" class="input-text" name="name" th:value="${tag.name}" placeholder="태그 명을 적어주세요."/>
-                            <span th:style="${'color: red; font-size:11px;'}" th:text="${valid_name}"></span>
+                            <span th:style="${'color: red; font-size:18px;'}" th:text="${valid_name}"></span>
                         </div>
 
                         <div id="drop-file" class="drag-file">
@@ -30,7 +30,7 @@
                         </div>
                         <label class="file-label" for="chooseFile" style="margin-bottom: 3rem;">태그 이미지를 업로드 해주세요.</label>
                         <input class="file" id="chooseFile" type="file" name="file" multiple="multiple" onchange="dropFile.handleFiles(this.files)" accept="image/png, image/jpeg, image/gif">
-                        <span th:style="${'color: red; font-size:11px;'}" th:text="${valid_tagImageUrl}"></span>
+                        <span th:style="${'color: red; font-size:18px;'}" th:text="${valid_tagImageUrl}"></span>
                     </div>
                 </div>
 

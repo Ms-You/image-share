@@ -1,4 +1,4 @@
-package com.share.image.user.dto;
+package com.share.image.feed.dto;
 
 import com.share.image.feed.dto.FeedRequestDto;
 import com.share.image.feed.dto.ReportRequestDto;

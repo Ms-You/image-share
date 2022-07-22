@@ -20,12 +20,12 @@
                     <div class="upload-box">
                         <div>
                             <input type="text" class="input-text" name="title" placeholder="제목을 입력해주세요."/>
-                            <span th:style="${'color: red; font-size:11px;'}" th:text="${valid_title}"></span>
+                            <span th:style="${'color: red; font-size:18px;'}" th:text="${valid_title}"></span>
                         </div>
 
                         <div>
                             <input type="text" class="input-text" name="description" placeholder="간단한 설명을 입력해주세요."/>
-                            <span th:style="${'color: red; font-size:11px;'}" th:text="${valid_description}"></span>
+                            <span th:style="${'color: red; font-size:18px;'}" th:text="${valid_description}"></span>
                         </div>
 
                         <div style="width: 100%; margin-bottom: 3rem;">
@@ -41,7 +41,7 @@
                         </div>
                         <label class="file-label" for="chooseFile" style="margin-bottom: 3rem;">이미지 선택</label>
                         <input class="file" id="chooseFile" type="file" name="file" multiple="multiple" onchange="dropFile.handleFiles(this.files)" accept="image/png, image/jpeg, image/gif">
-                        <span th:style="${'color: red; font-size:11px;'}" th:text="${valid_feedImageUrl}"></span>
+                        <span th:style="${'color: red; font-size:18px;'}" th:text="${valid_feedImageUrl}"></span>
                     </div>
                 </div>
 

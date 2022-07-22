@@ -7,7 +7,7 @@ import com.share.image.feed.dto.ReportRequestDto;
 import com.share.image.feed.repository.FeedRepository;
 import com.share.image.feed.service.ReportService;
 import com.share.image.user.domain.User;
-import com.share.image.user.dto.ReportDtoValidator;
+import com.share.image.feed.dto.ReportDtoValidator;
 import com.share.image.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

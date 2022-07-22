@@ -4,6 +4,7 @@ import com.share.image.config.PrincipalDetails;
 import com.share.image.feed.domain.Feed;
 import com.share.image.user.domain.User;
 import com.share.image.user.dto.JoinRequestDto;
+import com.share.image.user.dto.UpdateDtoValidator;
 import com.share.image.user.dto.UpdateRequestDto;
 import com.share.image.user.dto.JoinDtoValidator;
 import com.share.image.user.repository.UserRepository;
@@ -31,6 +32,7 @@ public class UserController {
     private final UserService userService;
     private final UserRepository userRepository;
     private final JoinDtoValidator usersDtoValidator;
+    private final UpdateDtoValidator updateDtoValidator;
 
 
     @PostMapping("/auth/join")
@@ -83,11 +85,28 @@ public class UserController {
     @PutMapping("/user/update")
     public String uploadProfile(
             @Valid UpdateRequestDto updateRequestDto,
+            Errors errors,
+            Model model,
             @AuthenticationPrincipal PrincipalDetails principalDetails,
             @RequestParam MultipartFile file) throws IOException {
         User user = userRepository.findById(principalDetails.getUser().getId()).orElseThrow(()->{
             return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
         });
+
+        updateRequestDto.setFormerNickName(user.getNickName());
+        updateDtoValidator.validate(updateRequestDto, errors);
+
+        if (errors.hasErrors()) {
+            model.addAttribute("updateRequestDto", updateRequestDto);
+            model.addAttribute("user", user);
+
+            Map<String, String> validatorResult = userService.validateHandling(errors);
+            for (String key : validatorResult.keySet()) {
+                model.addAttribute(key, validatorResult.get(key));
+            }
+
+            return "user/update";
+        }
 
         userService.updateProfile(user, updateRequestDto, file);
 
