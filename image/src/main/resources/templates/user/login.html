@@ -18,9 +18,13 @@
         </div>
 
         <form th:action="@{/auth/login}" method="post" class="was-validated" id="login">
-            <input type="email" class="input-field" id="email" placeholder="Email" name="email" required>
-            <input type="password" class="input-field" id="password" placeholder="Enter Password" name="password" required>
-            <input type="checkbox" class="checkbox"><span class="box-word">Remember Me</span>
+            <input type="email" class="input-field" placeholder="Email" name="email" th:value="${userEmail}" required>
+            <input type="password" class="input-field" placeholder="Enter Password" name="password" th:value="${userPassword}" required>
+            <label class="box-word">
+                <input type="checkbox" class="checkbox" name="rememberChk" th:checked="${flag}">
+                <input type="hidden" class="checkbox" name="_rememberChk" />
+                Remember Me
+            </label>
             <button class="submit">Login</button>
 
             <a href="#" class="forgot-password">Forgot password?</a>

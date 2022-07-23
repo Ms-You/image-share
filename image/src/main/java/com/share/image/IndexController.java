@@ -7,6 +7,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+
 @Controller
 public class IndexController {
 
@@ -25,9 +28,20 @@ public class IndexController {
     @GetMapping("/auth/login")
     public String login(@RequestParam(value = "error", required = false)String error,
                         @RequestParam(value = "exception", required = false)String exception,
-                        Model model){
+                        Model model, HttpServletRequest httpServletRequest){
         model.addAttribute("error", error);
         model.addAttribute("exception", exception);
+
+        Cookie[] myCookies = httpServletRequest.getCookies();
+        if (myCookies == null || myCookies.length <= 1) {   // 쿠키에 userEmail, userPassword 가 없을 경우 체크박스 해제
+            model.addAttribute("flag", false);
+        }
+        else if (myCookies != null){
+            for(int i = 0; i < myCookies.length; i++) {
+                model.addAttribute(myCookies[i].getName(), myCookies[i].getValue());
+            }
+            model.addAttribute("flag", true);
+        }
 
         return "/user/login";
     }
