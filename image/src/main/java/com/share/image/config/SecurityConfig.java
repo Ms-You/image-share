@@ -1,8 +1,10 @@
 package com.share.image.config;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.ServletListenerRegistrationBean;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.authentication.AuthenticationDetailsSource;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -52,6 +54,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         web.ignoring().antMatchers("/css/**", "/js/**", "/image/**", "/templates/**");
     }
 
+    @Autowired
+    private AuthenticationDetailsSource authenticationDetailsSource;
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable();
@@ -63,17 +68,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
                 .antMatchers("/**", "/auth/**").permitAll()
                 .and()
+                .logout()
+                .logoutRequestMatcher(new AntPathRequestMatcher("/auth/logout"))
+                .logoutSuccessUrl("/")
+                .invalidateHttpSession(true)
+                .and()
                 .formLogin()
                     .loginPage("/auth/login")
                     .usernameParameter("email")
                     .passwordParameter("password")
+                    .authenticationDetailsSource(authenticationDetailsSource)
                     .successHandler(successHandler())
                     .failureHandler(failureHandler())
-                .and()
-                .logout()
-                .logoutRequestMatcher(new AntPathRequestMatcher("/auth/logout"))
-                .logoutSuccessUrl("/")
-                .invalidateHttpSession(true);
+                    .permitAll();
     }
 
 
