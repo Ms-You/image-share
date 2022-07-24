@@ -25,6 +25,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
 	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-validation', version: '2.5.2'
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 	implementation 'commons-io:commons-io:2.8.0'
 	implementation 'commons-fileupload:commons-fileupload:1.4'
 	compileOnly 'org.projectlombok:lombok'

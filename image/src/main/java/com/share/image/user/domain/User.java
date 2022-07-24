@@ -29,7 +29,7 @@ public class User {
     @Column(nullable = false)
     private String email;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String nickName;
 
     @Column(nullable = false, length = 255)
@@ -69,15 +69,33 @@ public class User {
     @OneToMany(mappedBy = "writer", cascade = CascadeType.ALL)
     private List<Reply> replies = new ArrayList<>();
 
+    private String provider;
+
+    private String providerId;
+
+
     @Builder
-    public User(Long id, String email, String nickName, String password, RoleType role, String intro, String profileImageUrl){
-        this.id = id;
+    public User(String email, String nickName, String password, RoleType role, String intro, String profileImageUrl){
         this.email = email;
         this.nickName = nickName;
         this.password = password;
         this.role = role;
         this.intro = intro;
         this.profileImageUrl = profileImageUrl;
+        this.createdDate = LocalDateTime.now();
+        this.permanentLocked = "정지하기";
+        this.temporaryLocked = "정지하기";
+    }
+
+    public User(String email, String nickName, String password, RoleType role, String profileImageUrl, String provider, String providerId){
+        this.email = email;
+        this.nickName = nickName;
+        this.password = password;
+        this.role = role;
+        this.intro = null;
+        this.profileImageUrl = profileImageUrl;
+        this.provider = provider;
+        this.providerId = providerId;
         this.createdDate = LocalDateTime.now();
         this.permanentLocked = "정지하기";
         this.temporaryLocked = "정지하기";

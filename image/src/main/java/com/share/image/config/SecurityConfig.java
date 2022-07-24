@@ -1,5 +1,6 @@
 package com.share.image.config;
 
+import com.share.image.config.oauth.PrincipalOauth2UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.ServletListenerRegistrationBean;
@@ -11,9 +12,10 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.session.SessionRegistryImpl;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.firewall.DefaultHttpFirewall;
+import org.springframework.security.web.firewall.HttpFirewall;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
@@ -35,11 +37,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 
     @Bean
-    public BCryptPasswordEncoder bCryptPasswordEncoder(){
-        return new BCryptPasswordEncoder();
-    }
-
-    @Bean
     public SessionRegistry sessionRegistry(){
         return new SessionRegistryImpl();
     }
@@ -52,10 +49,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring().antMatchers("/css/**", "/js/**", "/image/**", "/templates/**");
+        web.httpFirewall(defaultHttpFirewall());
+    }
+
+    @Bean
+    public HttpFirewall defaultHttpFirewall() {
+        return new DefaultHttpFirewall();
     }
 
     @Autowired
     private AuthenticationDetailsSource authenticationDetailsSource;
+
+    @Autowired
+    private PrincipalOauth2UserService principalOauth2UserService;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -68,19 +74,27 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
                 .antMatchers("/**", "/auth/**").permitAll()
                 .and()
-                .logout()
-                .logoutRequestMatcher(new AntPathRequestMatcher("/auth/logout"))
-                .logoutSuccessUrl("/")
-                .invalidateHttpSession(true)
+                    .logout()
+                        .logoutRequestMatcher(new AntPathRequestMatcher("/auth/logout"))
+                        .logoutSuccessUrl("/")
+                        .invalidateHttpSession(true)
+                .and()
+                    .oauth2Login()
+                        .loginPage("/auth/login")
+                        .successHandler(successHandler())
+                        .failureHandler(failureHandler())
+                        .userInfoEndpoint()
+                        .userService(principalOauth2UserService);
+
+        http.authorizeRequests()
                 .and()
                 .formLogin()
-                    .loginPage("/auth/login")
-                    .usernameParameter("email")
-                    .passwordParameter("password")
-                    .authenticationDetailsSource(authenticationDetailsSource)
-                    .successHandler(successHandler())
-                    .failureHandler(failureHandler())
-                    .permitAll();
+                .loginPage("/auth/login")
+                .usernameParameter("email")
+                .passwordParameter("password")
+                .successHandler(successHandler())
+                .failureHandler(failureHandler())
+                .authenticationDetailsSource(authenticationDetailsSource);
     }
 
 

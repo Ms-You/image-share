@@ -6,13 +6,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
-    User findByNickName(String nickName);
     Page<User> findByNickNameContaining(String keyword, Pageable pageable);
-    Optional<User> findByEmail(String email);
-    Boolean existsByNickName(String nickName);
     Boolean existsByEmail(String email);
 
     Page<User> findAll(Pageable pageable);
@@ -22,4 +18,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     List<User> findAllByTemporaryLocked(String temporaryLocked);
 
     Page<User> findAllByPermanentLocked(Pageable pageable, String permanentLocked);
+
+    User findByEmailAndProvider(String email, String provider);
 }

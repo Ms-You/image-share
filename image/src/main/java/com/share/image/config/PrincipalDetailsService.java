@@ -16,10 +16,7 @@ public class PrincipalDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(()->{
-                    return new UsernameNotFoundException("찾을 수 없는 사용자입니다.");
-                });
+        User user = userRepository.findByEmailAndProvider(email, null); // 소셜 로그인이 아닌 일반 로그인의 경우
 
         return new PrincipalDetails(user);
     }

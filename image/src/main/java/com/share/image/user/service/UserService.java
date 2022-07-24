@@ -8,7 +8,9 @@ import com.share.image.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.Errors;
@@ -31,7 +33,11 @@ import java.util.Map;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    @Bean
+    public BCryptPasswordEncoder bCryptPasswordEncoder(){
+        return new BCryptPasswordEncoder();
+    }
 
     // 회원가입 시, 유효성 체크
     @Transactional(readOnly = true)
@@ -51,7 +57,7 @@ public class UserService {
         User user = User.builder()
                 .email(joinRequestDto.getEmail())
                 .nickName(joinRequestDto.getNickName())
-                .password(bCryptPasswordEncoder.encode(joinRequestDto.getPassword()))
+                .password(bCryptPasswordEncoder().encode(joinRequestDto.getPassword()))
                 .intro(null)
                 .profileImageUrl(null)
                 .role(RoleType.ROLE_USER)
@@ -59,6 +65,14 @@ public class UserService {
 
         return userRepository.save(user);
 
+    }
+
+    public User oauthSignUp(String provider, OAuth2User oAuth2User){
+        User user = new User(oAuth2User.getAttribute("email"), oAuth2User.getAttribute("name"),
+                bCryptPasswordEncoder().encode(oAuth2User.getAttribute("email")),   // 비밀번호는 의미가 없어서 이메일로 암호화만 해서 넣어줌
+                RoleType.ROLE_USER, oAuth2User.getAttribute("picture"), provider, oAuth2User.getAttribute("sub"));
+
+        return userRepository.save(user);
     }
 
 
