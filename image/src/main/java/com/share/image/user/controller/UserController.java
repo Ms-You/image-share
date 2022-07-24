@@ -1,10 +1,8 @@
 package com.share.image.user.controller;
 
 import com.share.image.config.PrincipalDetails;
-import com.share.image.feed.domain.Feed;
 import com.share.image.user.domain.User;
 import com.share.image.user.dto.JoinRequestDto;
-import com.share.image.user.dto.UpdateDtoValidator;
 import com.share.image.user.dto.UpdateRequestDto;
 import com.share.image.user.dto.JoinDtoValidator;
 import com.share.image.user.repository.UserRepository;
@@ -21,7 +19,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -32,7 +29,6 @@ public class UserController {
     private final UserService userService;
     private final UserRepository userRepository;
     private final JoinDtoValidator usersDtoValidator;
-    private final UpdateDtoValidator updateDtoValidator;
 
 
     @PostMapping("/auth/join")
@@ -92,9 +88,6 @@ public class UserController {
         User user = userRepository.findById(principalDetails.getUser().getId()).orElseThrow(()->{
             return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
         });
-
-        updateRequestDto.setFormerNickName(user.getNickName());
-        updateDtoValidator.validate(updateRequestDto, errors);
 
         if (errors.hasErrors()) {
             model.addAttribute("updateRequestDto", updateRequestDto);

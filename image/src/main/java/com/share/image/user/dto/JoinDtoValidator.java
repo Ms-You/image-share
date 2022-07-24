@@ -23,9 +23,6 @@ public class JoinDtoValidator implements Validator {
         if (userRepository.existsByEmail(joinRequestDto.getEmail())){
             errors.rejectValue("email", "email", new Object[]{joinRequestDto.getEmail()}, "이미 사용중인 이메일입니다.");
         }
-        if (userRepository.existsByNickName(joinRequestDto.getNickName())){
-            errors.rejectValue("nickName", "nickName", new Object[]{joinRequestDto.getNickName()}, "이미 사용중인 닉네임입니다.");
-        }
         if (!joinRequestDto.getPassword().equals(joinRequestDto.getPassword_confirm())){
             errors.rejectValue("password_confirm", "key","비밀번호가 일치하지 않습니다.");
         }
