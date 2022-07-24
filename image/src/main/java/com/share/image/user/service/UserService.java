@@ -1,5 +1,6 @@
 package com.share.image.user.service;
 
+import com.share.image.config.oauth.OAuth2UserInfo;
 import com.share.image.user.domain.RoleType;
 import com.share.image.user.domain.User;
 import com.share.image.user.dto.JoinRequestDto;
@@ -67,10 +68,10 @@ public class UserService {
 
     }
 
-    public User oauthSignUp(String provider, OAuth2User oAuth2User){
-        User user = new User(oAuth2User.getAttribute("email"), oAuth2User.getAttribute("name"),
-                bCryptPasswordEncoder().encode(oAuth2User.getAttribute("email")),   // 비밀번호는 의미가 없어서 이메일로 암호화만 해서 넣어줌
-                RoleType.ROLE_USER, oAuth2User.getAttribute("picture"), provider, oAuth2User.getAttribute("sub"));
+    public User oauthSignUp(OAuth2UserInfo oAuth2UserInfo){
+        User user = new User(oAuth2UserInfo.getEmail(), oAuth2UserInfo.getName(),
+                bCryptPasswordEncoder().encode(oAuth2UserInfo.getEmail()),   // 비밀번호는 의미가 없어서 이메일로 암호화만 해서 넣어줌
+                oAuth2UserInfo.getProvider(), oAuth2UserInfo.getProviderId());
 
         return userRepository.save(user);
     }

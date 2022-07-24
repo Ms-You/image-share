@@ -87,13 +87,14 @@ public class User {
         this.temporaryLocked = "정지하기";
     }
 
-    public User(String email, String nickName, String password, RoleType role, String profileImageUrl, String provider, String providerId){
+    public User(String email, String nickName, String password, String provider, String providerId){
         this.email = email;
         this.nickName = nickName;
         this.password = password;
         this.role = role;
         this.intro = null;
-        this.profileImageUrl = profileImageUrl;
+        this.profileImageUrl = null;
+        this.role = RoleType.ROLE_USER;
         this.provider = provider;
         this.providerId = providerId;
         this.createdDate = LocalDateTime.now();
