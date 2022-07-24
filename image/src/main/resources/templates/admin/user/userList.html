@@ -33,6 +33,7 @@
                 <th>닉네임</th>
                 <th>이메일(계정)</th>
                 <th>권한</th>
+                <th>로그인 방식</th>
                 <th>보기</th>
             </tr>
             </thead>
@@ -45,6 +46,12 @@
                     <td th:text="${user.nickName}"></td>
                     <td th:text="${user.email}"></td>
                     <td th:text="${user.role}"></td>
+                    <span th:if="${#strings.isEmpty(user.provider)}">
+                        <td>일반 로그인</td>
+                    </span>
+                    <span th:unless="${#strings.isEmpty(user.provider)}">
+                        <td th:text="${user.provider}+' 로그인'"></td>
+                    </span>
                     <td>
                         <a th:href="@{/admin/user/{id}(id=${user.id})}">
                             <button type="button" class="btn btn-primary">보기</button>
