@@ -36,13 +36,16 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
             oAuth2UserInfo = new GoogleUserInfo(oAuth2User.getAttributes());
         } else if (userRequest.getClientRegistration().getRegistrationId().equals("naver")){
             oAuth2UserInfo = new NaverUserInfo((Map) oAuth2User.getAttributes().get("response"));
+        } else if (userRequest.getClientRegistration().getRegistrationId().equals("kakao")){
+            oAuth2UserInfo = new KakaoUserInfo(oAuth2User.getAttributes());
         }
 
-        String provider = userRequest.getClientRegistration().getRegistrationId();    // google, kakao, naver
+        String provider = oAuth2UserInfo.getProvider();     // google, kakao, naver
 
-        User user = userRepository.findByEmailAndProvider(oAuth2User.getAttribute("email"), provider);
+        User user = userRepository.findByEmailAndProvider(oAuth2UserInfo.getEmail(), provider);
+        log.info("user: {}", user);
 
-        if (user == null)   // email, provider 에 해당하는 계정이 없는 경우 생성
+        if (user == null)   // email, provider 에 해당하는 계정이 없는 경우 생성 있으면 로그인
             user = userService.oauthSignUp(oAuth2UserInfo);
 
         return new PrincipalDetails(user, oAuth2User.getAttributes());

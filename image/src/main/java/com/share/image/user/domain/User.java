@@ -91,7 +91,6 @@ public class User {
         this.email = email;
         this.nickName = nickName;
         this.password = password;
-        this.role = role;
         this.intro = null;
         this.profileImageUrl = null;
         this.role = RoleType.ROLE_USER;
