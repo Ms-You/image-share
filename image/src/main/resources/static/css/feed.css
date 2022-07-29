@@ -124,6 +124,14 @@ button.button {
   background: #FD3301;
 }
 
+.btnYellow {
+  background: #FADE37;
+}
+
+.btnBlue {
+  background: #397ACF;
+}
+
 .btnBlueGreen.btnPush {
   box-shadow: 0px 5px 0px 0px #007144;
 }
@@ -138,6 +146,14 @@ button.button {
 
 .btnRed.btnPush {
   box-shadow: 0px 5px 0px 0px #9E3301;
+}
+
+.btnYellow.btnPush {
+  box-shadow: 0px 5px 0px 0px #F1BE37;
+}
+
+.btnBlue.btnPush {
+  box-shadow: 0px 5px 0px 0px #296a9a;
 }
 
 .btnPush:hover {

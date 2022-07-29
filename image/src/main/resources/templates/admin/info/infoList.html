@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<!-- head.html -->
+<th:block th:replace="layout/head::headFragment"></th:block>
+
+<!-- layout/admin_header.html -->
+<header th:replace="layout/admin_header::admin_headerFragment"></header>
+
+<!-- content -->
+<section class="page-section portfolio">
+    <div class="container" style="margin-bottom: 10rem;">
+        <div style="margin-bottom: 4rem;">
+            <a th:href="@{/admin/}">
+                <button type="button" class="button btnPush btnBlue">뒤로 가기</button>
+            </a>
+        </div>
+
+        <div style="display: flex; margin-bottom: 4rem;">
+            <a th:href="@{/admin/new/info}">
+                <button type="button" class="button btnPush btnBlue">공지 등록</button>
+            </a>
+        </div>
+
+        <h1>공지 목록</h1>
+        <table class="user-table">
+            <thead style="background-color: #397ACF;">
+            <tr>
+                <th>번호</th>
+                <th>제목</th>
+                <th>타입</th>
+                <th>등록일</th>
+                <th>작성자</th>
+                <th>보기</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="info: ${infos.content}">
+                <td th:text="${info.id}"></td>
+                <td th:text="${info.title}"></td>
+                <td th:text="${info.informationType.value}"></td>
+                <td th:text="${#temporals.format(info.createdDate, 'yyyy-MM-dd')}"></td>
+                <td th:text="${info.writer.nickName}"></td>
+                <td>
+                    <a th:href="@{/admin/info/{id}(id=${info.id})}">
+                        <button type="button" class="btn btn-primary">보기</button>
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="container">
+        <!-- 페이징처리 시작 -->
+        <div th:if="${!infos.isEmpty()}">
+            <ul class="pagination justify-content-center">
+
+                <li class="page-item" th:classappend="${!infos.hasPrevious} ? 'disabled'">
+                    <a class="page-link" th:href="@{/admin/infos/(page='0')}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+
+                <li class="page-item" th:classappend="${!infos.hasPrevious} ? 'disabled'">
+                    <a class="page-link" th:href="@{/admin/infos/(page=${infos.number-1})}">
+                        <span>&lt;</span>
+                    </a>
+                </li>
+
+                <li th:each="page: ${#numbers.sequence(startPage, endPage)}"
+                    th:classappend="${page == infos.number + 1} ? 'active'" class="page-item">
+                    <a th:text="${page}" class="page-link" th:href="@{/admin/infos/(page=${page-1})}"></a>
+                </li>
+
+                <li class="page-item" th:classappend="${!infos.hasNext} ? 'disabled'">
+                    <a class="page-link" th:href="@{/admin/infos/(page=${infos.number+1})}">
+                        <span>&gt;</span>
+                    </a>
+                </li>
+
+                <li class="page-item" th:classappend="${!infos.hasNext} ? 'disabled'">
+                    <a class="page-link" th:href="@{/admin/infos/(page=${infos.totalPages-1})}" aria-label="Previous">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+
+            </ul>
+        </div>
+        <!-- 페이징처리 끝 -->
+
+
+    </div>
+</section>
+<footer th:replace="layout/footer::footerFragment"></footer>

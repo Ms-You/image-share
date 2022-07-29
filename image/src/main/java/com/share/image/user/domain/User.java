@@ -1,5 +1,6 @@
 package com.share.image.user.domain;
 
+import com.share.image.admin.domain.Information;
 import com.share.image.feed.domain.Feed;
 import com.share.image.feed.domain.FeedLike;
 import com.share.image.feed.domain.Reply;
@@ -68,6 +69,9 @@ public class User {
 
     @OneToMany(mappedBy = "writer", cascade = CascadeType.ALL)
     private List<Reply> replies = new ArrayList<>();
+
+    @OneToMany(mappedBy = "writer", cascade = CascadeType.ALL)
+    private List<Information> informations = new ArrayList<>();
 
     private String provider;
 
