@@ -21,9 +21,12 @@
         <h3 style="color: white; background-color: #397ACF; font-weight: lighter;" th:text="${info.title}"></h3>
         <h5 style="color: gray; font-weight: lighter;" th:text="'작성일' + ${#temporals.format(info.createdDate, 'yyyy-MM-dd')}"></h5>
         <hr/>
+        <div th:if="${not #strings.isEmpty(info.infoImageUrl)}" style="margin-bottom: 5rem;">
+            <img th:src="@{/info_imgs/} + ${info.infoImageUrl}" class="d-block w-100"/>
+        </div>
         <p style="white-space: break-spaces; margin-bottom: 10rem;" th:text="${info.content}"></p>
 
-        <a th:href="@{/admin/info/update/{id}(id=${info.id})}">
+        <a th:href="@{/admin/info/update/{id}(id=${info.id})}" style="display: flow-root; margin-bottom: 10rem;">
             <button class="button btnPush btnBlue" type="submit" style="float: right; margin-right: 1rem;">수정 하기</button>
         </a>
     </div>

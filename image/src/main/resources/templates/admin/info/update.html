@@ -11,7 +11,7 @@
 <section class="page-section portfolio">
     <div class="container">
 
-        <form th:action="@{/admin/info/update/{id}(id=${info.id})}" method="post" th:object="${infoRequestDto}"  style="padding: 3rem 0rem 30rem 0rem;">
+        <form th:action="@{/admin/info/update/{id}(id=${info.id})}" method="post" th:object="${infoRequestDto}" enctype="multipart/form-data" accept-charset="UTF-8" style="padding: 3rem 0rem 30rem 0rem;">
             <input type="hidden" name="_method" value="put"/>
             <div id="feed-create">
 
@@ -33,6 +33,18 @@
                 <div style="margin-bottom: 5rem; margin-top: 3rem;">
                     <textarea id="input" name="content" placeholder="공지로 등록할 내용을 입력해주세요." type="text" class="form-control" th:text="${info.content}" style="height: 110px; margin-bottom: 1rem; font-size: 18px;"></textarea>
                     <div class="field-error" th:errors="*{content}" style="color: red; font-size: 18px;">최대 글자수 초과</div>
+                </div>
+
+                <div class="contents">
+                    <div class="upload-box">
+                        <div id="drop-file" class="drag-file">
+                            <img th:src="@{/info_imgs/} + ${info.infoImageUrl}" class="image" id="basic_img" style="width: 100%; height: 100%; position: absolute;">
+                            <p class="message">이미지 업로드</p>
+                            <img src="" alt="미리보기 이미지" class="preview">
+                        </div>
+                        <label class="file-label" for="chooseFile" style="margin-bottom: 3rem;">이미지 선택</label>
+                        <input class="file" id="chooseFile" type="file" name="file" multiple="multiple" onchange="dropFile.handleFiles(this.files)" accept="image/png, image/jpeg, image/gif">
+                    </div>
                 </div>
 
                 <a th:href="@{/admin}">

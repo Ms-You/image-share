@@ -6,11 +6,19 @@ import com.share.image.admin.repository.InformationRepository;
 import com.share.image.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,7 +42,10 @@ public class InformationService {
         return validatorResult;
     }
 
-    public void enrollInfo(User writer, InfoRequestDto infoRequestDto) {
+    @Value("${infoImg.path}")
+    private String uploadFolder;
+
+    public void enrollInfo(User writer, InfoRequestDto infoRequestDto, MultipartFile multipartFile) throws UnsupportedEncodingException {
         Information information = Information.builder()
                 .title(infoRequestDto.getTitle())
                 .content(infoRequestDto.getContent())
@@ -42,11 +53,51 @@ public class InformationService {
                 .writer(writer)
                 .build();
 
+        String fileName = writer.getId() + "_" + multipartFile.getOriginalFilename();
+        // 한글 파일 명 깨짐 처리
+        fileName = URLEncoder.encode(fileName, "UTF-8");
+        Path imageFilePath = Paths.get(uploadFolder + fileName);
+        log.info("fileName: {}", fileName);
+
+        // 파일 업로드 여부 확인
+        if (multipartFile.getSize() != 0){
+            try{
+                if (information.getInfoImageUrl() != null) {
+                    File file = new File(uploadFolder + information.getInfoImageUrl());
+                    file.delete();
+                }
+                Files.write(imageFilePath, multipartFile.getBytes());
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+            information.updateInfoImageUrl(fileName);
+        }
+
         informationRepository.save(information);
     }
 
-    public void updateInfo(Information information, InfoRequestDto infoRequestDto) {
+    public void updateInfo(Information information, InfoRequestDto infoRequestDto, MultipartFile multipartFile) throws UnsupportedEncodingException {
         information.updateInfo(infoRequestDto.getTitle(), infoRequestDto.getContent(), infoRequestDto.getInformationType());
+
+        String fileName = information.getWriter().getId() + "_" + multipartFile.getOriginalFilename();
+        // 한글 파일 명 깨짐 처리
+        fileName = URLEncoder.encode(fileName, "UTF-8");
+        Path imageFilePath = Paths.get(uploadFolder + fileName);
+        log.info("fileName: {}", fileName);
+
+        // 파일 업로드 여부 확인
+        if (multipartFile.getSize() != 0){
+            try{
+                if (information.getInfoImageUrl() != null) {
+                    File file = new File(uploadFolder + information.getInfoImageUrl());
+                    file.delete();
+                }
+                Files.write(imageFilePath, multipartFile.getBytes());
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+            information.updateInfoImageUrl(fileName);
+        }
 
         informationRepository.save(information);
     }

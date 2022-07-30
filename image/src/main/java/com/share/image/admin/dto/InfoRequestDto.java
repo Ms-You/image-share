@@ -17,10 +17,10 @@ public class InfoRequestDto {
     private Long id;
 
     @NotBlank(message = "제목은 필수 입력 값입니다.")
-    @Size(min = 1, max = 20, message = "제목은 최대 20자까지 입력해주세요.")
+    @Size(min = 1, max = 50, message = "제목은 최대 50자까지 입력해주세요.")
     private String title;
 
-    @Size(max = 500, message = "최대 500자까지 작성 가능합니다.")
+    @Size(max = 999, message = "최대 999자까지 작성 가능합니다.")
     private String content;
 
     @NotNull(message = "공지 타입을 선택해주세요.")

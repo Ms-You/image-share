@@ -29,16 +29,67 @@
 
     <div class="masthead text-center move" id="notice" style="color: #C31952; background-color: pink;">
         <div class="container d-flex align-items-center flex-column">
-            <h1 class="masthead-heading text-uppercase py-5">공지사항</h1>
-            <img th:src="@{/img/notice.png}" alt="공지사항" height="100" width="100">
-            <h1 class="masthead-heading text-uppercase py-5">시스템 점검 안내</h1>
-            <hr style="width: 75%; height: 0.5rem;">
-            <p class="masthead-subheading font-weight-light py-5">
-                더 나은 서비스를 제공해드리기 위해 홈페이지 정기 정검을 실시합니다.<br/>
-                해당 시간동안 서비스 이용이 제한되오니 고객님들의 많은 양해 부탁드립니다.<br/>
-                이용에 불편을 드려 죄송합니다.<br/>
-            </p>
-            <span class="masthead-subheading py-1" style="font-weight: 700; background-color: #F2F2F2;">점검 일시: 2022년 7월 4일 ~ </span>
+            <div class="container" style="margin-bottom: 10rem;">
+                <h1>공지 목록</h1>
+                <table class="user-table" style="font-size: 16px;">
+                    <thead style="background-color: #397ACF;">
+                    <tr>
+                        <th>번호</th>
+                        <th>제목</th>
+                        <th>타입</th>
+                        <th>등록일</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="info: ${infos.content}">
+                        <td th:text="${info.id}"></td>
+                        <td>
+                            <a th:href="@{/info/{id}(id=${info.id})}" style="color: #C31952;">
+                                <span th:text="${info.title}"></span>
+                            </a>
+                        </td>
+                        <td th:text="${info.informationType.value}"></td>
+                        <td th:text="${#temporals.format(info.createdDate, 'yyyy-MM-dd')}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="container" style="font-size: 16px;">
+                <div th:if="${!infos.isEmpty()}">
+                    <ul class="pagination justify-content-center">
+
+                        <li class="page-item" th:classappend="${!infos.hasPrevious} ? 'disabled'">
+                            <a class="page-link" th:href="@{/(page='0')}" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+
+                        <li class="page-item" th:classappend="${!infos.hasPrevious} ? 'disabled'">
+                            <a class="page-link" th:href="@{/(page=${infos.number-1})}">
+                                <span>&lt;</span>
+                            </a>
+                        </li>
+
+                        <li th:each="page: ${#numbers.sequence(startPage, endPage)}"
+                            th:classappend="${page == infos.number + 1} ? 'active'" class="page-item">
+                            <a th:text="${page}" class="page-link" th:href="@{/(page=${page-1})}"></a>
+                        </li>
+
+                        <li class="page-item" th:classappend="${!infos.hasNext} ? 'disabled'">
+                            <a class="page-link" th:href="@{/(page=${infos.number+1})}">
+                                <span>&gt;</span>
+                            </a>
+                        </li>
+
+                        <li class="page-item" th:classappend="${!infos.hasNext} ? 'disabled'">
+                            <a class="page-link" th:href="@{/(page=${infos.totalPages-1})}" aria-label="Previous">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+
+                    </ul>
+                </div>
+            </div>
         </div>
     </div>
 

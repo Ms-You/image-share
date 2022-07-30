@@ -21,8 +21,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
 @Slf4j
@@ -44,7 +46,7 @@ public class InformationController {
 
     // 공지 관리
     @GetMapping("/infos")
-    public String infoList(Model model, @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable){
+    public String infoList(Model model, @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable){
 
         Page<Information> infos = informationRepository.findAll(pageable);
         int startPage = (int) (Math.floor(pageable.getPageNumber() / pageable.getPageSize()) * pageable.getPageSize() + 1);
@@ -69,7 +71,8 @@ public class InformationController {
     @PostMapping("/new/info")
     public String enrollInfo(@AuthenticationPrincipal PrincipalDetails principalDetails,
                              @Valid @ModelAttribute InfoRequestDto infoRequestDto,
-                             BindingResult bindingResult, Model model) {
+                             BindingResult bindingResult, Model model,
+                             @RequestParam MultipartFile file) throws UnsupportedEncodingException {
 
         User writer = userRepository.findById(principalDetails.getUser().getId()).orElseThrow(()->{
             return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다");
@@ -88,10 +91,10 @@ public class InformationController {
             return "admin/info/enroll";
         }
 
-        informationService.enrollInfo(writer, infoRequestDto);
+        informationService.enrollInfo(writer, infoRequestDto, file);
         model.addAttribute("message", "공지가 등록되었습니다.");
 
-        return "redirect:/admin/infos";
+        return "admin/info/enroll";
     }
 
 
@@ -126,8 +129,8 @@ public class InformationController {
     @PutMapping("/info/update/{information_id}")
     public String updateInfo(@PathVariable(name = "information_id") Long informationId,
                              @Valid InfoRequestDto infoRequestDto,
-                             BindingResult bindingResult,
-                             Model model) {
+                             BindingResult bindingResult, Model model,
+                             @RequestParam MultipartFile file) throws UnsupportedEncodingException {
 
         Information info = informationRepository.findById(informationId).orElseThrow(()->{
             return new IllegalArgumentException("공지를 찾을 수 없습니다.");
@@ -146,7 +149,7 @@ public class InformationController {
 
             return "admin/info/update";
         }
-        informationService.updateInfo(info, infoRequestDto);
+        informationService.updateInfo(info, infoRequestDto, file);
 
         return "redirect:/admin/infos";
     }

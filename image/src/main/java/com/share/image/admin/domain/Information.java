@@ -24,6 +24,8 @@ public class Information {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
 
+    private String infoImageUrl;
+
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private InformationType informationType;
@@ -48,6 +50,10 @@ public class Information {
         this.title = title;
         this.content = content;
         this.informationType = informationType;
+    }
+
+    public void updateInfoImageUrl(String infoImageUrl){
+        this.infoImageUrl = infoImageUrl;
     }
 
 }

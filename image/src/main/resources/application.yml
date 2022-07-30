@@ -51,3 +51,6 @@ tagImg:
 
 feedImg:
   path: C:/Users/명수/Documents/공부/스프링/image/feed_imgs/
+
+infoImg:
+  path: C:/Users/명수/Documents/공부/스프링/image/info_imgs/
