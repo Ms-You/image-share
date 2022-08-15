@@ -1,52 +1,62 @@
 <!doctype html>
-<html lang="ko"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
 <!-- head.html -->
 <th:block th:replace="layout/head::headFragment"></th:block>
 
 <!-- layout/header.html -->
 <header th:replace="layout/header::headerFragment"></header>
 
-<body layout:fragment="content">
 <!-- content -->
-<div class="container">
+<section class="page-section portfolio">
+    <div class="container">
 
-    <form th:action="@{/user/feed/update/{id}(id=${feed.id})}" method="post" modelAttribute="feedRequestDto" name="form" enctype="multipart/form-data" accept-charset="UTF-8">
-        <input type="hidden" name="_method" value="put"/>
-        <!--  제목  -->
-        <div>제목</div>
-        <div>
-            <input type="text" name="title" th:value="${feed.title}" placeholder="제목을 입력해주세요."/>
-            <span th:style="${'color: red; font-size:18px;'}" th:text="${valid_title}"></span>
-        </div>
-        <!--  설명  -->
-        <div>설명</div>
-        <div>
-            <input type="text" name="description" th:value="${feed.description}" placeholder="간단한 설명을 입력해주세요."/>
-            <span th:style="${'color: red; font-size:18px;'}" th:text="${valid_description}"></span>
-        </div>
+        <form th:action="@{/user/feed/update/{id}(id=${feed.id})}" method="post" modelAttribute="feedRequestDto" name="form" enctype="multipart/form-data" accept-charset="UTF-8" style="padding: 3rem 0rem 30rem 0rem;">
+            <input type="hidden" name="_method" value="put"/>
 
-        <!--  피드 이미지  -->
-        <div>업로드 할 이미지</div>
-        <div>
-            <input type="file" name="file" multiple="multiple"/>
-            <span th:style="${'color: red; font-size:18px;'}" th:text="${valid_feedImageUrl}"></span>
-            <img th:src="@{/feed_imgs/} + ${feed.feedImageUrl}" width="150" height="150" style="border-radius: 100%;" />
-        </div>
+            <div id="feed-create">
+                <h2 class="title">피드 수정</h2>
 
-        <div>업로드 할 태그</div>
-        <div>
-            <select class="form-select" name="tagName">
-                <option th:each="tag : ${tags}" th:value="${tag.name}" th:text="${tag.name}"></option>
-            </select>
-        </div>
+                <div class="contents">
+                    <div class="upload-box">
+                        <div>
+                            <input type="text" class="input-text" name="title" th:value="${feed.title}" placeholder="제목을 입력해주세요."/>
+                            <span th:style="${'color: red; font-size:18px;'}" th:text="${valid_title}"></span>
+                        </div>
 
-        <button class="btn btn-primary" type="submit">수정</button>
-    </form>
+                        <div>
+                            <input type="text" class="input-text" name="description" th:value="${feed.description}" placeholder="간단한 설명을 입력해주세요."/>
+                            <span th:style="${'color: red; font-size:18px;'}" th:text="${valid_description}"></span>
+                        </div>
 
-</div>
-</body>
+                        <div style="width: 100%; margin-bottom: 3rem;">
+                            <select class="form-select" name="tagName">
+                                <option th:each="tag : ${tags}" th:value="${tag.name}" th:text="${tag.name}"></option>
+                            </select>
+                        </div>
 
+                        <div id="drop-file" class="drag-file">
+                            <img th:src="@{/feed_imgs/} + ${feed.feedImageUrl}" class="image" id="basic_img" style="width: 100%; height: 100%; position: absolute;">
+                            <p class="message">이미지 업로드</p>
+                            <img src="" alt="미리보기 이미지" class="preview">
+                        </div>
+                        <label class="file-label" for="chooseFile" style="margin-bottom: 3rem;">태그 이미지를 업로드 해주세요.</label>
+                        <input class="file" id="chooseFile" type="file" name="file" multiple="multiple" onchange="dropFile.handleFiles(this.files)" accept="image/png, image/jpeg, image/gif">
+                        <span th:style="${'color: red; font-size:18px;'}" th:text="${valid_feedImageUrl}"></span>
+                    </div>
+                </div>
+
+                <a th:href="@{/user/feed/{id}(id=${feed.id})}">
+                    <button class="button btnPush btnOrange" type="button" style="float: right;">취소</button>
+                </a>
+                <button class="button btnPush btnBlueGreen" type="submit" style="float: right; margin-right: 1rem;">수정</button>
+
+            </div>
+        </form>
+
+    </div>
+</section>
+
+<script type="text/javascript" th:src="@{/js/feedCreate.js}"></script>
 <!-- layout/footer.html -->
 <footer th:replace="layout/footer::footerFragment"></footer>
