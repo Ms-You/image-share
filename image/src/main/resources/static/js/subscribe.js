@@ -1,14 +1,15 @@
 $(".subscribe").click(function() {
+    var toUserId = $("#toUserId").val();
     var feedId = $("#feedId").val();
     var arrowImage = $(this).children("span").children("img");
 
     arrowImage.attr("src", function(index, attr){
       if (attr.match('do')) {
-        btnUnSubscribe(feedId);
+        btnUnSubscribe(toUserId, feedId);
         return attr.replace("do", "un");
       }
       else {
-        btnSubscribe(feedId);
+        btnSubscribe(toUserId, feedId);
         return attr.replace("un", "do");
       }
     });
@@ -16,10 +17,10 @@ $(".subscribe").click(function() {
   });
 
 
-  function btnSubscribe(feedId){
+  function btnSubscribe(toUserId, feedId){
   	$.ajax({
   		type: "POST",
-  		url: `/user/subscribe/feed/${feedId}`,
+  		url: `/user/subscribe/${toUserId}/${feedId}`,
   		dataType: "text"
   	}).done(res=>{
   	    console.log("OK");
@@ -28,10 +29,10 @@ $(".subscribe").click(function() {
   	});
   }
 
-  function btnUnSubscribe(feedId){
+  function btnUnSubscribe(toUserId, feedId){
       $.ajax({
           type: "POST",
-          url: `/user/unSubscribe/feed/${feedId}`,
+          url: `/user/unSubscribe/${toUserId}/${feedId}`,
           dataType: "text"
       }).done(res=>{
           console.log("OK");

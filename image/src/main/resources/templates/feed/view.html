@@ -44,6 +44,7 @@
                     <img th:src="@{/img/save.png}" alt="피드 저장" width="40" height="40" class="d-inline-block align-text-top" style="float: right;">
                 </a>
             <!--  구독 start  -->
+                <input type="hidden" id="toUserId" th:value="${feed.writer.id}">
                 <a href="#a" class="subscribe">
                     <span><img th:src="@{${subscribeStatus}}" alt="구독" width="80" height="60" class="d-inline-block align-text-top"></span>
                 </a>

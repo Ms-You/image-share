@@ -119,7 +119,7 @@ public class FeedController {
         List<Reply> replies = replyRepository.findByFeed(feed);
 
         // 구독 상태 변경
-        if (subscribeService.isUserSubscribe(feedId, user.getId()))
+        if (subscribeService.isUserSubscribe(feed.getWriter().getId(), user.getId()))
             model.addAttribute("subscribeStatus", "/img/do_sub.png");
         else
             model.addAttribute("subscribeStatus", "/img/un_sub.png");

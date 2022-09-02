@@ -1,11 +1,13 @@
 package com.share.image.feed.service;
 
-import com.share.image.feed.repository.FeedRepository;
+import com.share.image.feed.domain.Subscribe;
 import com.share.image.feed.repository.SubscribeRepository;
 import com.share.image.user.domain.User;
 import com.share.image.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,17 +19,14 @@ import org.springframework.transaction.annotation.Transactional;
 public class SubscribeService {
 
     private final UserRepository userRepository;
-    private final FeedRepository feedRepository;
     private final SubscribeRepository subscribeRepository;
 
     // 구독 여부 확인
     @Transactional(readOnly = true)
-    public Boolean isUserSubscribe(Long feedId, Long userId) {
+    public Boolean isUserSubscribe(Long toUserId, Long userId) {
         User fromUser = userRepository.findById(userId).orElseThrow(()->{
             return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
         });
-
-        Long toUserId = feedRepository.findUserIdByFeedId(feedId);
 
         if (subscribeRepository.findSubscribeByUserId(fromUser.getId(), toUserId) == null)	// 구독중이 아님
             return false;
@@ -36,14 +35,16 @@ public class SubscribeService {
 
     }
 
-    public void subscribe(Long fromUserId, Long feedId) {
-        Long toUserId = feedRepository.findUserIdByFeedId(feedId);
+    public void subscribe(Long fromUserId, Long toUserId) {
         subscribeRepository.subscribeUser(fromUserId, toUserId);
     }
 
-    public void unSubscribe(Long fromUserId, Long feedId) {
-        Long toUserId = feedRepository.findUserIdByFeedId(feedId);
+    public void unSubscribe(Long fromUserId, Long toUserId) {
         subscribeRepository.unSubscribeUser(fromUserId, toUserId);
+    }
+
+    public Page<Subscribe> findSubscribeList(User user, Pageable pageable){
+        return subscribeRepository.findByFromUserId(user.getId(), pageable);
     }
 
 }

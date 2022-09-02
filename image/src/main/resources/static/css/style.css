@@ -11594,3 +11594,8 @@ html {
 .copyright {
   background-color: #1a252f;
 }
+
+.each-hover:hover{
+  cursor: pointer;
+  background-color: #f5f5f5;
+}

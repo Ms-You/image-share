@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+
+<!-- head.html -->
+<th:block th:replace="layout/head::headFragment"></th:block>
+
+<!-- layout/header.html -->
+<header th:replace="layout/header::headerFragment"></header>
+
+<!-- content -->
+<section class="page-section portfolio">
+
+    <!--  subscribe list start  -->
+    <div class="container" style="margin-bottom: 10rem;">
+        <div style="font-weight: 500; font-size: 23px; margin-top: 3rem; margin-bottom: 5rem;">구독 관리 페이지</div>
+        <div th:each="subscribe: ${subscribes}" style="margin-top: 2rem; margin-bottom: 2rem; display: flex;">
+            <a th:href="@{/user/subscribe/{id}(id=${subscribe.toUser.id})}" style="width: 100%;">
+                <div class="each-hover">
+                    <img th:src="@{/profile_imgs/} + ${subscribe.toUser.profileImageUrl}" onerror="this.src='/img/default_profile.png';" style="width: 90px; height: 90px; border-radius: 100%; vertical-align: middle;" />
+                    <span th:text="${subscribe.toUser.nickName}" style="font-weight: bold; font-size: 18px; margin-left: 1.5rem; margin-right: 5rem;"></span>
+                </div>
+            </a>
+        </div>
+    </div>
+    <!--  feed list end  -->
+
+    <div class="container">
+        <div th:if="${subscribes.isEmpty()}" class="row" style="padding: 3rem 0rem 30rem 0rem; text-align: center;">
+            <h2>
+                구독이 없습니다.<br/>
+            </h2>
+            <a th:href="@{/user/profile/}">
+                <button type="button" class="button btnPush btnBlueGreen" style="width: 10%; float: initial; display: inline;">돌아가기</button>
+            </a>
+        </div>
+
+
+        <!-- 페이징처리 시작 -->
+        <div th:if="${!subscribes.isEmpty()}">
+            <ul class="pagination justify-content-center">
+
+                <li class="page-item" th:classappend="${!subscribes.hasPrevious} ? 'disabled'">
+                    <a class="page-link" th:href="@{/user/subscribe/(page='0')}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+
+                <li class="page-item" th:classappend="${!subscribes.hasPrevious} ? 'disabled'">
+                    <a class="page-link" th:href="@{/user/subscribe/(page=${subscribes.number-1})}">
+                        <span>&lt;</span>
+                    </a>
+                </li>
+
+                <li th:each="page: ${#numbers.sequence(startPage, endPage)}"
+                    th:classappend="${page == subscribes.number + 1} ? 'active'" class="page-item">
+                    <a th:text="${page}" class="page-link" th:href="@{/user/subscribe/(page=${page-1})}"></a>
+                </li>
+
+                <li class="page-item" th:classappend="${!subscribes.hasNext} ? 'disabled'">
+                    <a class="page-link" th:href="@{/user/subscribe/(page=${subscribes.number+1})}">
+                        <span>&gt;</span>
+                    </a>
+                </li>
+
+                <li class="page-item" th:classappend="${!subscribes.hasNext} ? 'disabled'">
+                    <a class="page-link" th:href="@{/user/subscribe/(page=${subscribes.totalPages-1})}" aria-label="Previous">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+
+            </ul>
+        </div>
+        <!-- 페이징처리 끝 -->
+
+
+    </div>
+</section>
+
+<!-- layout/footer.html -->
+<footer th:replace="layout/footer::footerFragment"></footer>
