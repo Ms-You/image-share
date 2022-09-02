@@ -78,16 +78,51 @@ public class SubscribeController {
 
     // 구독 유저 보기
     @GetMapping("/subscribe/{user_id}")
-    public String userView(@PathVariable(name = "user_id") Long userId, Model model){
+    public String userView(@PathVariable(name = "user_id") Long userId, Model model,
+                           @AuthenticationPrincipal PrincipalDetails principalDetails){
 
-        User user = userRepository.findById(userId).orElseThrow(()->{
+        User user = userRepository.findById(principalDetails.getUser().getId()).orElseThrow(()->{
+            return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
+        });
+
+        User toUser = userRepository.findById(userId).orElseThrow(()->{
             return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
 
         });
 
-        model.addAttribute("user", user);
+        // 구독 상태 변경
+        if (subscribeService.isUserSubscribe(toUser.getId(), user.getId()))
+            model.addAttribute("subscribeStatus", "/img/do_sub.png");
+        else
+            model.addAttribute("subscribeStatus", "/img/un_sub.png");
+
+        model.addAttribute("user", toUser);
 
         return "user/subscribeUser";
+    }
+
+    @PostMapping("/subscribe/{to_user_id}")
+    public String userSubscribe(@PathVariable(name = "to_user_id") Long toUserId,
+                                @AuthenticationPrincipal PrincipalDetails principalDetails) {
+        User user = userRepository.findById(principalDetails.getUser().getId()).orElseThrow(()->{
+            return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
+        });
+
+        subscribeService.subscribe(user.getId(), toUserId);
+
+        return "redirect:/user/subscribe/" + toUserId;
+    }
+
+    @PostMapping("/unSubscribe/{to_user_id}")
+    public String userUnSubscribe(@PathVariable(name = "to_user_id") Long toUserId,
+                                  @AuthenticationPrincipal PrincipalDetails principalDetails) {
+        User user = userRepository.findById(principalDetails.getUser().getId()).orElseThrow(()->{
+            return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
+        });
+
+        subscribeService.unSubscribe(user.getId(), toUserId);
+
+        return "redirect:/user/subscribe/" + toUserId;
     }
 
 }
