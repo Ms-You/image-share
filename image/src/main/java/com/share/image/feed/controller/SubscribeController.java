@@ -77,7 +77,7 @@ public class SubscribeController {
     }
 
     // 구독 유저 보기
-    @GetMapping("/subscribe/{user_id}")
+    @GetMapping("/toUser/{user_id}")
     public String userView(@PathVariable(name = "user_id") Long userId, Model model,
                            @AuthenticationPrincipal PrincipalDetails principalDetails){
 

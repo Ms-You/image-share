@@ -14,7 +14,7 @@
     <div class="container" style="margin-bottom: 10rem;">
         <div style="font-weight: 500; font-size: 23px; margin-top: 3rem; margin-bottom: 5rem;">구독 관리 페이지</div>
         <div th:each="subscribe: ${subscribes}" style="margin-top: 2rem; margin-bottom: 2rem; display: flex;">
-            <a th:href="@{/user/subscribe/{id}(id=${subscribe.toUser.id})}" style="width: 100%; text-decoration: none;">
+            <a th:href="@{/user/toUser/{id}(id=${subscribe.toUser.id})}" style="width: 100%; text-decoration: none;">
                 <div class="each-hover">
                     <img th:src="@{/profile_imgs/} + ${subscribe.toUser.profileImageUrl}" onerror="this.src='/img/default_profile.png';" style="width: 90px; height: 90px; border-radius: 100%; vertical-align: middle;" />
                     <span th:text="${subscribe.toUser.nickName}" style="font-weight: bold; font-size: 18px; margin-left: 1.5rem; margin-right: 5rem;"></span>

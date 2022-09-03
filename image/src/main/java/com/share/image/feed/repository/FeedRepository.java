@@ -21,6 +21,12 @@ public interface FeedRepository extends JpaRepository<Feed, Long> {
     @Query(value = "select feed_id from Feed where feed_id = (select MAX(feed_id) from Feed where feed_id < :feedId and tag_id = :tagId)", nativeQuery = true)
     Long leadFeedId(@Param(value = "feedId") Long feedId, @Param(value = "tagId") Long tagId);
 
+    @Query(value = "select feed_id from Feed where feed_id = (select MIN(feed_id) from Feed where feed_id > :feedId and user_id = :userId)", nativeQuery = true)
+    Long toUsersLagFeedId(@Param(value = "feedId") Long feedId, @Param(value = "userId") Long userId);
+
+    @Query(value = "select feed_id from Feed where feed_id = (select MAX(feed_id) from Feed where feed_id < :feedId and user_id = :userId)", nativeQuery = true)
+    Long toUsersLeadFeedId(@Param(value = "feedId") Long feedId, @Param(value = "userId") Long userId);
+
     Page<Feed> findByTitleContaining(String keyword, Pageable pageable);
     @Query(value = "select feed_id from Views group by feed_id order by count(feed_id) desc, feed_id desc limit 5 offset :offset", nativeQuery = true)
     List<Long> findFeedIdByViewsDesc(@Param(value = "offset") int offset);

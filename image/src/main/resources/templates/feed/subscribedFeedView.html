@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<!-- head.html -->
+<th:block th:replace="layout/head::headFragment"></th:block>
+
+<!-- layout/header.html -->
+<header th:replace="layout/header::headerFragment"></header>
+
+<script type="text/javascript">
+    function deleteFeed(feedId, feedName){
+        var result = confirm(feedName + " 피드를 정말로 삭제하시겠습니까?");
+            if (result) {
+                location.href = "delete/" + feedId;
+            }
+    }
+
+    function deleteReply(replyId){
+        var result = confirm("댓글을 정말로 삭제하시겠습니까?");
+            if (result) {
+                location.href = "delete/reply/" + replyId;
+            }
+    }
+</script>
+
+<body layout:fragment="content">
+<!-- content -->
+<section class="page-section portfolio">
+    <div class="container" style="padding: 3rem 0rem 30rem 0rem; max-width: 960px;">
+
+        <div>
+            <img th:src="@{/profile_imgs/} + ${feed.writer.profileImageUrl}" onerror="this.src='/img/default_profile.png';" width="30" height="30" style="border-radius: 100%;" />
+            <span th:text="${feed.writer.nickName}" style="font-size: 30px;"></span>
+            <div>
+                <!--  report a feed  -->
+                <div th:if="${feed.writer.role.toString().equals('ROLE_USER')}">
+                    <a th:href="@{/user/report/feed/{feed_id}(feed_id=${feed.id})}">
+                        <img th:src="@{/img/siren.png}" alt="신고" width="40" height="40" id="myBtn" class="d-inline-block align-text-top" style="float: right; margin-left: 2rem; cursor: pointer;">
+                    </a>
+                </div>
+
+                <a th:href="@{/download/{feed_id}(feed_id=${feed.id})}">
+                    <img th:src="@{/img/save.png}" alt="피드 저장" width="40" height="40" class="d-inline-block align-text-top" style="float: right;">
+                </a>
+            <!--  구독 start  -->
+                <input type="hidden" id="toUserId" th:value="${feed.writer.id}">
+                <a href="#a" class="subscribe">
+                    <span><img th:src="@{${subscribeStatus}}" alt="구독" width="80" height="60" class="d-inline-block align-text-top"></span>
+                </a>
+            </div>
+            <!--  구독 end  -->
+            <h6 th:text="${#temporals.format(feed.createdDate, 'yyyy-MM-dd')}"></h6>
+            조회수: <span th:text="${#lists.size(feed.views)}"></span>
+            <a th:href="@{/user/tag/(tag_id=${feed.tag.id})}">
+                <div th:text="${feed.tag.name}" style="color: orange;"></div>
+            </a>
+        </div>
+        <hr>
+        <!--  제목  -->
+        <h3 th:text="${feed.title}"></h3>
+        <!--  설명  -->
+        <div>
+            <h5 th:text="${feed.description}"></h5>
+        </div>
+        <!--  피드 이미지  -->
+        <div class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img th:src="@{/feed_imgs/} + ${feed.feedImageUrl}" class="d-block w-100"/>
+                </div>
+            </div>
+
+            <!--  이전 피드로 이동  -->
+            <a th:href="@{/user/subscribed/feed/{id}(id=${prevFeed})}">
+                <div th:if="${not #strings.isEmpty(prevFeed)}">
+                    <button class="carousel-control-prev" type="button" data-bs-slide="prev">❮</button>
+                </div>
+                <div th:unless="${not #strings.isEmpty(prevFeed)}">
+                    <button class="carousel-control-prev" type="button" data-bs-slide="prev" disabled>❮</button>
+                </div>
+            </a>
+            <!--  다음 피드로 이동  -->
+            <a th:href="@{/user/subscribed/feed/{id}(id=${nextFeed})}">
+                <div th:if="${not #strings.isEmpty(nextFeed)}">
+                    <button class="carousel-control-next" type="button" data-bs-slide="next">❯</button>
+                </div>
+                <div th:unless="${not #strings.isEmpty(nextFeed)}">
+                    <button class="carousel-control-next" type="button" data-bs-slide="next" disabled>❯</button>
+                </div>
+            </a>
+
+        </div>
+
+
+        <div th:if="${feed.writer.id.equals(#authentication.getPrincipal().getUser().id)}" style="float: right; margin: 1rem -20px 0rem 0rem;">
+            <button class="button btnPush btnRed" th:onclick="deleteFeed('[[${feed.id}]]','[[${feed.title}]]')"/>삭제하기</button>
+        </div>
+
+        <div th:if="${feed.writer.id.equals(#authentication.getPrincipal().getUser().id)}" style="float: right; margin:1rem 1rem 0rem 0rem;">
+            <a th:href="@{/user/feed/update/{id}(id=${feed.id})}">
+                <button class="button btnPush btnLightBlue">수정하기</button>
+            </a>
+        </div>
+
+        <!--  좋아요 start  -->
+        <div style="margin: 2rem 0rem 8rem 0rem;">
+            <input type="hidden" id="feedId" th:value="${feed.id}">
+            <a href="#a" class="feed-like">
+                <span><img th:src="@{${feedLikeStatus}}" alt="좋아요" width="35" height="35" class="d-inline-block align-text-top"></span>
+            </a>
+            <span id="feedLikeCount" th:text="${#lists.size(feed.feedLikes)}" style="font-size: 22px; vertical-align: bottom; font-weight: bold;"></span>
+        </div>
+        <!--  좋아요 end  -->
+
+        <div id="replyList">
+            <span style="font-weight: bold; font-size: 22px;">댓글</span>
+            <span th:text="${#lists.size(replies)}" style="font-weight: bold; font-size: 22px; color: #6EC7B7"></span>
+            <form class="card-text" modelAttribute="replyRequestDto">
+                <div style="margin-bottom: 10rem;">
+                    <textarea id="input" placeholder="댓글은 최대 500자까지 작성할 수 있습니다&#13;&#10;여러분의 댓글은 큰 힘이 됩니다 (❁´◡`❁)" type="text" class="form-control" style="height: 110px; margin-bottom: 1rem;"></textarea>
+                    <span style="color: red; font-size: 18px;" th:text="${valid_content}"></span>
+                    <input id="feed_id" type="hidden" th:value="${feed.id}">
+                    <button class="btn btn-outline-secondary" style="float: right;" type="button" onclick="dataSend()">입력</button>
+                </div>
+            </form>
+
+            <div th:if="${replies!=null and !replies.empty}">
+                <div th:each="reply: ${replies}" class="replies">
+                    <div class="reply">
+                        <div class="content">
+                            <header class="top" style="margin-bottom: 2rem;">
+                                <img th:src="@{/profile_imgs/} + ${reply.writer.profileImageUrl}" onerror="this.src='/img/default_profile.png';" width="30" height="30" style="border-radius: 100%;" />
+                                <span class="username" th:text="${reply.writer.nickName}"></span>
+                                <!--  댓글 삭제  -->
+                                <div class="utility" th:if="${reply.writer.id.equals(#authentication.getPrincipal().getUser().id)}">
+                                    <button th:onclick="deleteReply('[[${reply.id}]]')">삭제</button>
+                                </div>
+                            </header>
+                            <p th:text="${reply.content}" style="word-break:break-all;"></p>
+                            <ul class="bottom">
+                                <li th:text="${#temporals.format(reply.createdDate, 'yyyy-MM-dd')}"></li>
+                                <li class="divider"></li>
+                                <!--  댓글 좋아요 start  -->
+                                <li>
+                                    <a href="#a" class="reply-like" th:onclick="replyLikeFunc('[[${feed.id}]]','[[${reply.id}]]')">
+                                        <span><img th:id="'replyImage'+${reply.id}" th:value="${reply.id}" th:src="@{${reply.replyLikeStatus}}" alt="좋아요" width="30" height="30" class="d-inline-block align-text-top"></span>
+                                    </a>
+                                    <span th:id="'replyLikeCount'+${reply.id}" th:text="${#lists.size(reply.replyLikes)}"></span>
+                                </li>
+                                <!--  댓글 좋아요 end  -->
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+</body>
+<script>
+function dataSend() {
+    var feedId=$("#feed_id").val();
+    var data= $("#input").val()
+
+    var replyRequestDto={
+        content: data
+    };
+
+    $.ajax({
+        url: `/user/reply/feed/${feedId}`,
+        data: replyRequestDto,
+        type:"POST",
+    }).done(function (fragment) {
+        $("#replyList").replaceWith(fragment);
+    });
+}
+</script>
+<script type="text/javascript" th:src="@{/js/feedLike.js}"></script>
+<script type="text/javascript" th:src="@{/js/replyLike.js}"></script>
+<script type="text/javascript" th:src="@{/js/subscribe.js}"></script>
+
+<!-- layout/footer.html -->
+<footer th:replace="layout/footer::footerFragment"></footer>
