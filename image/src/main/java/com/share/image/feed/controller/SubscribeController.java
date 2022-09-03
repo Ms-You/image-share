@@ -125,4 +125,28 @@ public class SubscribeController {
         return "redirect:/user/subscribe/" + toUserId;
     }
 
+    @PostMapping("/subscribe/toUser/{to_user_id}")
+    public String specificSubscribe(@PathVariable(name = "to_user_id") Long toUserId,
+                                @AuthenticationPrincipal PrincipalDetails principalDetails) {
+        User user = userRepository.findById(principalDetails.getUser().getId()).orElseThrow(()->{
+            return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
+        });
+
+        subscribeService.subscribe(user.getId(), toUserId);
+
+        return "redirect:/user/" + toUserId;
+    }
+
+    @PostMapping("/unSubscribe/toUser/{to_user_id}")
+    public String specificUnSubscribe(@PathVariable(name = "to_user_id") Long toUserId,
+                                  @AuthenticationPrincipal PrincipalDetails principalDetails) {
+        User user = userRepository.findById(principalDetails.getUser().getId()).orElseThrow(()->{
+            return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
+        });
+
+        subscribeService.unSubscribe(user.getId(), toUserId);
+
+        return "redirect:/user/" + toUserId;
+    }
+
 }

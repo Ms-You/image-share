@@ -1,6 +1,7 @@
 package com.share.image.user.controller;
 
 import com.share.image.config.PrincipalDetails;
+import com.share.image.feed.service.SubscribeService;
 import com.share.image.user.domain.User;
 import com.share.image.user.dto.JoinRequestDto;
 import com.share.image.user.dto.UpdateRequestDto;
@@ -27,6 +28,7 @@ import java.util.Map;
 public class UserController {
 
     private final UserService userService;
+    private final SubscribeService subscribeService;
     private final UserRepository userRepository;
     private final JoinDtoValidator usersDtoValidator;
 
@@ -112,14 +114,24 @@ public class UserController {
 
     // 특정 사용자 보기
     @GetMapping("/user/{user_id}")
-    public String userView(@PathVariable(name = "user_id") Long userId, Model model){
+    public String userView(@PathVariable(name = "user_id") Long userId, Model model,
+                           @AuthenticationPrincipal PrincipalDetails principalDetails){
 
-        User user = userRepository.findById(userId).orElseThrow(()->{
+        User fromUser = userRepository.findById(principalDetails.getUser().getId()).orElseThrow(()->{
             return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
-
         });
 
-        model.addAttribute("user", user);
+        User toUser = userRepository.findById(userId).orElseThrow(()->{
+            return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
+        });
+
+        // 구독 상태 변경
+        if (subscribeService.isUserSubscribe(toUser.getId(), fromUser.getId()))
+            model.addAttribute("subscribeStatus", "/img/do_sub.png");
+        else
+            model.addAttribute("subscribeStatus", "/img/un_sub.png");
+
+        model.addAttribute("user", toUser);
 
         return "user/view";
     }
