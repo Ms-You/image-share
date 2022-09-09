@@ -24,7 +24,7 @@ public class IndexController {
 
     private final InformationRepository informationRepository;
 
-    @GetMapping("/")
+    @GetMapping({"", "/"})
     public String index(Model model, @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable){
         Page<Information> infos = informationRepository.findAll(pageable);
         int startPage = (int) (Math.floor(pageable.getPageNumber() / pageable.getPageSize()) * pageable.getPageSize() + 1);
@@ -50,7 +50,6 @@ public class IndexController {
 
         return "info/view";
     }
-
 
     // 회원가입 페이지 이동
     @GetMapping("/auth/join")

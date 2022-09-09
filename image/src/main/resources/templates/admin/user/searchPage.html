@@ -11,7 +11,7 @@
 <section class="page-section portfolio">
     <div class="container" style="margin-bottom: 10rem;">
         <div style="display: flex;">
-            <a th:href="@{/admin/users/}">
+            <a th:href="@{/admin/users}">
                 <button type="button" class="button btnPush btnBlueGreen">뒤로 가기</button>
             </a>
         </div>
@@ -65,30 +65,30 @@
             <ul class="pagination justify-content-center">
 
                 <li class="page-item" th:classappend="${!userList.hasPrevious} ? 'disabled'">
-                    <a class="page-link" th:href="@{/admin/user/search/(keyword=${keyword}, page='0')}" aria-label="Previous">
+                    <a class="page-link" th:href="@{/admin/user/search(keyword=${keyword}, page='0')}" aria-label="Previous">
                         <span aria-hidden="true">&laquo;</span>
                     </a>
                 </li>
 
                 <li class="page-item" th:classappend="${!userList.hasPrevious} ? 'disabled'">
-                    <a class="page-link" th:href="@{/admin/user/search/(keyword=${keyword}, page=${userList.number-1})}">
+                    <a class="page-link" th:href="@{/admin/user/search(keyword=${keyword}, page=${userList.number-1})}">
                         <span>&lt;</span>
                     </a>
                 </li>
 
                 <li th:each="page: ${#numbers.sequence(startPage, endPage)}"
                     th:classappend="${page == userList.number + 1} ? 'active'" class="page-item">
-                    <a th:text="${page}" class="page-link" th:href="@{/admin/user/search/(keyword=${keyword}, page=${page-1})}"></a>
+                    <a th:text="${page}" class="page-link" th:href="@{/admin/user/search(keyword=${keyword}, page=${page-1})}"></a>
                 </li>
 
                 <li class="page-item" th:classappend="${!userList.hasNext} ? 'disabled'">
-                    <a class="page-link" th:href="@{/admin/user/search/(keyword=${keyword}, page=${userList.number+1})}">
+                    <a class="page-link" th:href="@{/admin/user/search(keyword=${keyword}, page=${userList.number+1})}">
                         <span>&gt;</span>
                     </a>
                 </li>
 
                 <li class="page-item" th:classappend="${!userList.hasNext} ? 'disabled'">
-                    <a class="page-link" th:href="@{/admin/user/search/(keyword=${keyword}, page=${userList.totalPages-1})}" aria-label="Previous">
+                    <a class="page-link" th:href="@{/admin/user/search(keyword=${keyword}, page=${userList.totalPages-1})}" aria-label="Previous">
                         <span aria-hidden="true">&raquo;</span>
                     </a>
                 </li>

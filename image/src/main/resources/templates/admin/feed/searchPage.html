@@ -8,20 +8,29 @@
 <header th:replace="layout/admin_header::admin_headerFragment"></header>
 
 <script type="text/javascript">
-    function deleteFeed(feedId, feedTitle){
-        var result = confirm(feedTitle + " 피드를 정말로 삭제하시겠습니까?");
-            if (result) {
-                location.href = "delete/feed/" + feedId;
-            }
+function deleteFeed(feedId, feedTitle){
+    var result = confirm(feedTitle + " 피드를 정말로 삭제하시겠습니까?");
+    if (result){
+        $.ajax({
+            type: "DELETE",
+            url: `/admin/feed/${feedId}`,
+        }).done(function(resp){
+            alert("삭제가 완료되었습니다.");
+            location.href = "/admin/tag/" + resp;
+        }).fail(function(error){
+            console.log(error);
+            alert("삭제에 실패하였습니다.");
+        });
     }
+}
 </script>
 
 <!-- content -->
 <section class="page-section portfolio">
     <div class="container" style="margin-bottom: 10rem;">
         <div style="display: flex;">
-            <a th:href="@{/admin/tag/list}">
-                <button type="button" class="button btnPush btnLightBlue">뒤로 가기</button>
+            <a th:href="@{/admin/tags}">
+                <button type="button" class="button btnPush btnOrange">뒤로 가기</button>
             </a>
         </div>
 
@@ -39,7 +48,7 @@
         <div th:if="${!feedList.isEmpty()}">
             <h1>피드 목록</h1>
             <table class="user-table">
-                <thead style="background-color: #5DC8CD;">
+                <thead style="background-color: #FFAA40;">
                 <tr>
                     <th>번호</th>
                     <th>타이틀</th>
@@ -61,7 +70,7 @@
                     </td>
                     <td th:text="${feed.tag.name}"></td>
                     <td>
-                        <button class="btn btn-primary" th:onclick="deleteFeed('[[${feed.id}]]','[[${feed.title}]]')"/>삭제</button>
+                        <button class="btn btn-danger" th:onclick="deleteFeed('[[${feed.id}]]','[[${feed.title}]]')"/>삭제</button>
                     </td>
                 </tr>
                 </tbody>
@@ -81,30 +90,30 @@
             <ul class="pagination justify-content-center">
 
                 <li class="page-item" th:classappend="${!feedList.hasPrevious} ? 'disabled'">
-                    <a class="page-link" th:href="@{/admin/feed/search/(keyword=${keyword}, page='0')}" aria-label="Previous">
+                    <a class="page-link" th:href="@{/admin/feed/search(keyword=${keyword}, page='0')}" aria-label="Previous">
                         <span aria-hidden="true">&laquo;</span>
                     </a>
                 </li>
 
                 <li class="page-item" th:classappend="${!feedList.hasPrevious} ? 'disabled'">
-                    <a class="page-link" th:href="@{/admin/feed/search/(keyword=${keyword}, page=${feedList.number-1})}">
+                    <a class="page-link" th:href="@{/admin/feed/search(keyword=${keyword}, page=${feedList.number-1})}">
                         <span>&lt;</span>
                     </a>
                 </li>
 
                 <li th:each="page: ${#numbers.sequence(startPage, endPage)}"
                     th:classappend="${page == feedList.number + 1} ? 'active'" class="page-item">
-                    <a th:text="${page}" class="page-link" th:href="@{/admin/feed/search/(keyword=${keyword}, page=${page-1})}"></a>
+                    <a th:text="${page}" class="page-link" th:href="@{/admin/feed/search(keyword=${keyword}, page=${page-1})}"></a>
                 </li>
 
                 <li class="page-item" th:classappend="${!feedList.hasNext} ? 'disabled'">
-                    <a class="page-link" th:href="@{/admin/feed/search/(keyword=${keyword}, page=${feedList.number+1})}">
+                    <a class="page-link" th:href="@{/admin/feed/search(keyword=${keyword}, page=${feedList.number+1})}">
                         <span>&gt;</span>
                     </a>
                 </li>
 
                 <li class="page-item" th:classappend="${!feedList.hasNext} ? 'disabled'">
-                    <a class="page-link" th:href="@{/admin/feed/search/(keyword=${keyword}, page=${feedList.totalPages-1})}" aria-label="Previous">
+                    <a class="page-link" th:href="@{/admin/feed/search(keyword=${keyword}, page=${feedList.totalPages-1})}" aria-label="Previous">
                         <span aria-hidden="true">&raquo;</span>
                     </a>
                 </li>

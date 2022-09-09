@@ -33,6 +33,7 @@ public class UserController {
     private final JoinDtoValidator usersDtoValidator;
 
 
+    // 회원 가입
     @PostMapping("/auth/join")
     public String join(@Valid JoinRequestDto joinRequestDto, Errors errors, Model model){
         usersDtoValidator.validate(joinRequestDto, errors);
@@ -55,7 +56,7 @@ public class UserController {
 
     // 회원 정보 페이지로 이동
     @GetMapping("/user/profile")
-    public String uploadProfile(@AuthenticationPrincipal PrincipalDetails principalDetails, Model model){
+    public String userProfile(@AuthenticationPrincipal PrincipalDetails principalDetails, Model model){
         User user = userRepository.findById(principalDetails.getUser().getId()).orElseThrow(()->{
             return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
         });
@@ -67,8 +68,8 @@ public class UserController {
 
 
     // 회원 정보 수정 페이지로 이동
-    @GetMapping("/user/update")
-    public String update(@AuthenticationPrincipal PrincipalDetails principalDetails, Model model) {
+    @GetMapping("/modifying/user/profile")
+    public String modifyProfile(@AuthenticationPrincipal PrincipalDetails principalDetails, Model model) {
         User user = userRepository.findById(principalDetails.getUser().getId()).orElseThrow(()->{
             return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
         });
@@ -80,13 +81,14 @@ public class UserController {
 
 
     // 회원 정보 수정
-    @PutMapping("/user/update")
-    public String uploadProfile(
+    @PutMapping("/user/profile")
+    public String modifyProfile(
             @Valid UpdateRequestDto updateRequestDto,
             Errors errors,
             Model model,
             @AuthenticationPrincipal PrincipalDetails principalDetails,
             @RequestParam MultipartFile file) throws IOException {
+
         User user = userRepository.findById(principalDetails.getUser().getId()).orElseThrow(()->{
             return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
         });
@@ -113,8 +115,8 @@ public class UserController {
     }
 
     // 특정 사용자 보기
-    @GetMapping("/user/{user_id}")
-    public String userView(@PathVariable(name = "user_id") Long userId, Model model,
+    @GetMapping("/user/{userId}")
+    public String userView(@PathVariable(name = "userId") Long userId, Model model,
                            @AuthenticationPrincipal PrincipalDetails principalDetails){
 
         User fromUser = userRepository.findById(principalDetails.getUser().getId()).orElseThrow(()->{

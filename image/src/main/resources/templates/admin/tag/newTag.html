@@ -11,7 +11,7 @@
 <section class="page-section portfolio">
     <div class="container">
 
-        <form th:action="@{/admin/new/tag}" method="post" modelAttribute="tagRequestDto" enctype="multipart/form-data" accept-charset="UTF-8" style="padding: 3rem 0rem 30rem 0rem;">
+        <form th:action="@{/admin/tag}" method="post" modelAttribute="tagRequestDto" enctype="multipart/form-data" accept-charset="UTF-8" style="padding: 3rem 0rem 30rem 0rem;">
             <div id="feed-create">
                 <h2 class="title">태그 생성</h2>
 
@@ -33,7 +33,7 @@
                     </div>
                 </div>
 
-                <a th:href="@{/admin/tags/}">
+                <a th:href="@{/admin/tags}">
                     <button class="button btnPush btnOrange" type="button" style="float: right;">취소</button>
                 </a>
                 <button class="button btnPush btnBlueGreen" type="submit" style="float: right; margin-right: 1rem;">생성</button>

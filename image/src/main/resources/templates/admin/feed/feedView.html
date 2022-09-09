@@ -11,8 +11,8 @@
 <section class="page-section portfolio">
     <div class="container" style="padding: 3rem 0rem 10rem 0rem; max-width: 960px;">
         <div style="display: flex; margin-bottom: 4rem;">
-            <a th:href="@{/admin/tag/(tag_id=${feed.tag.id})}">
-                <button type="button" class="button btnPush btnLightBlue">뒤로 가기</button>
+            <a th:href="@{/admin/tag/{id}(id=${feed.tag.id})}">
+                <button type="button" class="button btnPush btnOrange">뒤로 가기</button>
             </a>
         </div>
 

@@ -11,7 +11,7 @@
 <section class="page-section portfolio">
   <div style="margin-left: 20rem;">
     <a th:href="@{/admin/user/{id}(id=${user.id})}">
-      <button type="button" class="button btnPush btnOrange" >돌아가기</button>
+      <button type="button" class="button btnPush btnOrange" >뒤로 가기</button>
     </a>
   </div>
 
@@ -40,30 +40,30 @@
       <ul class="pagination justify-content-center">
 
         <li class="page-item" th:classappend="${!feeds.hasPrevious} ? 'disabled'">
-          <a class="page-link" th:href="@{/user/feeds/(page='0')}" aria-label="Previous">
+          <a class="page-link" th:href="@{/user/feeds(page='0')}" aria-label="Previous">
             <span aria-hidden="true">&laquo;</span>
           </a>
         </li>
 
         <li class="page-item" th:classappend="${!feeds.hasPrevious} ? 'disabled'">
-          <a class="page-link" th:href="@{/user/feeds/(page=${feeds.number-1})}">
+          <a class="page-link" th:href="@{/user/feeds(page=${feeds.number-1})}">
             <span>&lt;</span>
           </a>
         </li>
 
         <li th:each="page: ${#numbers.sequence(startPage, endPage)}"
             th:classappend="${page == feeds.number + 1} ? 'active'" class="page-item">
-          <a th:text="${page}" class="page-link" th:href="@{/user/feeds/(page=${page-1})}"></a>
+          <a th:text="${page}" class="page-link" th:href="@{/user/feeds(page=${page-1})}"></a>
         </li>
 
         <li class="page-item" th:classappend="${!feeds.hasNext} ? 'disabled'">
-          <a class="page-link" th:href="@{/user/feeds/(page=${feeds.number+1})}">
+          <a class="page-link" th:href="@{/user/feeds(page=${feeds.number+1})}">
             <span>&gt;</span>
           </a>
         </li>
 
         <li class="page-item" th:classappend="${!feeds.hasNext} ? 'disabled'">
-          <a class="page-link" th:href="@{/user/feeds/(page=${feeds.totalPages-1})}" aria-label="Previous">
+          <a class="page-link" th:href="@{/user/feeds(page=${feeds.totalPages-1})}" aria-label="Previous">
             <span aria-hidden="true">&raquo;</span>
           </a>
         </li>

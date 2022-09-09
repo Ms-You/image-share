@@ -11,17 +11,17 @@
 <section class="page-section portfolio">
     <div class="container" style="margin-bottom: 10rem;">
         <div style="display: flex; margin-bottom: 3rem;">
-            <a th:href="@{/admin/}">
+            <a th:href="@{/admin}">
                 <button type="button" class="button btnPush btnRed">뒤로 가기</button>
             </a>
         </div>
         <div>
-            <a th:href="@{/admin/user/temporary}">
+            <a th:href="@{/admin/temporary/users}">
                 <button type="button" class="button btnPush btnRed" style="background-color: #FF7777; width: 10%;">일시 정지 유저</button>
             </a>
         </div>
         <div style="display: flex; margin-bottom: 4rem;">
-            <a th:href="@{/admin/user/permanent}">
+            <a th:href="@{/admin/permanent/users}">
                 <button type="button" class="button btnPush btnRed" style="background-color: #FF7777; width: 100%;">영구 정지 유저</button>
             </a>
         </div>
@@ -61,30 +61,30 @@
             <ul class="pagination justify-content-center">
 
                 <li class="page-item" th:classappend="${!reports.hasPrevious} ? 'disabled'">
-                    <a class="page-link" th:href="@{/admin/report/(page='0')}" aria-label="Previous">
+                    <a class="page-link" th:href="@{/admin/report(page='0')}" aria-label="Previous">
                         <span aria-hidden="true">&laquo;</span>
                     </a>
                 </li>
 
                 <li class="page-item" th:classappend="${!reports.hasPrevious} ? 'disabled'">
-                    <a class="page-link" th:href="@{/admin/report/(page=${reports.number-1})}">
+                    <a class="page-link" th:href="@{/admin/report(page=${reports.number-1})}">
                         <span>&lt;</span>
                     </a>
                 </li>
 
                 <li th:each="page: ${#numbers.sequence(startPage, endPage)}"
                     th:classappend="${page == reports.number + 1} ? 'active'" class="page-item">
-                    <a th:text="${page}" class="page-link" th:href="@{/admin/report/(page=${page-1})}"></a>
+                    <a th:text="${page}" class="page-link" th:href="@{/admin/report(page=${page-1})}"></a>
                 </li>
 
                 <li class="page-item" th:classappend="${!reports.hasNext} ? 'disabled'">
-                    <a class="page-link" th:href="@{/admin/report/(page=${reports.number+1})}">
+                    <a class="page-link" th:href="@{/admin/report(page=${reports.number+1})}">
                         <span>&gt;</span>
                     </a>
                 </li>
 
                 <li class="page-item" th:classappend="${!reports.hasNext} ? 'disabled'">
-                    <a class="page-link" th:href="@{/admin/report/(page=${reports.totalPages-1})}" aria-label="Previous">
+                    <a class="page-link" th:href="@{/admin/report(page=${reports.totalPages-1})}" aria-label="Previous">
                         <span aria-hidden="true">&raquo;</span>
                     </a>
                 </li>

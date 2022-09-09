@@ -11,7 +11,7 @@
 <section class="page-section portfolio">
     <div class="container">
 
-        <form th:action="@{/admin/new/info}" method="post" th:object="${infoRequestDto}" enctype="multipart/form-data" accept-charset="UTF-8" style="padding: 3rem 0rem 30rem 0rem;">
+        <form th:action="@{/admin/info}" method="post" th:object="${infoRequestDto}" enctype="multipart/form-data" accept-charset="UTF-8" style="padding: 3rem 0rem 30rem 0rem;">
 
             <div id="feed-create">
                 <h2 class="title">공지 등록</h2>
@@ -64,7 +64,7 @@
 
 		if (message !== null) {
 			alert(message);
-			location.href= `/admin/infos`;
+			location.href= `/admin/infoList`;
 		}
 
 	}

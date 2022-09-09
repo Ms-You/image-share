@@ -18,13 +18,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Slf4j
 @RequiredArgsConstructor
 @Controller
-@RequestMapping("/admin")
+@RequestMapping("/admin/report")
 public class AdminReportController {
     private final BlockUserService blockUserService;
     private final ReportRepository reportRepository;
 
     // 신고 목록 페이지 이동
-    @GetMapping("/report")
+    @GetMapping("")
     public String reportList(Model model, @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC)Pageable pageable){
 
         Page<Report> reports = reportRepository.findAll(pageable);
@@ -42,8 +42,8 @@ public class AdminReportController {
 
 
     // 특정 신고 보기
-    @GetMapping("/report/{report_id}")
-    public String reportView(@PathVariable(name = "report_id") Long reportId, Model model){
+    @GetMapping("/{reportId}")
+    public String reportView(@PathVariable(name = "reportId") Long reportId, Model model){
 
         Report report = reportRepository.findById(reportId).orElseThrow(()->{
             return new IllegalArgumentException("존재하지 않는 신고입니다.");
@@ -55,16 +55,16 @@ public class AdminReportController {
     }
 
     // 계정 일시 정지하기
-    @GetMapping("/report/temporary/user/{user_id}")
-    public String temporarySuspendUser(@PathVariable(name = "user_id") Long userId){
+    @GetMapping("/temporary/user/{userId}")
+    public String temporaryStoppedUser(@PathVariable(name = "userId") Long userId){
         blockUserService.temporaryBlockUser(userId);
 
         return "redirect:/admin/report";
     }
 
     // 계정 영구 정지하기
-    @GetMapping("/report/permanent/user/{user_id}")
-    public String permanentSuspendUser(@PathVariable(name = "user_id") Long userId){
+    @GetMapping("/permanent/user/{userId}")
+    public String permanentStoppedUser(@PathVariable(name = "userId") Long userId){
         blockUserService.permanentBlockUser(userId);
 
         return "redirect:/admin/report";

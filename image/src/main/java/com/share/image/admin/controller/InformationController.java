@@ -44,8 +44,8 @@ public class InformationController {
         return InformationType.values();
     }
 
-    // 공지 관리
-    @GetMapping("/infos")
+    // 공지 페이지 이동
+    @GetMapping("/infoList")
     public String infoList(Model model, @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable){
 
         Page<Information> infos = informationRepository.findAll(pageable);
@@ -60,15 +60,16 @@ public class InformationController {
         return "admin/info/infoList";
     }
 
-
-    @GetMapping("/new/info")
-    public String createInfo(Model model) {
+    // 공지 생성 페이지 이동
+    @GetMapping("/info")
+    public String enrollInfo(Model model) {
         model.addAttribute("infoRequestDto", new InfoRequestDto());
 
         return "admin/info/enroll";
     }
 
-    @PostMapping("/new/info")
+    // 공지 생성
+    @PostMapping("/info")
     public String enrollInfo(@AuthenticationPrincipal PrincipalDetails principalDetails,
                              @Valid @ModelAttribute InfoRequestDto infoRequestDto,
                              BindingResult bindingResult, Model model,
@@ -99,8 +100,8 @@ public class InformationController {
 
 
     // 특정 공지 보기
-    @GetMapping("/info/{information_id}")
-    public String infoView(@PathVariable(name = "information_id") Long informationId, Model model){
+    @GetMapping("/info/{informationId}")
+    public String infoView(@PathVariable(name = "informationId") Long informationId, Model model){
 
         Information info = informationRepository.findById(informationId).orElseThrow(()->{
             return new IllegalArgumentException("공지를 찾을 수 없습니다.");
@@ -112,8 +113,8 @@ public class InformationController {
     }
 
     // 공지 수정페이지 이동
-    @GetMapping("/info/update/{information_id}")
-    public String updateInfo(@PathVariable(name = "information_id") Long informationId, Model model){
+    @GetMapping("/modifying/info/{informationId}")
+    public String updateInfo(@PathVariable(name = "informationId") Long informationId, Model model){
 
         Information info = informationRepository.findById(informationId).orElseThrow(()->{
             return new IllegalArgumentException("공지를 찾을 수 없습니다.");
@@ -126,8 +127,8 @@ public class InformationController {
     }
 
     // 공지 수정
-    @PutMapping("/info/update/{information_id}")
-    public String updateInfo(@PathVariable(name = "information_id") Long informationId,
+    @PutMapping("/info/{informationId}")
+    public String updateInfo(@PathVariable(name = "informationId") Long informationId,
                              @Valid InfoRequestDto infoRequestDto,
                              BindingResult bindingResult, Model model,
                              @RequestParam MultipartFile file) throws UnsupportedEncodingException {
@@ -151,7 +152,7 @@ public class InformationController {
         }
         informationService.updateInfo(info, infoRequestDto, file);
 
-        return "redirect:/admin/infos";
+        return "redirect:/admin/infoList";
     }
 
 

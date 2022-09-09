@@ -11,7 +11,7 @@
 <section class="page-section portfolio">
     <div class="container">
         <div style="display: flex; margin-bottom: 5rem;">
-            <a th:href="@{/admin/infos}">
+            <a th:href="@{/admin/infoList}">
                 <button type="button" class="button btnPush btnBlue">뒤로 가기</button>
             </a>
         </div>
@@ -26,7 +26,7 @@
         </div>
         <p style="white-space: break-spaces; margin-bottom: 10rem;" th:text="${info.content}"></p>
 
-        <a th:href="@{/admin/info/update/{id}(id=${info.id})}" style="display: flow-root; margin-bottom: 10rem;">
+        <a th:href="@{/admin/modifying/info/{id}(id=${info.id})}" style="display: flow-root; margin-bottom: 10rem;">
             <button class="button btnPush btnBlue" type="submit" style="float: right; margin-right: 1rem;">수정 하기</button>
         </a>
     </div>

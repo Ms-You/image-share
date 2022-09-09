@@ -1,6 +1,7 @@
 package com.share.image.admin.controller;
 
 import com.share.image.feed.domain.Feed;
+import com.share.image.feed.repository.FeedRepository;
 import com.share.image.feed.repository.ReportRepository;
 import com.share.image.user.domain.User;
 import com.share.image.user.repository.UserRepository;
@@ -17,8 +18,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.List;
-
 @Slf4j
 @RequiredArgsConstructor
 @Controller
@@ -27,6 +26,7 @@ public class AdminUserController {
 
     private final UserRepository userRepository;
     private final ReportRepository reportRepository;
+    private final FeedRepository feedRepository;
 
     // 사용자 리스트 보기
     @GetMapping("/users")
@@ -46,8 +46,8 @@ public class AdminUserController {
 
 
     // 특정 사용자 보기
-    @GetMapping("/user/{user_id}")
-    public String userView(@PathVariable(name = "user_id") Long userId, Model model){
+    @GetMapping("/user/{userId}")
+    public String userView(@PathVariable(name = "userId") Long userId, Model model){
 
         User user = userRepository.findById(userId).orElseThrow(()->{
             return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
@@ -79,8 +79,8 @@ public class AdminUserController {
 
 
     // 일시 정지된 사용자 관리
-    @GetMapping("/user/temporary")
-    public String temporarySuspendedUser(@PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable, Model model){
+    @GetMapping("/temporary/users")
+    public String temporaryStoppedUser(@PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable, Model model){
         Page<User> users = userRepository.findAllByTemporaryLocked(pageable, "해제하기");
 
         int startPage = (int) (Math.floor(pageable.getPageNumber() / pageable.getPageSize()) * pageable.getPageSize() + 1);
@@ -95,8 +95,8 @@ public class AdminUserController {
     }
 
     // 영구 정지된 사용자 관리
-    @GetMapping("/user/permanent")
-    public String permanentSuspendedUser(@PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable, Model model){
+    @GetMapping("/permanent/users")
+    public String permanentStoppedUser(@PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable, Model model){
         Page<User> users = userRepository.findAllByPermanentLocked(pageable, "해제하기");
 
         int startPage = (int) (Math.floor(pageable.getPageNumber() / pageable.getPageSize()) * pageable.getPageSize() + 1);
@@ -110,7 +110,27 @@ public class AdminUserController {
         return "admin/user/permanent";
     }
 
+    // 회원 관리에서의 특정 사용자가 생성한 피드 목록
+    @GetMapping("/user/{userId}/feeds")
+    public String feedsView(@PathVariable(name = "userId") Long userId, Model model, @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC)Pageable pageable){
 
+        User user = userRepository.findById(userId).orElseThrow(()->{
+            return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
+        });
+
+        Page<Feed> feeds = feedRepository.findByWriter(user, pageable);
+
+        int startPage = (int) (Math.floor(pageable.getPageNumber() / pageable.getPageSize()) * pageable.getPageSize() + 1);
+        int tempEndPage = startPage + pageable.getPageSize() - 1;
+        int endPage = tempEndPage > feeds.getTotalPages() ? feeds.getTotalPages() : tempEndPage;
+
+        model.addAttribute("user", user);
+        model.addAttribute("feeds", feeds);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
+
+        return "/admin/user/feedsView";
+    }
 
 
 }

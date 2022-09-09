@@ -11,7 +11,7 @@
 <section class="page-section portfolio">
     <div class="container">
 
-        <form th:action="@{/admin/tag/update/{id}(id=${tag.id})}" method="post" modelAttribute="tagRequestDto" enctype="multipart/form-data" accept-charset="UTF-8" style="padding: 3rem 0rem 30rem 0rem;">
+        <form th:action="@{/admin/tag/{id}(id=${tag.id})}" method="post" modelAttribute="tagRequestDto" enctype="multipart/form-data" accept-charset="UTF-8" style="padding: 3rem 0rem 30rem 0rem;">
             <input type="hidden" name="_method" value="put"/>
             <div id="feed-create">
                 <h2 class="title">태그 수정</h2>
@@ -34,7 +34,7 @@
                     </div>
                 </div>
 
-                <a th:href="@{/admin/tags/}">
+                <a th:href="@{/admin/tags}">
                     <button class="button btnPush btnOrange" type="button" style="float: right;">취소</button>
                 </a>
                 <button class="button btnPush btnBlueGreen" type="submit" style="float: right; margin-right: 1rem;">수정</button>

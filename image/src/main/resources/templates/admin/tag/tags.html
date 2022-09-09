@@ -8,28 +8,44 @@
 <header th:replace="layout/admin_header::admin_headerFragment"></header>
 
 <script type="text/javascript">
-    function deleteTag(tagId, tagName){
-        var result = confirm(tagName + " 태그를 정말로 삭제하시겠습니까?");
-            if (result) {
-                location.href = "delete/" + tagId;
-            }
+function deleteTag(tagId, tagName){
+    var result = confirm(tagName + " 태그를 정말로 삭제하시겠습니까?");
+    if (result){
+        $.ajax({
+            type: "DELETE",
+            url: `/admin/tag/${tagId}`,
+        }).done(function(resp){
+            alert("삭제가 완료되었습니다.");
+            location.href = "/admin/tags";
+        }).fail(function(error){
+            console.log(error);
+            alert("삭제에 실패하였습니다.");
+        });
     }
+}
 </script>
 
 <!-- content -->
 <section class="page-section portfolio">
     <div class="container" style="margin-bottom: 10rem;">
         <div style="margin-bottom: 4rem;">
-            <a th:href="@{/admin/}">
+            <a th:href="@{/admin}">
                 <button type="button" class="button btnPush btnOrange">뒤로 가기</button>
             </a>
         </div>
 
         <div style="display: flex; margin-bottom: 4rem;">
-            <a th:href="@{/admin/new/tag}">
+            <a th:href="@{/admin/tag}">
                 <button type="button" class="button btnPush btnOrange" style="background-color: #FFCC88;">태그 생성</button>
             </a>
         </div>
+
+        <form th:action="@{/admin/feed/search}" method="get" class="d-flex" style="margin-bottom: 3rem;">
+            <input class="form-control me-2" type="search" name="keyword" placeholder="피드 검색" aria-label="Search" style="width: 20%;">
+            <button class="btn btn-outline-secondary" type="submit">
+                <img th:src="@{/img/search.png}" alt="검색" width="20" height="20" class="d-inline-block align-text-top">
+            </button>
+        </form>
 
         <div th:if="${!tags.isEmpty()}">
             <h1>태그 목록</h1>
@@ -47,11 +63,13 @@
                 <tr th:each="tag: ${tags.content}">
                     <td th:text="${tag.id}"></td>
                     <td>
-                        <img th:src="@{/tag_imgs/} + ${tag.tagImageUrl}" style="border-radius: 100%; width: 80px; height: 80px;" />
+                        <a th:href="@{/admin/tag/{id}(id=${tag.id})}">
+                            <img th:src="@{/tag_imgs/} + ${tag.tagImageUrl}" style="border-radius: 100%; width: 80px; height: 80px;" />
+                        </a>
                     </td>
                     <td th:text="${tag.name}"></td>
                     <td>
-                        <a th:href="@{/admin/tag/update/{id}(id=${tag.id})}">
+                        <a th:href="@{/admin/modifying/tag/{id}(id=${tag.id})}">
                             <button type="button" class="btn btn-info">수정</button>
                         </a>
                     </td>
@@ -77,30 +95,30 @@
             <ul class="pagination justify-content-center">
 
                 <li class="page-item" th:classappend="${!tags.hasPrevious} ? 'disabled'">
-                    <a class="page-link" th:href="@{/admin/tags/(page='0')}" aria-label="Previous">
+                    <a class="page-link" th:href="@{/admin/tags(page='0')}" aria-label="Previous">
                         <span aria-hidden="true">&laquo;</span>
                     </a>
                 </li>
 
                 <li class="page-item" th:classappend="${!tags.hasPrevious} ? 'disabled'">
-                    <a class="page-link" th:href="@{/admin/tags/(page=${tags.number-1})}">
+                    <a class="page-link" th:href="@{/admin/tags(page=${tags.number-1})}">
                         <span>&lt;</span>
                     </a>
                 </li>
 
                 <li th:each="page: ${#numbers.sequence(startPage, endPage)}"
                     th:classappend="${page == tags.number + 1} ? 'active'" class="page-item">
-                    <a th:text="${page}" class="page-link" th:href="@{/admin/tags/(page=${page-1})}"></a>
+                    <a th:text="${page}" class="page-link" th:href="@{/admin/tags(page=${page-1})}"></a>
                 </li>
 
                 <li class="page-item" th:classappend="${!tags.hasNext} ? 'disabled'">
-                    <a class="page-link" th:href="@{/admin/tags/(page=${tags.number+1})}">
+                    <a class="page-link" th:href="@{/admin/tags(page=${tags.number+1})}">
                         <span>&gt;</span>
                     </a>
                 </li>
 
                 <li class="page-item" th:classappend="${!tags.hasNext} ? 'disabled'">
-                    <a class="page-link" th:href="@{/admin/tags/(page=${tags.totalPages-1})}" aria-label="Previous">
+                    <a class="page-link" th:href="@{/admin/tags(page=${tags.totalPages-1})}" aria-label="Previous">
                         <span aria-hidden="true">&raquo;</span>
                     </a>
                 </li>

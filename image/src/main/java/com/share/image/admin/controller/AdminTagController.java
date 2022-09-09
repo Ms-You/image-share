@@ -14,6 +14,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -22,7 +24,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.io.UnsupportedEncodingException;
-import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -53,13 +54,13 @@ public class AdminTagController {
     }
 
     // 태그 생성 페이지로 이동
-    @GetMapping("/new/tag")
+    @GetMapping("/tag")
     public String createTag(){
-        return "/admin/tag/new_tag";
+        return "/admin/tag/newTag";
     }
 
     // 태그 생성
-    @PostMapping("/new/tag")
+    @PostMapping("/tag")
     public String newTag(@Valid TagRequestDto tagRequestDto, Errors errors, Model model, @RequestParam MultipartFile file) throws UnsupportedEncodingException {
         // 파일 유효성 검사를 위해 파일명을 dto 에 넣어줌
         tagRequestDto.insertImage(file.getOriginalFilename());
@@ -73,7 +74,7 @@ public class AdminTagController {
                 model.addAttribute(key, validatorResult.get(key));
             }
 
-            return "admin/tag/new_tag";
+            return "admin/tag/newTag";
         }
 
         adminTagService.createTag(tagRequestDto, file);
@@ -82,8 +83,8 @@ public class AdminTagController {
 
 
     // 태그 수정페이지 이동
-    @GetMapping("/tag/update/{tag_id}")
-    public String updateTag(@PathVariable(name = "tag_id") Long tagId, Model model){
+    @GetMapping("/modifying/tag/{tagId}")
+    public String updateTag(@PathVariable(name = "tagId") Long tagId, Model model){
 
         Tag tag = tagRepository.findById(tagId).orElseThrow(()->{
             return new IllegalArgumentException("존재하지 않는 태그입니다.");
@@ -94,8 +95,8 @@ public class AdminTagController {
     }
 
     // 태그 수정
-    @PutMapping("/tag/update/{tag_id}")
-    public String updateTag(@PathVariable(name = "tag_id") Long tagId,
+    @PutMapping("/tag/{tagId}")
+    public String updateTag(@PathVariable(name = "tagId") Long tagId,
                             @Valid TagRequestDto tagRequestDto,
                             Errors errors,
                             Model model,
@@ -136,33 +137,20 @@ public class AdminTagController {
 
 
     // 태그 삭제
-    @GetMapping("/delete/{tag_id}")
-    public String deleteTag(@PathVariable("tag_id") Long tagId) {
-        tagRepository.deleteById(tagId);
-
-        return "redirect:/admin/tags";
+    @ResponseBody
+    @DeleteMapping("/tag/{tagId}")
+    public ResponseEntity deleteTag(@PathVariable(name = "tagId") Long tagId){
+        try{
+            tagRepository.deleteById(tagId);
+            return new ResponseEntity(HttpStatus.OK);
+        } catch (Exception e){
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
-
-
-    // 태그 목록 보기 (이후 태그 목록 확인 가능)
-    @GetMapping("/tag/list")
-    public String tagList(Model model, @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.ASC) Pageable pageable){
-        Page<Tag> tags = tagRepository.findAll(pageable);
-        int startPage = (int) (Math.floor(pageable.getPageNumber() / pageable.getPageSize()) * pageable.getPageSize() + 1);
-        int tempEndPage = startPage + pageable.getPageSize() - 1;
-        int endPage = tempEndPage > tags.getTotalPages() ? tags.getTotalPages() : tempEndPage;
-
-        model.addAttribute("tags", tags);
-        model.addAttribute("startPage", startPage);
-        model.addAttribute("endPage", endPage);
-
-        return "admin/tag/tagList";
-    }
-
 
     // 피드 모음 페이지로 이동
-    @GetMapping("/tag")
-    public String tags(@RequestParam(name = "tag_id") Long tagId, Model model, @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable){
+    @GetMapping("/tag/{tagId}")
+    public String feedsOfTag(@PathVariable(name = "tagId") Long tagId, Model model, @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable){
         Tag tag = tagRepository.findById(tagId).orElseThrow(()->{
             return new IllegalArgumentException("존재하지 않는 태그입니다.");
         });
