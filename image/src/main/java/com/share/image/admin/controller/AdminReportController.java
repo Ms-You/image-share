@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Slf4j
@@ -55,7 +56,7 @@ public class AdminReportController {
     }
 
     // 계정 일시 정지하기
-    @GetMapping("/temporary/user/{userId}")
+    @PostMapping("/temporary/user/{userId}")
     public String temporaryStoppedUser(@PathVariable(name = "userId") Long userId){
         blockUserService.temporaryBlockUser(userId);
 
@@ -63,7 +64,7 @@ public class AdminReportController {
     }
 
     // 계정 영구 정지하기
-    @GetMapping("/permanent/user/{userId}")
+    @PostMapping("/permanent/user/{userId}")
     public String permanentStoppedUser(@PathVariable(name = "userId") Long userId){
         blockUserService.permanentBlockUser(userId);
 

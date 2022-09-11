@@ -89,7 +89,7 @@
         }
 
         $.ajax({
-            type: "GET",
+            type: "POST",
             url: `/admin/report/temporary/user/${userId}`,
             dataType: "text"
         }).done(res=>{
@@ -114,7 +114,7 @@
         }
 
         $.ajax({
-            type: "GET",
+            type: "POST",
             url: `/admin/report/permanent/user/${userId}`,
             dataType: "text"
         }).done(res=>{
