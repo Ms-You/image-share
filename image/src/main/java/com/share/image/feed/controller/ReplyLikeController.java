@@ -18,18 +18,18 @@ public class ReplyLikeController {
 
     private final ReplyLikeService replyLikeService;
 
-    @PostMapping("/like/feed/{feed_id}/reply/{reply_id}")
-    public String likeReply(@PathVariable(name = "feed_id") Long feedId,
-                            @PathVariable(name = "reply_id") Long replyId,
+    @PostMapping("/likes/feed/{feedId}/reply/{replyId}")
+    public String likesReply(@PathVariable(name = "feedId") Long feedId,
+                            @PathVariable(name = "replyId") Long replyId,
                             @AuthenticationPrincipal PrincipalDetails principalDetails) {
         replyLikeService.likeReply(replyId, principalDetails.getUser().getId());
 
         return "redirect:/user/feed/" + feedId;
     }
 
-    @PostMapping("/unLike/feed/{feed_id}/reply/{reply_id}")
-    public String unLikeReply(@PathVariable(name = "feed_id") Long feedId,
-                              @PathVariable(name = "reply_id") Long replyId,
+    @PostMapping("/unLikes/feed/{feedId}/reply/{replyId}")
+    public String unLikesReply(@PathVariable(name = "feedId") Long feedId,
+                              @PathVariable(name = "replyId") Long replyId,
                               @AuthenticationPrincipal PrincipalDetails principalDetails) {
         replyLikeService.unLikeReply(replyId, principalDetails.getUser().getId());
 

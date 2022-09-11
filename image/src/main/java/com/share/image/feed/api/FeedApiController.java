@@ -29,8 +29,8 @@ public class FeedApiController {
     @Value("${feedImg.path}")
     private String uploadFolder;
 
-    @GetMapping("/download/{feed_id}")
-    public ResponseEntity<Resource> download(@PathVariable(name = "feed_id") Long feedId){
+    @GetMapping("/download/{feedId}")
+    public ResponseEntity<Resource> download(@PathVariable(name = "feedId") Long feedId){
         Feed feed = feedRepository.findById(feedId).orElseThrow(()->{
             return new IllegalArgumentException("존재하지 않는 피드입니다.");
         });

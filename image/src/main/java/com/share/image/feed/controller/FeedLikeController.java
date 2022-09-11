@@ -18,15 +18,15 @@ public class FeedLikeController {
 
     private final FeedLikeService likeService;
 
-    @PostMapping("/like/feed/{feed_id}")
-    public String likeFeed(@PathVariable(name = "feed_id") Long feedId, @AuthenticationPrincipal PrincipalDetails principalDetails) {
+    @PostMapping("/likes/feed/{feedId}")
+    public String likesFeed(@PathVariable(name = "feedId") Long feedId, @AuthenticationPrincipal PrincipalDetails principalDetails) {
         likeService.likeFeed(feedId, principalDetails.getUser().getId());
 
         return "redirect:/user/feed/" + feedId;
     }
 
-    @PostMapping("/unLike/feed/{feed_id}")
-    public String unLikeFeed(@PathVariable(name = "feed_id") Long feedId, @AuthenticationPrincipal PrincipalDetails principalDetails) {
+    @PostMapping("/unLikes/feed/{feedId}")
+    public String unLikesFeed(@PathVariable(name = "feedId") Long feedId, @AuthenticationPrincipal PrincipalDetails principalDetails) {
         likeService.unLikeFeed(feedId, principalDetails.getUser().getId());
 
         return "redirect:/user/feed/" + feedId;

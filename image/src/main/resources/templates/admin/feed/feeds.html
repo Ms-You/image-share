@@ -8,21 +8,21 @@
 <header th:replace="layout/admin_header::admin_headerFragment"></header>
 
 <script type="text/javascript">
-function deleteFeed(feedId, feedTitle){
-    var result = confirm(feedTitle + " 피드를 정말로 삭제하시겠습니까?");
-    if (result){
-        $.ajax({
-            type: "DELETE",
-            url: `/admin/feed/${feedId}`,
-        }).done(function(resp){
-            alert("삭제가 완료되었습니다.");
-            location.href = "/admin/tag/" + resp;
-        }).fail(function(error){
-            console.log(error);
-            alert("삭제에 실패하였습니다.");
-        });
+    function deleteFeed(feedId, feedTitle){
+        var result = confirm(feedTitle + " 피드를 정말로 삭제하시겠습니까?");
+        if (result){
+            $.ajax({
+                type: "DELETE",
+                url: `/admin/feed/${feedId}`,
+            }).done(function(resp){
+                alert("삭제가 완료되었습니다.");
+                location.href = "/admin/tag/" + resp;
+            }).fail(function(error){
+                console.log(error);
+                alert("삭제에 실패하였습니다.");
+            });
+        }
     }
-}
 </script>
 
 <!-- content -->

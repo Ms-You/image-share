@@ -26,7 +26,7 @@
     <!--  tag start  -->
     <div class="row" style="padding: 3rem 0rem 30rem 0rem;">
       <div th:each="tag: ${tags}" class="col-md-6 col-lg-4 mb-4">
-        <a th:href="@{/user/tag/(tag_id=${tag.id})}">
+        <a th:href="@{/user/tag/{id}(id=${tag.id})}">
           <div class="portfolio-item mx-auto" style="position: relative">
             <img class="img-fluid" th:src="@{/tag_imgs/} + ${tag.tagImageUrl}" width="100%" height="100%" />
             <span class="tag-text" th:text="${tag.name}"></span>

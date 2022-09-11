@@ -1,6 +1,8 @@
 package com.share.image.user.controller;
 
 import com.share.image.config.PrincipalDetails;
+import com.share.image.feed.domain.Feed;
+import com.share.image.feed.repository.FeedRepository;
 import com.share.image.feed.service.SubscribeService;
 import com.share.image.user.domain.User;
 import com.share.image.user.dto.JoinRequestDto;
@@ -10,6 +12,10 @@ import com.share.image.user.repository.UserRepository;
 import com.share.image.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
@@ -30,6 +36,7 @@ public class UserController {
     private final UserService userService;
     private final SubscribeService subscribeService;
     private final UserRepository userRepository;
+    private final FeedRepository feedRepository;
     private final JoinDtoValidator usersDtoValidator;
 
 
@@ -136,6 +143,28 @@ public class UserController {
         model.addAttribute("user", toUser);
 
         return "user/view";
+    }
+
+    // 특정 사용자의 피드 관리
+    @GetMapping("/user/{userId}/feeds")
+    public String feedsView(@PathVariable(name = "userId") Long userId, Model model, @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable){
+
+        User user = userRepository.findById(userId).orElseThrow(()->{
+            return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
+        });
+
+        Page<Feed> feeds = feedRepository.findByWriter(user, pageable);
+
+        int startPage = (int) (Math.floor(pageable.getPageNumber() / pageable.getPageSize()) * pageable.getPageSize() + 1);
+        int tempEndPage = startPage + pageable.getPageSize() - 1;
+        int endPage = tempEndPage > feeds.getTotalPages() ? feeds.getTotalPages() : tempEndPage;
+
+        model.addAttribute("user", user);
+        model.addAttribute("feeds", feeds);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
+
+        return "/user/feedsView";
     }
 
 

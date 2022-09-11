@@ -1,7 +1,6 @@
 <!doctype html>
-<html lang="ko"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
 <!-- head.html -->
 <th:block th:replace="layout/head::headFragment"></th:block>
 
@@ -9,50 +8,84 @@
 <header th:replace="layout/header::headerFragment"></header>
 
 <script type="text/javascript">
-    function deleteFeed(feedId, feedName){
-        var result = confirm(feedName + " 피드를 정말로 삭제하시겠습니까?");
-            if (result) {
-                location.href = "delete/" + feedId;
-            }
+    function deleteFeed(feedId, feedTitle){
+        var result = confirm(feedTitle + " 피드를 정말로 삭제하시겠습니까?");
+        if (result){
+            $.ajax({
+                type: "DELETE",
+                url: `/user/feed/${feedId}`,
+            }).done(function(resp){
+                alert("삭제가 완료되었습니다.");
+                location.href = "/user/tag/" + resp;
+            }).fail(function(error){
+                console.log(error);
+                alert("삭제에 실패하였습니다.");
+            });
+        }
     }
 
     function deleteReply(replyId){
         var result = confirm("댓글을 정말로 삭제하시겠습니까?");
-            if (result) {
-                location.href = "delete/reply/" + replyId;
-            }
+        if (result){
+            $.ajax({
+                type: "DELETE",
+                url: `/user/feed/reply/${replyId}`,
+            }).done(function(resp){
+                alert("삭제가 완료되었습니다.");
+                location.href = "/user/feed/" + resp;
+            }).fail(function(error){
+                console.log(error);
+                alert("삭제에 실패하였습니다.");
+            });
+        }
+    }
+
+    function dataSend() {
+        var feedId=$("#feed_id").val();
+        var data= $("#input").val()
+
+        var replyRequestDto={
+            content: data
+        };
+
+        $.ajax({
+            url: `/user/feed/${feedId}/reply`,
+            data: replyRequestDto,
+            type:"POST",
+        }).done(function (fragment) {
+            $("#replyList").replaceWith(fragment);
+        });
     }
 </script>
 
-<body layout:fragment="content">
 <!-- content -->
 <section class="page-section portfolio">
     <div class="container" style="padding: 3rem 0rem 30rem 0rem; max-width: 960px;">
 
         <div>
-            <img th:src="@{/profile_imgs/} + ${feed.writer.profileImageUrl}" onerror="this.src='/img/default_profile.png';" width="30" height="30" style="border-radius: 100%;" />
+            <img th:src="@{/profile_imgs/} + ${feed.writer.profileImageUrl}" onerror="this.src='/img/default_profile.png'" width="30" height="30" style="border-radius: 100%;" />
             <span th:text="${feed.writer.nickName}" style="font-size: 30px;"></span>
             <div>
                 <!--  report a feed  -->
                 <div th:if="${feed.writer.role.toString().equals('ROLE_USER')}">
-                    <a th:href="@{/user/report/feed/{feed_id}(feed_id=${feed.id})}">
+                    <a th:href="@{/user/report/feed/{id}(id=${feed.id})}">
                         <img th:src="@{/img/siren.png}" alt="신고" width="40" height="40" id="myBtn" class="d-inline-block align-text-top" style="float: right; margin-left: 2rem; cursor: pointer;">
                     </a>
                 </div>
 
-                <a th:href="@{/download/{feed_id}(feed_id=${feed.id})}">
+                <a th:href="@{/download/{id}(id=${feed.id})}">
                     <img th:src="@{/img/save.png}" alt="피드 저장" width="40" height="40" class="d-inline-block align-text-top" style="float: right;">
                 </a>
-            <!--  구독 start  -->
+                <!--  구독 start  -->
                 <input type="hidden" id="toUserId" th:value="${feed.writer.id}">
                 <a href="#a" class="subscribe">
                     <span><img th:src="@{${subscribeStatus}}" alt="구독" width="80" height="60" class="d-inline-block align-text-top"></span>
                 </a>
+                <!--  구독 end  -->
             </div>
-            <!--  구독 end  -->
             <h6 th:text="${#temporals.format(feed.createdDate, 'yyyy-MM-dd')}"></h6>
             조회수: <span th:text="${#lists.size(feed.views)}"></span>
-            <a th:href="@{/user/tag/(tag_id=${feed.tag.id})}">
+            <a th:href="@{/user/tag/{id}(id=${feed.tag.id})}">
                 <div th:text="${feed.tag.name}" style="color: orange;"></div>
             </a>
         </div>
@@ -74,19 +107,19 @@
             <!--  이전 피드로 이동  -->
             <a th:href="@{/user/feed/{id}(id=${prevFeed})}">
                 <div th:if="${not #strings.isEmpty(prevFeed)}">
-                    <button class="carousel-control-prev" type="button" data-bs-slide="prev">❮</button>
+                    <button class="carousel-control-next" type="button" data-bs-slide="next">❯</button>
                 </div>
                 <div th:unless="${not #strings.isEmpty(prevFeed)}">
-                    <button class="carousel-control-prev" type="button" data-bs-slide="prev" disabled>❮</button>
+                    <button class="carousel-control-next" type="button" data-bs-slide="next" disabled>❯</button>
                 </div>
             </a>
             <!--  다음 피드로 이동  -->
             <a th:href="@{/user/feed/{id}(id=${nextFeed})}">
                 <div th:if="${not #strings.isEmpty(nextFeed)}">
-                    <button class="carousel-control-next" type="button" data-bs-slide="next">❯</button>
+                    <button class="carousel-control-prev" type="button" data-bs-slide="prev">❮</button>
                 </div>
                 <div th:unless="${not #strings.isEmpty(nextFeed)}">
-                    <button class="carousel-control-next" type="button" data-bs-slide="next" disabled>❯</button>
+                    <button class="carousel-control-prev" type="button" data-bs-slide="prev" disabled>❮</button>
                 </div>
             </a>
 
@@ -98,7 +131,7 @@
         </div>
 
         <div th:if="${feed.writer.id.equals(#authentication.getPrincipal().getUser().id)}" style="float: right; margin:1rem 1rem 0rem 0rem;">
-            <a th:href="@{/user/feed/update/{id}(id=${feed.id})}">
+            <a th:href="@{/user/modifying/feed/{id}(id=${feed.id})}">
                 <button class="button btnPush btnLightBlue">수정하기</button>
             </a>
         </div>
@@ -130,7 +163,7 @@
                     <div class="reply">
                         <div class="content">
                             <header class="top" style="margin-bottom: 2rem;">
-                                <img th:src="@{/profile_imgs/} + ${reply.writer.profileImageUrl}" onerror="this.src='/img/default_profile.png';" width="30" height="30" style="border-radius: 100%;" />
+                                <img th:src="@{/profile_imgs/} + ${reply.writer.profileImageUrl}" onerror="this.src='/img/default_profile.png'" width="30" height="30" style="border-radius: 100%;" />
                                 <span class="username" th:text="${reply.writer.nickName}"></span>
                                 <!--  댓글 삭제  -->
                                 <div class="utility" th:if="${reply.writer.id.equals(#authentication.getPrincipal().getUser().id)}">
@@ -159,25 +192,6 @@
     </div>
 </section>
 
-</body>
-<script>
-function dataSend() {
-    var feedId=$("#feed_id").val();
-    var data= $("#input").val()
-
-    var replyRequestDto={
-        content: data
-    };
-
-    $.ajax({
-        url: `/user/reply/feed/${feedId}`,
-        data: replyRequestDto,
-        type:"POST",
-    }).done(function (fragment) {
-        $("#replyList").replaceWith(fragment);
-    });
-}
-</script>
 <script type="text/javascript" th:src="@{/js/feedLike.js}"></script>
 <script type="text/javascript" th:src="@{/js/replyLike.js}"></script>
 <script type="text/javascript" th:src="@{/js/subscribe.js}"></script>

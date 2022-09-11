@@ -11,7 +11,7 @@
 <section class="page-section portfolio">
     <div class="container">
 
-        <form th:action="@{/user/report/feed/{feed_id}(feed_id=${feedId})}" method="post" th:object="${reportRequestDto}"  style="padding: 3rem 0rem 30rem 0rem;">
+        <form th:action="@{/user/report/feed/{id}(id=${feedId})}" method="post" th:object="${reportRequestDto}"  style="padding: 3rem 0rem 30rem 0rem;">
 
             <div id="feed-create">
                 <h2 class="title">부적절한 피드 신고</h2>
@@ -29,7 +29,7 @@
                     <div class="field-error" th:errors="*{content}" style="color: red; font-size: 18px;">최대 글자수 초과</div>
                 </div>
 
-                <a th:href="@{/user}">
+                <a th:href="@{/user/feed/{id}(id=${feedId})}">
                     <button class="button btnPush btnLightBlue" type="button" style="float: right;">취소</button>
                 </a>
                 <button class="button btnPush btnRed" type="submit" style="float: right; margin-right: 1rem;">신고하기</button>

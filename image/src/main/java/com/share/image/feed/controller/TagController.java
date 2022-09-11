@@ -13,8 +13,8 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import java.util.List;
 
 
@@ -36,8 +36,8 @@ public class TagController {
     }
 
 
-    @GetMapping("/tag")
-    public String tags(@RequestParam(name = "tag_id") Long tagId, Model model, @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable){
+    @GetMapping("/tag/{tagId}")
+    public String feedsOfTag(@PathVariable(name = "tagId") Long tagId, Model model, @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable){
         Tag tag = tagRepository.findById(tagId).orElseThrow(()->{
             return new IllegalArgumentException("존재하지 않는 태그입니다.");
         });

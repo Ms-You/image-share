@@ -13,7 +13,7 @@
         <div th:text="${user.nickName} + '의 프로필'" class="profile"></div>
         <div style="margin-bottom: 3rem;">
             <span class="profile-text" style="margin-right: 10rem;">프로필 사진</span>
-            <img th:src="@{/profile_imgs/} + ${user.profileImageUrl}" onerror="this.src='/img/default_profile.png';" class="profile-img" /><br/>
+            <img th:src="@{/profile_imgs/} + ${user.profileImageUrl}" onerror="this.src='/img/default_profile.png'" class="profile-img" /><br/>
         </div>
         <div style="margin-bottom: 3rem;">
             <span class="profile-text">닉네임</span>
@@ -42,13 +42,13 @@
         </div>
 
         <div style="margin-top: 3rem;">
-            <a th:href="@{/user/feeds/}">
+            <a th:href="@{/user/feeds}">
                 <button class="button btnPush btnOrange" style="margin: 1rem 3rem 0rem 0rem;">내 피드</button>
             </a>
         </div>
 
         <div style="margin-top: 3rem;">
-            <a th:href="@{/user/feeds/likes}">
+            <a th:href="@{/user/likes/feeds}">
                 <button class="button btnPush btnBlueGreen" style="margin: 1rem 3rem 0rem 0rem; width: 150px;">좋아요 표시한 피드</button>
             </a>
         </div>

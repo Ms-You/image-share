@@ -24,7 +24,7 @@ $(".feed-like").click(function() {
   function btnFeedLike(feedId){
   	$.ajax({
   		type: "POST",
-  		url: `/user/like/feed/${feedId}`,
+  		url: `/user/likes/feed/${feedId}`,
   		dataType: "text"
   	}).done(res=>{
   	    console.log("OK");
@@ -36,7 +36,7 @@ $(".feed-like").click(function() {
   function btnFeedUnLike(feedId){
       $.ajax({
           type: "POST",
-          url: `/user/unLike/feed/${feedId}`,
+          url: `/user/unLikes/feed/${feedId}`,
           dataType: "text"
       }).done(res=>{
           console.log("OK");

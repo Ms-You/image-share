@@ -28,7 +28,7 @@
             <h2>
                 좋아요를 표시한 피드가 없습니다.<br/>
             </h2>
-            <a th:href="@{/user/profile/}">
+            <a th:href="@{/user/profile}">
                 <button type="button" class="button btnPush btnBlueGreen" style="width: 10%; float: initial; display: inline;">돌아가기</button>
             </a>
         </div>
@@ -39,30 +39,30 @@
             <ul class="pagination justify-content-center">
 
                 <li class="page-item" th:classappend="${pageNum <= 0} ? 'disabled'">
-                    <a class="page-link" th:href="@{/user/feeds/likes/(page='0')}" aria-label="Previous">
+                    <a class="page-link" th:href="@{/user/feeds/likes(page='0')}" aria-label="Previous">
                         <span aria-hidden="true">&laquo;</span>
                     </a>
                 </li>
 
                 <li class="page-item" th:classappend="${pageNum <= 0} ? 'disabled'">
-                    <a class="page-link" th:href="@{/user/feeds/likes/(page=${pageNum-1})}">
+                    <a class="page-link" th:href="@{/user/feeds/likes(page=${pageNum-1})}">
                         <span>&lt;</span>
                     </a>
                 </li>
 
                 <li th:each="page: ${#numbers.sequence(startPage, endPage)}"
                     th:classappend="${page == pageNum + 1} ? 'active'" class="page-item">
-                    <a th:text="${page}" class="page-link" th:href="@{/user/feeds/likes/(page=${page-1})}"></a>
+                    <a th:text="${page}" class="page-link" th:href="@{/user/feeds/likes(page=${page-1})}"></a>
                 </li>
 
                 <li class="page-item" th:classappend="${pageNum + 1 >= totalPages} ? 'disabled'">
-                    <a class="page-link" th:href="@{/user/feeds/likes/(page=${pageNum+1})}">
+                    <a class="page-link" th:href="@{/user/feeds/likes(page=${pageNum+1})}">
                         <span>&gt;</span>
                     </a>
                 </li>
 
                 <li class="page-item" th:classappend="${pageNum + 1 >= totalPages} ? 'disabled'">
-                    <a class="page-link" th:href="@{/user/feeds/likes/(page=${totalPages-1})}" aria-label="Previous">
+                    <a class="page-link" th:href="@{/user/feeds/likes(page=${totalPages-1})}" aria-label="Previous">
                         <span aria-hidden="true">&raquo;</span>
                     </a>
                 </li>

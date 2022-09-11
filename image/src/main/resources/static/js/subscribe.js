@@ -20,7 +20,7 @@ $(".subscribe").click(function() {
   function btnSubscribe(toUserId, feedId){
   	$.ajax({
   		type: "POST",
-  		url: `/user/subscribe/${toUserId}/${feedId}`,
+  		url: `/user/subscribe/toUser/${toUserId}/feed/${feedId}`,
   		dataType: "text"
   	}).done(res=>{
   	    console.log("OK");
@@ -32,7 +32,7 @@ $(".subscribe").click(function() {
   function btnUnSubscribe(toUserId, feedId){
       $.ajax({
           type: "POST",
-          url: `/user/unSubscribe/${toUserId}/${feedId}`,
+          url: `/user/unSubscribe/toUser/${toUserId}/feed/${feedId}`,
           dataType: "text"
       }).done(res=>{
           console.log("OK");
@@ -63,7 +63,7 @@ $(".user-subscribe").click(function() {
   function userSubscribe(toUserId){
   	$.ajax({
   		type: "POST",
-  		url: `/user/subscribe/${toUserId}`,
+  		url: `/user/subscribe/toUser/${toUserId}`,
   		dataType: "text"
   	}).done(res=>{
   	    console.log("OK");
@@ -75,7 +75,7 @@ $(".user-subscribe").click(function() {
   function userUnSubscribe(toUserId){
       $.ajax({
           type: "POST",
-          url: `/user/unSubscribe/${toUserId}`,
+          url: `/user/unSubscribe/toUser/${toUserId}`,
           dataType: "text"
       }).done(res=>{
           console.log("OK");
@@ -106,7 +106,7 @@ $(".specific-subscribe").click(function() {
   function specificSubscribe(toUserId){
   	$.ajax({
   		type: "POST",
-  		url: `/user/subscribe/toUser/${toUserId}`,
+  		url: `/user/sub/toUser/${toUserId}`,
   		dataType: "text"
   	}).done(res=>{
   	    console.log("OK");
@@ -118,7 +118,7 @@ $(".specific-subscribe").click(function() {
   function specificUnSubscribe(toUserId){
       $.ajax({
           type: "POST",
-          url: `/user/unSubscribe/toUser/${toUserId}`,
+          url: `/user/unSub/toUser/${toUserId}`,
           dataType: "text"
       }).done(res=>{
           console.log("OK");

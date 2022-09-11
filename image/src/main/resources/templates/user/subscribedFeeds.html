@@ -18,7 +18,7 @@
     <!--  feed list start  -->
     <div th:if="${!feeds.isEmpty()}" class="row" style="padding: 3rem 20rem 30rem 20rem;margin: 0rem 0rem 0rem 0rem;" id="columns">
         <div th:each="feed: ${feeds}" class="col-md-6 col-lg-4 mb-4" style="width: 100%;">
-            <a th:href="@{/user/subscribed/feed/{id}(id=${feed.id})}">
+            <a th:href="@{/user/subscription/feed/{id}(id=${feed.id})}">
                 <figure>
                     <img th:src="@{/feed_imgs/} + ${feed.feedImageUrl}" class="feed-img">
                     <figcaption th:text="${feed.title}"></figcaption>
@@ -40,30 +40,30 @@
             <ul class="pagination justify-content-center">
 
                 <li class="page-item" th:classappend="${!feeds.hasPrevious} ? 'disabled'">
-                    <a class="page-link" th:href="@{/user/feeds/(page='0')}" aria-label="Previous">
+                    <a class="page-link" th:href="@{/user/feeds(page='0')}" aria-label="Previous">
                         <span aria-hidden="true">&laquo;</span>
                     </a>
                 </li>
 
                 <li class="page-item" th:classappend="${!feeds.hasPrevious} ? 'disabled'">
-                    <a class="page-link" th:href="@{/user/feeds/(page=${feeds.number-1})}">
+                    <a class="page-link" th:href="@{/user/feeds(page=${feeds.number-1})}">
                         <span>&lt;</span>
                     </a>
                 </li>
 
                 <li th:each="page: ${#numbers.sequence(startPage, endPage)}"
                     th:classappend="${page == feeds.number + 1} ? 'active'" class="page-item">
-                    <a th:text="${page}" class="page-link" th:href="@{/user/feeds/(page=${page-1})}"></a>
+                    <a th:text="${page}" class="page-link" th:href="@{/user/feeds(page=${page-1})}"></a>
                 </li>
 
                 <li class="page-item" th:classappend="${!feeds.hasNext} ? 'disabled'">
-                    <a class="page-link" th:href="@{/user/feeds/(page=${feeds.number+1})}">
+                    <a class="page-link" th:href="@{/user/feeds(page=${feeds.number+1})}">
                         <span>&gt;</span>
                     </a>
                 </li>
 
                 <li class="page-item" th:classappend="${!feeds.hasNext} ? 'disabled'">
-                    <a class="page-link" th:href="@{/user/feeds/(page=${feeds.totalPages-1})}" aria-label="Previous">
+                    <a class="page-link" th:href="@{/user/feeds(page=${feeds.totalPages-1})}" aria-label="Previous">
                         <span aria-hidden="true">&raquo;</span>
                     </a>
                 </li>

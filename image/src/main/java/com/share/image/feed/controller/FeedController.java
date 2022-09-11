@@ -18,6 +18,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
@@ -50,7 +52,7 @@ public class FeedController {
     private final ReplyRepository replyRepository;
 
     // 피드 생성 페이지로 이동
-    @GetMapping("/new/feed")
+    @GetMapping("/feed")
     public String createFeed(Model model){
         List<Tag> tags = tagRepository.findAll();
         model.addAttribute("tags", tags);
@@ -60,7 +62,7 @@ public class FeedController {
 
 
     // 피드 생성
-    @PostMapping("/new/feed")
+    @PostMapping("/feed")
     public String createFeed(
             @AuthenticationPrincipal PrincipalDetails principalDetails,
             @Valid FeedRequestDto feedRequestDto,
@@ -103,10 +105,10 @@ public class FeedController {
 
     }
 
-
-    @GetMapping("/feed/{feed_id}")
-    public String tags(@AuthenticationPrincipal PrincipalDetails principalDetails,
-                        @PathVariable(name = "feed_id") Long feedId, Model model){
+    // 특정 피드 보기
+    @GetMapping("/feed/{feedId}")
+    public String feedView(@AuthenticationPrincipal PrincipalDetails principalDetails,
+                        @PathVariable(name = "feedId") Long feedId, Model model){
 
         User user = userRepository.findById(principalDetails.getUser().getId()).orElseThrow(()->{
             return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
@@ -152,9 +154,10 @@ public class FeedController {
         return "feed/view";
     }
 
-    @GetMapping("/subscribed/feed/{feed_id}")
-    public String toUsersFeeds(@AuthenticationPrincipal PrincipalDetails principalDetails,
-                       @PathVariable(name = "feed_id") Long feedId, Model model){
+    // 구독한 사용자의 피드 보기 (prevFeed, nextFeed 때문에 생성)
+    @GetMapping("/subscription/feed/{feedId}")
+    public String subscribedFeedView(@AuthenticationPrincipal PrincipalDetails principalDetails,
+                       @PathVariable(name = "feedId") Long feedId, Model model){
 
         User user = userRepository.findById(principalDetails.getUser().getId()).orElseThrow(()->{
             return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
@@ -201,9 +204,9 @@ public class FeedController {
     }
 
     // 피드 수정페이지 이동
-    @GetMapping("/feed/update/{feed_id}")
+    @GetMapping("/modifying/feed/{feedId}")
     public String updateFeed(@AuthenticationPrincipal PrincipalDetails principalDetails,
-                                @PathVariable(name = "feed_id") Long feedId, Model model){
+                                @PathVariable(name = "feedId") Long feedId, Model model){
 
         User user = userRepository.findById(principalDetails.getUser().getId()).orElseThrow(()->{
             return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
@@ -225,8 +228,8 @@ public class FeedController {
     }
 
     // 피드 수정
-    @PutMapping("/feed/update/{feed_id}")
-    public String updateFeed(@PathVariable(name = "feed_id") Long feedId,
+    @PutMapping("/feed/{feedId}")
+    public String updateFeed(@PathVariable(name = "feedId") Long feedId,
             @Valid FeedRequestDto feedRequestDto,
             Errors errors,
             Model model,
@@ -268,23 +271,28 @@ public class FeedController {
 
 
     // 피드 삭제
-    @GetMapping("/feed/delete/{feed_id}")
-    public String deleteFeed(@PathVariable("feed_id") Long feedId) {
-        Feed feed = feedRepository.findById(feedId).orElseThrow(()->{
-            return new IllegalArgumentException("존재하지 않는 피드입니다.");
-        });
+    @ResponseBody
+    @DeleteMapping("/feed/{feedId}")
+    public ResponseEntity deleteFeed(@PathVariable(name = "feedId") Long feedId){
+        try {
+            Feed feed = feedRepository.findById(feedId).orElseThrow(()->{
+                return new IllegalArgumentException("존재하지 않는 피드입니다.");
+            });
 
-        Long tagId = feed.getTag().getId();
+            feedRepository.deleteById(feedId);
+            Long tagId = feed.getTag().getId();
 
-        feedRepository.deleteById(feedId);
-
-        return "redirect:/user/tag/?tag_id=" + tagId;
+            return new ResponseEntity(tagId, HttpStatus.OK);
+        } catch (Exception e){
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 
 
     // 현재 사용자의 피드 관리
     @GetMapping("/feeds")
-    public String manageFeeds(@AuthenticationPrincipal PrincipalDetails principalDetails, Model model, @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC)Pageable pageable){
+    public String currentUsersFeeds(@AuthenticationPrincipal PrincipalDetails principalDetails,
+                              Model model, @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC)Pageable pageable){
 
         User user = userRepository.findById(principalDetails.getUser().getId()).orElseThrow(()->{
             return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
@@ -303,31 +311,11 @@ public class FeedController {
         return "/user/feeds";
     }
 
-    // 특정 사용자의 피드 관리
-    @GetMapping("/feeds/{user_id}")
-    public String feedsView(@PathVariable(name = "user_id") Long userId, Model model, @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC)Pageable pageable){
-
-        User user = userRepository.findById(userId).orElseThrow(()->{
-            return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
-        });
-
-        Page<Feed> feeds = feedRepository.findByWriter(user, pageable);
-
-        int startPage = (int) (Math.floor(pageable.getPageNumber() / pageable.getPageSize()) * pageable.getPageSize() + 1);
-        int tempEndPage = startPage + pageable.getPageSize() - 1;
-        int endPage = tempEndPage > feeds.getTotalPages() ? feeds.getTotalPages() : tempEndPage;
-
-        model.addAttribute("user", user);
-        model.addAttribute("feeds", feeds);
-        model.addAttribute("startPage", startPage);
-        model.addAttribute("endPage", endPage);
-
-        return "/user/feedsView";
-    }
 
     // 구독한 사용자의 피드 보기
-    @GetMapping("/feeds/toUser/{user_id}")
-    public String subscribedFeedsView(@PathVariable(name = "user_id") Long userId, Model model, @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC)Pageable pageable){
+    @GetMapping("/toUser/{userId}/feeds")
+    public String subscriptionFeedsView(@PathVariable(name = "userId") Long userId, Model model,
+                                      @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC)Pageable pageable){
 
         User user = userRepository.findById(userId).orElseThrow(()->{
             return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
@@ -350,7 +338,8 @@ public class FeedController {
 
     // 피드 검색
     @GetMapping("/feed/search")
-    public String searchFeed(String keyword, Model model, @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC)Pageable pageable) {
+    public String searchFeed(String keyword, Model model,
+                             @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC)Pageable pageable) {
         Page<Feed> searchList = feedService.search(keyword, pageable);
 
         int startPage = (int) (Math.floor(pageable.getPageNumber() / pageable.getPageSize()) * pageable.getPageSize() + 1);
@@ -365,8 +354,11 @@ public class FeedController {
         return "feed/searchPage";
     }
 
-    @GetMapping("/feeds/likes")
-    public String manageFeedsLikes(@AuthenticationPrincipal PrincipalDetails principalDetails, Model model, @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable){
+
+    // 좋아요 표시한 피드 목록
+    @GetMapping("/likes/feeds")
+    public String feedsLikes(@AuthenticationPrincipal PrincipalDetails principalDetails, Model model,
+                                   @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable){
         User user = userRepository.findById(principalDetails.getUser().getId()).orElseThrow(()->{
             return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
         });
@@ -400,7 +392,8 @@ public class FeedController {
 
     // 서치 타입 별 피드 조회
     @GetMapping("/feed/searchType")
-    public String searchFeedByRecently(@RequestParam String searchType, Model model, @PageableDefault(size = 5) Pageable pageable) {
+    public String searchFeedByType(@RequestParam String searchType, Model model,
+                                   @PageableDefault(size = 5) Pageable pageable) {
         int offset = pageable.getPageNumber()*5;
         int totalFeedsCount = feedRepository.findAll().size(); // 총 게시물 수를 알아옴
 

@@ -34,7 +34,7 @@
                 작성한 피드가 없습니다.<br/>
                 새로운 피드를 작성해보세요.
             </h2>
-            <a class="nav-link" th:href="@{/user/new/feed}" style="margin-bottom: 3rem;">
+            <a class="nav-link" th:href="@{/user/feed}" style="margin-bottom: 3rem;">
                 <button class="button btnPush btnLightBlue" style="width: 15%; float: initial; display: inline;">피드 만들기</button>
             </a>
         </div>
@@ -44,30 +44,30 @@
             <ul class="pagination justify-content-center">
 
                 <li class="page-item" th:classappend="${!feeds.hasPrevious} ? 'disabled'">
-                    <a class="page-link" th:href="@{/user/feeds/(page='0')}" aria-label="Previous">
+                    <a class="page-link" th:href="@{/user/feeds(page='0')}" aria-label="Previous">
                         <span aria-hidden="true">&laquo;</span>
                     </a>
                 </li>
 
                 <li class="page-item" th:classappend="${!feeds.hasPrevious} ? 'disabled'">
-                    <a class="page-link" th:href="@{/user/feeds/(page=${feeds.number-1})}">
+                    <a class="page-link" th:href="@{/user/feeds(page=${feeds.number-1})}">
                         <span>&lt;</span>
                     </a>
                 </li>
 
                 <li th:each="page: ${#numbers.sequence(startPage, endPage)}"
                     th:classappend="${page == feeds.number + 1} ? 'active'" class="page-item">
-                    <a th:text="${page}" class="page-link" th:href="@{/user/feeds/(page=${page-1})}"></a>
+                    <a th:text="${page}" class="page-link" th:href="@{/user/feeds(page=${page-1})}"></a>
                 </li>
 
                 <li class="page-item" th:classappend="${!feeds.hasNext} ? 'disabled'">
-                    <a class="page-link" th:href="@{/user/feeds/(page=${feeds.number+1})}">
+                    <a class="page-link" th:href="@{/user/feeds(page=${feeds.number+1})}">
                         <span>&gt;</span>
                     </a>
                 </li>
 
                 <li class="page-item" th:classappend="${!feeds.hasNext} ? 'disabled'">
-                    <a class="page-link" th:href="@{/user/feeds/(page=${feeds.totalPages-1})}" aria-label="Previous">
+                    <a class="page-link" th:href="@{/user/feeds(page=${feeds.totalPages-1})}" aria-label="Previous">
                         <span aria-hidden="true">&raquo;</span>
                     </a>
                 </li>

@@ -23,7 +23,7 @@ function replyLikeFunc(feedId, replyId){
   function btnReplyLike(feedId, replyId){
   	$.ajax({
   		type: "POST",
-  		url: `/user/like/feed/${feedId}/reply/${replyId}`,
+  		url: `/user/likes/feed/${feedId}/reply/${replyId}`,
   		dataType: "text"
   	}).done(res=>{
   	    console.log("OK");
@@ -35,7 +35,7 @@ function replyLikeFunc(feedId, replyId){
   function btnReplyUnLike(feedId, replyId){
       $.ajax({
           type: "POST",
-          url: `/user/unLike/feed/${feedId}/reply/${replyId}`,
+          url: `/user/unLikes/feed/${feedId}/reply/${replyId}`,
           dataType: "text"
       }).done(res=>{
           console.log("OK");

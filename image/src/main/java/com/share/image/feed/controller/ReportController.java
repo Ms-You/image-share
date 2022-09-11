@@ -24,7 +24,7 @@ import java.util.Map;
 @Slf4j
 @RequiredArgsConstructor
 @Controller
-@RequestMapping("/user")
+@RequestMapping("/user/report")
 public class ReportController {
 
     private final UserRepository userRepository;
@@ -37,8 +37,9 @@ public class ReportController {
         return ReportType.values();
     }
 
-    @GetMapping("/report/feed/{feed_id}")
-    public String reportPage(@PathVariable(name = "feed_id") Long feedId, Model model){
+    // 특정 피드 신고 페이지로 이동
+    @GetMapping("/feed/{feedId}")
+    public String reportingPage(@PathVariable(name = "feedId") Long feedId, Model model){
 
         model.addAttribute("feedId", feedId);
         model.addAttribute("reportRequestDto", new ReportRequestDto());
@@ -46,8 +47,9 @@ public class ReportController {
         return "feed/report";
     }
 
-    @PostMapping("/report/feed/{feed_id}")
-    public String reportFeed(@PathVariable(name = "feed_id") Long feedId,
+    // 특정 피드 신고
+    @PostMapping("/feed/{feedId}")
+    public String reportFeed(@PathVariable(name = "feedId") Long feedId,
                              @AuthenticationPrincipal PrincipalDetails principalDetails,
                              @Valid @ModelAttribute ReportRequestDto reportRequestDto, BindingResult bindingResult, Model model) {
 

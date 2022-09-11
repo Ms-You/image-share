@@ -11,15 +11,14 @@ import com.share.image.user.domain.User;
 import com.share.image.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -37,8 +36,8 @@ public class ReplyController {
     private final ReplyRepository replyRepository;
 
     // 댓글 작성
-    @PostMapping("/reply/feed/{feed_id}")
-    public String createReply(@PathVariable(name = "feed_id") Long feedId,
+    @PostMapping("/feed/{feedId}/reply")
+    public String writeReply(@PathVariable(name = "feedId") Long feedId,
                               @AuthenticationPrincipal PrincipalDetails principalDetails,
                               @Valid ReplyRequestDto replyRequestDto,
                               Errors errors,
@@ -76,15 +75,18 @@ public class ReplyController {
 
 
     // 댓글 삭제
-    @GetMapping("/feed/delete/reply/{reply_id}")
-    public String deleteFeed(@PathVariable("reply_id") Long replyId) {
-        Reply reply = replyService.findByReplyId(replyId);
-        // 댓글 삭제
-        replyService.deleteReply(reply);
+    @ResponseBody
+    @DeleteMapping("/feed/reply/{replyId}")
+    public ResponseEntity deleteReply(@PathVariable(name = "replyId") Long replyId){
+        try{
+            Reply reply = replyService.findByReplyId(replyId);
+            replyService.deleteReply(reply);
+            Long feedId = reply.getFeed().getId();
 
-        Long feedId = reply.getFeed().getId();
-
-        return "redirect:/user/feed/" + feedId;
+            return new ResponseEntity(feedId, HttpStatus.OK);
+        } catch (Exception e){
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 
 
