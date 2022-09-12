@@ -2,22 +2,32 @@
 Image share project for Spring Boot
 
 ### API 리스트업
+#### Case A - Administrator)
+
+
 **① GET**
 
 |Index|Method|URI|Description|
 |---|---|---|---|
-|1|GET|/app/users|전체 유저 조회 API|
-|2|GET|/app/users/userId/:userIdx|아이디로 유저 조회 API|
-|3|GET|/app/users/userNickname/:userNickname|닉네임으로 유저 조회 API|
-|4|GET|/app/users/userEmail/:userEmail|이메일로 유저 조회 API|
-|5|GET|/app/users/userId/:userIdx/profile|아이디로 프로필 조회 API|
-|6|GET|/app/feeds|전체 피드 조회API|
-|7|GET|/app/feeds/feedId/:feedIdx|아이디로 피드 조회 API|
-|8|GET|/app/feeds/feedName/:feedName|피드 명으로 피드 조회 API|
-|9|GET|/app/feeds/tag/tagId/:tagIdx|태그 아이디로 전체 피드 조회 API|
-|10|GET|/app/feeds/tag/tagName/:tagName|태그 명으로 전체 피드 조회 API|
-|11|GET|/app/subs/status/:status|상태에 따른 구독 목록 조회 API|
-|12|GET|/app/feeds/like|좋아요 누른 피드 조회 API|
+|1|GET|/admin|관리자 페이지 이동 API|
+|2|GET|/admin/users|사용자 목록 조회 API|
+|3|GET|/admin/user/{userId}|특정 사용자 조회 API|
+|4|GET|/admin/user/search?keyword=nickName|사용자 닉네임으로 사용자 검색 API|
+|5|GET|/admin/temporary/users|일시 정지된 사용자 목록 조회 API|
+|6|GET|/admin/permanent/users|영구 정지된 사용자 목록 조회 API|
+|7|GET|/admin/user/{userId}/feeds|특정 사용자가 생성한 피드 목록 조회 API|
+|8|GET|/admin/tags|태그 목록 조회 API|
+|9|GET|/admin/tag|태그 생성 페이지 이동 API|
+|10|GET|/admin/modifying/tag/{tagId}|태그 수정 페이지 이동 API|
+|11|GET|/admin/tag/{tagId}|태그에 따른 피드 목록 조회 API|
+|12|GET|/admin/feed/{feedId}|특정 피드 조회 API|
+|13|GET|/admin/feed/search?keyword=feedTitle|피드 명으로 특정 피드 검색 API|
+|14|GET|/admin/report|신고 목록 조회 API|
+|15|GET|/admin/report/{reportId}|특정 신고 조회 API|
+|16|GET|/admin/infoList|공지 목록 조회 API|
+|17|GET|/admin/info|공지 생성 페이지 이동 API|
+|18|GET|/admin/info/{informationId}|특정 공지 조회 API|
+|19|GET|/admin/modifying/info/{informationId}|공지 수정 페이지 이동 API|
 
 <br/>
 
@@ -25,12 +35,10 @@ Image share project for Spring Boot
 
 |Index|Method|URI|Description|
 |---|---|---|---|
-|1|POST|/app/users|회원 가입 API|
-|2|POST|/app/users/findPassword|비밀번호 찾기 API|
-|3|POST|/app/feeds|피드 업로드 API|
-|4|POST|/app/good/feedId/:feedIdx|좋아요 클릭 API|
-|5|POST|/app/sub/userId/:userIdx|구독 클릭 API|
-|6|POST|/app/feeds/comments|댓글 작성 API|
+|1|POST|/admin/tag|태그 생성 API|
+|2|POST|/admin/temporary/user/{userId}|사용자 계정 일시 정지 API|
+|3|POST|/admin/permanent/user/{userId}|사용자 계정 영구 정지 API|
+|4|POST|/admin/info|공지 작성 API|
 
 <br/>
 
@@ -38,11 +46,87 @@ Image share project for Spring Boot
 
 |Index|Method|URI|Description|
 |---|---|---|---|
-|1|PUT|/app/users/userId/:userIdx/password|비밀번호 변경 API|
-|2|PUT|/app/users/userId/:userIdx/profile|프로필 수정 API|
-|3|PUT|/app/feeds/feedId/:feedIdx|업로드 한 피드 수정 API|
-|4|PUT|/app/feeds/feedId/:feedIdx/comments/commentIdx/:commentIdx|댓글 수정 API|
+|1|PUT|/admin/tag/{tagId}|태그 수정 API|
+|2|PUT|/admin/info/{informationId}|공지 수정 API|
 
+<br/>
+
+**④ DELETE**
+
+|Index|Method|URI|Description|
+|---|---|---|---|
+|1|PUT|/admin/tag/{tagId}|태그 삭제 API|
+|2|PUT|/admin/feed/{feedId}|피드 삭제 API|
+
+<br/>
+<br/>
+<br/>
+
+#### Case B - User)
+
+
+**① GET**
+
+|Index|Method|URI|Description|
+|---|---|---|---|
+|1|GET|/info/{informationId}|특정 공지 조회 API|
+|2|GET|/auth/join|회원가입 페이지 이동 API|
+|3|GET|/auth/login|로그인 페이지 이동 API|
+|4|GET|/user/profile|프로필 페이지 이동 API|
+|5|GET|/modifying/user/profile|프로필 수정 페이지 이동 API|
+|6|GET|/user/{userId}|특정 사용자 조회 API|
+|7|GET|/user/{userId}/feeds|특정 사용자가 생성한 피드 목록 조회 API|
+|8|GET|/user/tag/{tagId}|태그에 따른 피드 목록 조회 API|
+|9|GET|/user/feed|피드 생성 페이지 이동 API|
+|10|GET|/user/feed/{feedId}|특정 피드 조회 API|
+|11|GET|/user/subscription/feed/{feedId}|구독한 사용자들의 특정 피드 조회 API|
+|12|GET|/user/modifying/feed/{feedId}|피드 수정 페이지 이동 API|
+|13|GET|/user/feeds|사용자가 생성한 피드 목록 조회 API|
+|14|GET|/user/toUser/{userId}/feeds|구독한 사용자의 피드 목록 조회 API|
+|15|GET|/user/feed/search?keyword=feedTitle|피드 명으로 피드 검색 API|
+|16|GET|/user/feed/searchType?searchType=최신순|검색 타입 별 피드 목록 조회 API|
+|17|GET|/user/likes/feeds|좋아요 표시한 피드 목록 조회 API|
+|18|GET|/download/feed/{feedId}|특정 피드의 이미지 다운로드 API|
+|19|GET|/user/report/feed/{feedId}|특정 피드 신고 페이지 이동 API|
+|20|GET|/user/subscribe|구독한 사용자 목록 조회 API|
+|21|GET|/user/toUser/{userId}|구독한 특정 사용자 조회 API|
+
+<br/>
+
+**② POST**
+
+|Index|Method|URI|Description|
+|---|---|---|---|
+|1|POST|/auth/join|회원가입 API|
+|2|POST|/user/feed|피드 생성 API|
+|3|POST|/user/feed/{feedId}/reply|특정 피드에 댓글 작성 API|
+|4|POST|/user/likes/feed/{feedId}|특정 피드 좋아요 클릭 API|
+|5|POST|/user/unLikes/feed/{feedId}|특정 피드 좋아요 취소 API|
+|6|POST|/user/likes/feed/{feedId}/reply/{replyId}|특정 피드의 댓글 좋아요 클릭 API|
+|7|POST|/user/unLikes/feed/{feedId}/reply/{replyId}|특정 피드의 댓글 좋아요 취소 API|
+|8|POST|/user/report/feed/{feedId}|특정 피드 신고 API|
+|9|POST|/user/subscribe/toUser/{toUserId}/feed/{feedId}| 특정 사용자의 피드에서 구독 클릭 API|
+|10|POST|/user/unSubscribe/toUser/{toUserId}/feed/{feedId}|특정 사용자의 피드에서 구독 취소 API|
+
+<br/>
+
+**③ PUT**
+
+|Index|Method|URI|Description|
+|---|---|---|---|
+|1|PUT|/user/profile|회원 프로필 수정 API|
+|2|PUT|/user/feed/{feedId}|피드 수정 API|
+
+<br/>
+
+**④ DELETE**
+
+|Index|Method|URI|Description|
+|---|---|---|---|
+|1|PUT|/user/feed/{feedId}|피드 삭제 API|
+|2|PUT|/user/feed/reply/{replyId}|댓글 삭제 API|
+
+<br/>
 <br/>
 <br/>
 
@@ -73,7 +157,7 @@ Image share project for Spring Boot
     - 이미지, 제목, 설명, 태그
 - **업로드 한 피드 관리**
     - 피드 수정, 삭제
-- **좋아요**
+- **피드 좋아요**
     - 좋아요 수 확인
     - 좋아요 누른 이미지들을 마이 페이지에서 확인 가능
 - **구독**
@@ -82,6 +166,10 @@ Image share project for Spring Boot
     - 구독 취소 등
 - **댓글**
     - 피드에 댓글 달기
+- **댓글 좋아요**
+    - 좋아요 수 확인
+    
+    
 
 **③ 기타**
 
@@ -95,3 +183,6 @@ Image share project for Spring Boot
     - 관리자가 신고된 피드를 확인 후 처리
 - **피드에서 이미지 다운로드**
 - **OAuth 로그인**
+    - 카카오
+    - 네이버
+    - 구글
