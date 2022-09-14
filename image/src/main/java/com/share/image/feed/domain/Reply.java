@@ -1,20 +1,19 @@
 package com.share.image.feed.domain;
 
+import com.share.image.user.domain.BaseTimeEntity;
 import com.share.image.user.domain.User;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 @NoArgsConstructor
 @Entity
-public class Reply {
+public class Reply extends BaseTimeEntity {
 
     @Id @GeneratedValue
     @Column(name = "reply_id")
@@ -25,9 +24,6 @@ public class Reply {
 
     @Column(nullable = false)
     private String replyLikeStatus;
-
-    @CreatedDate
-    private LocalDateTime createdDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -48,7 +44,6 @@ public class Reply {
         this.replyLikeStatus = replyLikeStatus;
         this.writer = writer;
         this.feed = feed;
-        this.createdDate = LocalDateTime.now();
     }
 
 

@@ -1,18 +1,17 @@
 package com.share.image.admin.domain;
 
+import com.share.image.user.domain.BaseTimeEntity;
 import com.share.image.user.domain.User;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor
 @Entity
-public class Information {
+public class Information extends BaseTimeEntity {
 
     @Id @GeneratedValue
     @Column(name = "information_id")
@@ -30,9 +29,6 @@ public class Information {
     @Enumerated(EnumType.STRING)
     private InformationType informationType;
 
-    @CreatedDate
-    private LocalDateTime createdDate;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User writer;
@@ -43,7 +39,6 @@ public class Information {
         this.content = content;
         this.informationType = informationType;
         this.writer = writer;
-        this.createdDate = LocalDateTime.now();
     }
 
     public void updateInfo(String title, String content, InformationType informationType) {

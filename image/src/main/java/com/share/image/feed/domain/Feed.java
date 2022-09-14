@@ -1,20 +1,19 @@
 package com.share.image.feed.domain;
 
+import com.share.image.user.domain.BaseTimeEntity;
 import com.share.image.user.domain.User;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 @NoArgsConstructor
 @Entity
-public class Feed {
+public class Feed extends BaseTimeEntity {
 
     @Id @GeneratedValue
     @Column(name = "feed_id")
@@ -27,9 +26,6 @@ public class Feed {
     private String description;
 
     private String feedImageUrl;
-
-    @CreatedDate
-    private LocalDateTime createdDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -58,7 +54,6 @@ public class Feed {
         this.description = description;
         this.tag = tag;
         this.writer = writer;
-        this.createdDate = LocalDateTime.now();
     }
 
     public void modifyFeed(String title, String description, Tag tag){

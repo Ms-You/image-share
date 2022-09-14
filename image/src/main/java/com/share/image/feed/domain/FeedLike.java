@@ -1,5 +1,6 @@
 package com.share.image.feed.domain;
 
+import com.share.image.user.domain.BaseTimeEntity;
 import com.share.image.user.domain.User;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,7 +12,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Entity
 @Table(name = "feed_like")
-public class FeedLike {
+public class FeedLike extends BaseTimeEntity {
 
     @Id @GeneratedValue
     @Column(name = "feed_like_id")

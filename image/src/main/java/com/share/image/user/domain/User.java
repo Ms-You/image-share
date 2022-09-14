@@ -21,7 +21,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class User {
+public class User extends BaseTimeEntity{
 
     @Id @GeneratedValue
     @Column(name = "user_id")
@@ -44,9 +44,6 @@ public class User {
 
     @Column(nullable = true, columnDefinition = "TEXT")
     private String intro;
-
-    @CreatedDate
-    private LocalDateTime createdDate;
 
     private String temporaryLocked;
 
@@ -86,7 +83,6 @@ public class User {
         this.role = role;
         this.intro = intro;
         this.profileImageUrl = profileImageUrl;
-        this.createdDate = LocalDateTime.now();
         this.permanentLocked = "정지하기";
         this.temporaryLocked = "정지하기";
     }
@@ -100,7 +96,6 @@ public class User {
         this.role = RoleType.ROLE_USER;
         this.provider = provider;
         this.providerId = providerId;
-        this.createdDate = LocalDateTime.now();
         this.permanentLocked = "정지하기";
         this.temporaryLocked = "정지하기";
     }

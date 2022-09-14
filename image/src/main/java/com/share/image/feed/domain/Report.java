@@ -1,18 +1,17 @@
 package com.share.image.feed.domain;
 
+import com.share.image.user.domain.BaseTimeEntity;
 import com.share.image.user.domain.User;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor
 @Entity
-public class Report {
+public class Report extends BaseTimeEntity {
 
     @Id @GeneratedValue
     @Column(name = "report_id")
@@ -36,9 +35,6 @@ public class Report {
     @JoinColumn(name = "to_user_id")
     private User toUser;    // 신고 당하는 유저
 
-    @CreatedDate
-    private LocalDateTime reportDate;
-
     @Builder
     public Report(Long id, String reason, String content, Feed feed, User fromUser, User toUser) {
         this.id = id;
@@ -47,7 +43,6 @@ public class Report {
         this.feed = feed;
         this.fromUser = fromUser;
         this.toUser = toUser;
-        this.reportDate = LocalDateTime.now();
     }
 
 }

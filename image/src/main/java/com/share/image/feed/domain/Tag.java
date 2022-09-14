@@ -1,5 +1,6 @@
 package com.share.image.feed.domain;
 
+import com.share.image.user.domain.BaseTimeEntity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,7 +12,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @Entity
-public class Tag {
+public class Tag extends BaseTimeEntity {
 
     @Id @GeneratedValue
     @Column(name = "tag_id")
