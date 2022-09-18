@@ -23,6 +23,7 @@ import java.util.List;
 @Controller
 @RequestMapping("/user")
 public class TagController {
+
     private final TagRepository tagRepository;
     private final FeedRepository feedRepository;
 
@@ -37,7 +38,11 @@ public class TagController {
 
 
     @GetMapping("/tag/{tagId}")
-    public String feedsOfTag(@PathVariable(name = "tagId") Long tagId, Model model, @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable){
+    public String feedsOfTag(
+            @PathVariable(name = "tagId") Long tagId,
+            @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
+            Model model){
+
         Tag tag = tagRepository.findById(tagId).orElseThrow(()->{
             return new IllegalArgumentException("존재하지 않는 태그입니다.");
         });

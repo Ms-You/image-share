@@ -2,7 +2,6 @@ package com.share.image.feed.domain;
 
 import com.share.image.user.domain.BaseTimeEntity;
 import com.share.image.user.domain.User;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -37,17 +36,25 @@ public class Reply extends BaseTimeEntity {
     private List<ReplyLike> replyLikes = new ArrayList<>();
 
 
-    @Builder
-    public Reply(Long id, String content, String replyLikeStatus, User writer, Feed feed){
-        this.id = id;
-        this.content = content;
-        this.replyLikeStatus = replyLikeStatus;
-        this.writer = writer;
-        this.feed = feed;
+    //== 생성 메서드 ==//
+    public static Reply createReply(String content, String replyLikeStatus, User writer, Feed feed) {
+        Reply reply = new Reply();
+        reply.writer = writer;
+        reply.feed = feed;
+        reply.replyLikeStatus = replyLikeStatus;
+        reply.updateReply(content);
+
+        writer.getReplies().add(reply);
+        feed.getReplies().add(reply);
+
+        return reply;
     }
 
+    public void updateReply(String content){
+        this.content = content;
+    }
 
-    public void setReplyLikeStatus(String replyLikeStatus){
+    public void updateReplyLikeStatus(String replyLikeStatus){
         this.replyLikeStatus = replyLikeStatus;
     }
 

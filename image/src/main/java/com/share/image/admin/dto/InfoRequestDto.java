@@ -2,6 +2,7 @@ package com.share.image.admin.dto;
 
 import com.share.image.admin.domain.InformationType;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
@@ -13,8 +14,6 @@ import javax.validation.constraints.Size;
 @ToString
 @NoArgsConstructor
 public class InfoRequestDto {
-
-    private Long id;
 
     @NotBlank(message = "제목은 필수 입력 값입니다.")
     @Size(min = 1, max = 50, message = "제목은 최대 50자까지 입력해주세요.")

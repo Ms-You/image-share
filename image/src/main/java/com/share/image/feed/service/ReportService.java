@@ -35,18 +35,10 @@ public class ReportService {
         return validatorResult;
     }
 
-    @Transactional
-    public void reportingFeed(User fromUser, ReportRequestDto reportRequestDto, Feed feed){
-        Report report = Report.builder()
-                .reason(reportRequestDto.getReportType().name())
-                .content(reportRequestDto.getContent())
-                .feed(feed)
-                .fromUser(fromUser)
-                .toUser(feed.getWriter())
-                .build();
+    public void reportingFeed(User fromUser, Feed feed, ReportRequestDto reportRequestDto){
+        Report report = Report.createReport(fromUser, feed.getWriter(), feed, reportRequestDto.getReportType().name(), reportRequestDto.getContent());
 
         reportRepository.save(report);
-
     }
 
 

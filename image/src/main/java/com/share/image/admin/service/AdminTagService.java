@@ -49,15 +49,26 @@ public class AdminTagService {
 
     public void createTag(TagRequestDto tagRequestDto, MultipartFile multipartFile) throws UnsupportedEncodingException {
 
-        Tag tag = Tag.builder()
-                .name(tagRequestDto.getName())
-                .build();
+        Tag tag = Tag.createTag(tagRequestDto.getName());
+        updateTagImage(tag, multipartFile);
 
-        UUID uuid = UUID.randomUUID();
+        tagRepository.save(tag);
+    }
 
-        String fileName = uuid.toString() + "_" + multipartFile.getOriginalFilename();
+
+    public void updateTag(Tag tag, TagRequestDto tagRequestDto, MultipartFile multipartFile) throws UnsupportedEncodingException {
+
+        tag.updateTag(tagRequestDto.getName());
+        updateTagImage(tag, multipartFile);
+
+        tagRepository.save(tag);
+    }
+
+
+    public void updateTagImage(Tag tag, MultipartFile multipartFile) throws UnsupportedEncodingException {
+
         // 한글 파일 명 깨짐 처리
-        fileName = URLEncoder.encode(fileName, "UTF-8");
+        String fileName = URLEncoder.encode(UUID.randomUUID().toString() + "_" + multipartFile.getOriginalFilename(), "UTF-8");
         Path imageFilePath = Paths.get(uploadFolder + fileName);
         log.info("fileName: {}", fileName);
 
@@ -75,42 +86,7 @@ public class AdminTagService {
             tag.updateTagImageUrl(fileName);
         }
 
-
-        tagRepository.save(tag);
     }
-
-
-    public void updateTag(Tag tag, TagRequestDto tagRequestDto, MultipartFile multipartFile) throws UnsupportedEncodingException {
-
-        tag.updateTagName(tagRequestDto.getName());
-
-        UUID uuid = UUID.randomUUID();
-
-        String fileName = uuid.toString() + "_" + multipartFile.getOriginalFilename();
-        // 한글 파일 명 깨짐 처리
-        fileName = URLEncoder.encode(fileName, "UTF-8");
-        Path imageFilePath = Paths.get(uploadFolder + fileName);
-        log.info("fileName: {}", fileName);
-
-        // 파일 업로드 여부 확인
-        if (multipartFile.getSize() != 0) {
-            try {
-                if (tag.getTagImageUrl() != null) {
-                    File file = new File(uploadFolder + tag.getTagImageUrl());
-                    file.delete();
-                }
-                Files.write(imageFilePath, multipartFile.getBytes());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            tag.updateTagImageUrl(fileName);
-        }
-
-        tagRepository.save(tag);
-
-    }
-
-
 
 
 }

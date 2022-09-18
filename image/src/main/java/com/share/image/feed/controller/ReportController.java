@@ -47,11 +47,14 @@ public class ReportController {
         return "feed/report";
     }
 
+
     // 특정 피드 신고
     @PostMapping("/feed/{feedId}")
-    public String reportFeed(@PathVariable(name = "feedId") Long feedId,
-                             @AuthenticationPrincipal PrincipalDetails principalDetails,
-                             @Valid @ModelAttribute ReportRequestDto reportRequestDto, BindingResult bindingResult, Model model) {
+    public String reportFeed(
+            @AuthenticationPrincipal PrincipalDetails principalDetails,
+            @PathVariable(name = "feedId") Long feedId,
+            @Valid @ModelAttribute ReportRequestDto reportRequestDto,
+            BindingResult bindingResult, Model model) {
 
         User fromUser = userRepository.findById(principalDetails.getUser().getId()).orElseThrow(()->{
             return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
@@ -69,14 +72,13 @@ public class ReportController {
             model.addAttribute("reportRequestDto", reportRequestDto);
 
             Map<String, String> validatorResult = reportService.validateHandling(bindingResult);
-            for (String key : validatorResult.keySet()) {
+            for (String key : validatorResult.keySet())
                 model.addAttribute(key, validatorResult.get(key));
-            }
 
             return "feed/report";
         }
 
-        reportService.reportingFeed(fromUser, reportRequestDto, feed);
+        reportService.reportingFeed(fromUser, feed, reportRequestDto);
         model.addAttribute("message", "신고가 접수되었습니다.");
         model.addAttribute("feedId", feedId);
 

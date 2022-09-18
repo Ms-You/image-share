@@ -1,7 +1,5 @@
 package com.share.image.feed.dto;
 
-import com.share.image.feed.dto.FeedRequestDto;
-import com.share.image.feed.dto.ReportRequestDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

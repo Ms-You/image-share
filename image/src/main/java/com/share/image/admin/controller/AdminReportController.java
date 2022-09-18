@@ -3,12 +3,15 @@ package com.share.image.admin.controller;
 import com.share.image.admin.service.BlockUserService;
 import com.share.image.feed.domain.Report;
 import com.share.image.feed.repository.ReportRepository;
+import com.share.image.user.domain.User;
+import com.share.image.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,11 +25,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/admin/report")
 public class AdminReportController {
     private final BlockUserService blockUserService;
+    private final UserRepository userRepository;
     private final ReportRepository reportRepository;
 
     // 신고 목록 페이지 이동
     @GetMapping("")
-    public String reportList(Model model, @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC)Pageable pageable){
+    public String reportList(Model model, @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable){
 
         Page<Report> reports = reportRepository.findAll(pageable);
 
@@ -55,18 +59,30 @@ public class AdminReportController {
         return "admin/report/reportView";
     }
 
+
     // 계정 일시 정지하기
     @PostMapping("/temporary/user/{userId}")
     public String temporaryStoppedUser(@PathVariable(name = "userId") Long userId){
-        blockUserService.temporaryBlockUser(userId);
+
+        User user = userRepository.findById(userId).orElseThrow(()->{
+            return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
+        });
+
+        blockUserService.temporaryBlockUser(user);
 
         return "redirect:/admin/report";
     }
 
+
     // 계정 영구 정지하기
     @PostMapping("/permanent/user/{userId}")
     public String permanentStoppedUser(@PathVariable(name = "userId") Long userId){
-        blockUserService.permanentBlockUser(userId);
+
+        User user = userRepository.findById(userId).orElseThrow(()->{
+            return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
+        });
+
+        blockUserService.permanentBlockUser(user);
 
         return "redirect:/admin/report";
     }

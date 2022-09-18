@@ -6,7 +6,6 @@ import com.share.image.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.session.SessionInformation;
 import org.springframework.security.core.session.SessionRegistry;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,17 +21,13 @@ public class BlockUserService {
     private final UserRepository userRepository;
     private final SessionRegistry sessionRegistry;
 
-    public void temporaryBlockUser(Long userId){
-        User findUser = userRepository.findById(userId).orElseThrow(()->{
-            return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
-        });
+    public void temporaryBlockUser(User findUser){
 
         if (findUser.getTemporaryLocked().equals("해제하기")){  // 현재 일시 정지 상태
-            findUser.setTemporaryLocked("정지하기"); // 정지 -> 해제
+            findUser.updateTemporaryLocked("정지하기"); // 정지 -> 해제
         } else {    // 현재 정지 상태 x
-            findUser.setTemporaryLocked("해제하기");
-            findUser.setPermanentLocked("정지하기");    // 영구 정지였던 경우 -> 일시 정지
-            findUser.recordTemporarySuspendTime();
+            findUser.updateTemporaryLocked("해제하기");
+            findUser.updatePermanentLocked("정지하기");    // 영구 정지였던 경우 -> 일시 정지
 
             List<PrincipalDetails> principals = sessionRegistry.getAllPrincipals()
                     .stream().map(o -> (PrincipalDetails) o).collect(Collectors.toList());
@@ -50,17 +45,13 @@ public class BlockUserService {
         }
     }
 
-    public void permanentBlockUser(Long userId){
-        User findUser = userRepository.findById(userId).orElseThrow(()->{
-            return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
-        });
+    public void permanentBlockUser(User findUser){
 
         if (findUser.getPermanentLocked().equals("해제하기")){   // 현재 영구 정지 상태
-            findUser.setPermanentLocked("정지하기"); // 정지 -> 해제
+            findUser.updatePermanentLocked("정지하기"); // 정지 -> 해제
         } else {
-            findUser.setPermanentLocked("해제하기");
-            findUser.setTemporaryLocked("정지하기");    // 일시 정지였던 경우 -> 영구 정지
-            findUser.recordPermanentSuspendTime();
+            findUser.updatePermanentLocked("해제하기");
+            findUser.updateTemporaryLocked("정지하기");    // 일시 정지였던 경우 -> 영구 정지
 
             List<PrincipalDetails> principals = sessionRegistry.getAllPrincipals()
                     .stream().map(o -> (PrincipalDetails) o).collect(Collectors.toList());
@@ -85,7 +76,7 @@ public class BlockUserService {
         for (User user : users) {
             Duration duration = Duration.between(user.getTemporarySuspendedDate(), LocalDateTime.now());
             if (duration.getSeconds() >= 604800){   // 7일후 정지 해제
-                temporaryBlockUser(user.getId());
+                temporaryBlockUser(user);
             }
         }
 

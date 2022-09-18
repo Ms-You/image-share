@@ -46,42 +46,23 @@ public class InformationService {
     private String uploadFolder;
 
     public void enrollInfo(User writer, InfoRequestDto infoRequestDto, MultipartFile multipartFile) throws UnsupportedEncodingException {
-        Information information = Information.builder()
-                .title(infoRequestDto.getTitle())
-                .content(infoRequestDto.getContent())
-                .informationType(infoRequestDto.getInformationType())
-                .writer(writer)
-                .build();
-
-        String fileName = writer.getId() + "_" + multipartFile.getOriginalFilename();
-        // 한글 파일 명 깨짐 처리
-        fileName = URLEncoder.encode(fileName, "UTF-8");
-        Path imageFilePath = Paths.get(uploadFolder + fileName);
-        log.info("fileName: {}", fileName);
-
-        // 파일 업로드 여부 확인
-        if (multipartFile.getSize() != 0){
-            try{
-                if (information.getInfoImageUrl() != null) {
-                    File file = new File(uploadFolder + information.getInfoImageUrl());
-                    file.delete();
-                }
-                Files.write(imageFilePath, multipartFile.getBytes());
-            } catch (Exception e){
-                e.printStackTrace();
-            }
-            information.updateInfoImageUrl(fileName);
-        }
+        Information information = Information.createInformation(infoRequestDto.getTitle(), infoRequestDto.getContent(), infoRequestDto.getInformationType(), writer);
+        updateInformationImage(information, multipartFile);
 
         informationRepository.save(information);
     }
 
     public void updateInfo(Information information, InfoRequestDto infoRequestDto, MultipartFile multipartFile) throws UnsupportedEncodingException {
         information.updateInfo(infoRequestDto.getTitle(), infoRequestDto.getContent(), infoRequestDto.getInformationType());
+        updateInformationImage(information, multipartFile);
 
-        String fileName = information.getWriter().getId() + "_" + multipartFile.getOriginalFilename();
+        informationRepository.save(information);
+    }
+
+    public void updateInformationImage(Information information, MultipartFile multipartFile) throws UnsupportedEncodingException {
+
         // 한글 파일 명 깨짐 처리
-        fileName = URLEncoder.encode(fileName, "UTF-8");
+        String fileName = URLEncoder.encode(information.getWriter().getId() + "_" + multipartFile.getOriginalFilename(), "UTF-8");
         Path imageFilePath = Paths.get(uploadFolder + fileName);
         log.info("fileName: {}", fileName);
 
@@ -99,7 +80,6 @@ public class InformationService {
             information.updateInfoImageUrl(fileName);
         }
 
-        informationRepository.save(information);
     }
 
 }

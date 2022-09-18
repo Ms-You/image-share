@@ -62,7 +62,10 @@ public class AdminUserController {
 
     // 사용자 검색
     @GetMapping("/user/search")
-    public String searchUser(String keyword, Model model, @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
+    public String searchUser(
+            String keyword, Model model,
+            @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
+
         Page<User> userList = userRepository.findByNickNameContaining(keyword, pageable);
 
         int startPage = (int) (Math.floor(pageable.getPageNumber() / pageable.getPageSize()) * pageable.getPageSize() + 1);
@@ -81,6 +84,7 @@ public class AdminUserController {
     // 일시 정지된 사용자 관리
     @GetMapping("/temporary/users")
     public String temporaryStoppedUser(@PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable, Model model){
+
         Page<User> users = userRepository.findAllByTemporaryLocked(pageable, "해제하기");
 
         int startPage = (int) (Math.floor(pageable.getPageNumber() / pageable.getPageSize()) * pageable.getPageSize() + 1);
@@ -94,9 +98,11 @@ public class AdminUserController {
         return "admin/user/temporary";
     }
 
+
     // 영구 정지된 사용자 관리
     @GetMapping("/permanent/users")
     public String permanentStoppedUser(@PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable, Model model){
+
         Page<User> users = userRepository.findAllByPermanentLocked(pageable, "해제하기");
 
         int startPage = (int) (Math.floor(pageable.getPageNumber() / pageable.getPageSize()) * pageable.getPageSize() + 1);
@@ -110,9 +116,12 @@ public class AdminUserController {
         return "admin/user/permanent";
     }
 
+
     // 회원 관리에서의 특정 사용자가 생성한 피드 목록
     @GetMapping("/user/{userId}/feeds")
-    public String feedsView(@PathVariable(name = "userId") Long userId, Model model, @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC)Pageable pageable){
+    public String feedsView(
+            @PathVariable(name = "userId") Long userId, Model model,
+            @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC)Pageable pageable){
 
         User user = userRepository.findById(userId).orElseThrow(()->{
             return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");

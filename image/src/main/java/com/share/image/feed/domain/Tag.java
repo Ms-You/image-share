@@ -1,7 +1,6 @@
 package com.share.image.feed.domain;
 
 import com.share.image.user.domain.BaseTimeEntity;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -26,13 +25,16 @@ public class Tag extends BaseTimeEntity {
     @OneToMany(mappedBy = "tag", cascade = CascadeType.ALL)
     private List<Feed> feeds = new ArrayList<>();
 
-    @Builder
-    public Tag(Long id, String name){
-        this.id = id;
-        this.name = name;
+
+    //== 생성 메서드 ==//
+    public static Tag createTag(String name){
+        Tag tag = new Tag();
+        tag.updateTag(name);
+
+        return tag;
     }
 
-    public void updateTagName(String name){
+    public void updateTag(String name){
         this.name = name;
     }
 

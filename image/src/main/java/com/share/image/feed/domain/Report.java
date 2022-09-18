@@ -2,7 +2,6 @@ package com.share.image.feed.domain;
 
 import com.share.image.user.domain.BaseTimeEntity;
 import com.share.image.user.domain.User;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -35,14 +34,19 @@ public class Report extends BaseTimeEntity {
     @JoinColumn(name = "to_user_id")
     private User toUser;    // 신고 당하는 유저
 
-    @Builder
-    public Report(Long id, String reason, String content, Feed feed, User fromUser, User toUser) {
-        this.id = id;
-        this.reason = reason;
-        this.content = content;
-        this.feed = feed;
-        this.fromUser = fromUser;
-        this.toUser = toUser;
+
+    //== 생성 메서드 ==//
+    public static Report createReport(User fromUser, User toUser, Feed feed, String reason, String content){
+        Report report = new Report();
+        report.reason = reason;
+        report.content = content;
+        report.feed = feed;
+        report.fromUser = fromUser;
+        report.toUser = toUser;
+
+        feed.getReports().add(report);
+
+        return report;
     }
 
 }

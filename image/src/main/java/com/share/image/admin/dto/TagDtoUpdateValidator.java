@@ -1,6 +1,5 @@
 package com.share.image.admin.dto;
 
-import com.share.image.feed.repository.TagRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -9,8 +8,6 @@ import org.springframework.validation.Validator;
 @Component
 @RequiredArgsConstructor
 public class TagDtoUpdateValidator implements Validator {
-
-    private final TagRepository tagRepository;
 
     @Override
     public boolean supports(Class<?> clazz) {

@@ -1,8 +1,6 @@
 package com.share.image.feed.domain;
 
-import com.share.image.user.domain.BaseTimeEntity;
 import com.share.image.user.domain.User;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -12,7 +10,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Entity
 @Table(name = "reply_like")
-public class ReplyLike extends BaseTimeEntity {
+public class ReplyLike {
 
     @Id
     @GeneratedValue
@@ -26,12 +24,5 @@ public class ReplyLike extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "reply_id")
     private Reply reply;
-
-    @Builder
-    public ReplyLike(Long id, User user, Reply reply) {
-        this.id = id;
-        this.user = user;
-        this.reply = reply;
-    }
 
 }

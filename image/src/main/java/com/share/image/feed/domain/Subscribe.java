@@ -1,6 +1,5 @@
 package com.share.image.feed.domain;
 
-import com.share.image.user.domain.BaseTimeEntity;
 import com.share.image.user.domain.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,7 +15,7 @@ import javax.persistence.*;
                 columnNames = {"from_user_id", "to_user_id"}
         )
 })
-public class Subscribe extends BaseTimeEntity {
+public class Subscribe {
 
     @Id @GeneratedValue
     @Column(name = "subscribe_id")

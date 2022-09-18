@@ -11,7 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.Errors;
@@ -26,6 +25,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -53,25 +53,29 @@ public class UserService {
         return validatorResult;
     }
 
+
     public User signUp(JoinRequestDto joinRequestDto){
 
         User user = User.builder()
                 .email(joinRequestDto.getEmail())
                 .nickName(joinRequestDto.getNickName())
                 .password(bCryptPasswordEncoder().encode(joinRequestDto.getPassword()))
-                .intro(null)
-                .profileImageUrl(null)
-                .role(RoleType.ROLE_USER)
+                .provider("image-share")
+                .providerId(UUID.randomUUID().toString())
                 .build();
 
         return userRepository.save(user);
-
     }
 
+
     public User oauthSignUp(OAuth2UserInfo oAuth2UserInfo){
-        User user = new User(oAuth2UserInfo.getEmail(), oAuth2UserInfo.getName(),
-                bCryptPasswordEncoder().encode(oAuth2UserInfo.getEmail()),   // 비밀번호는 의미가 없어서 이메일로 암호화만 해서 넣어줌
-                oAuth2UserInfo.getProvider(), oAuth2UserInfo.getProviderId());
+        User user = User.builder()
+                .email(oAuth2UserInfo.getEmail())
+                .nickName(oAuth2UserInfo.getName())
+                .password(bCryptPasswordEncoder().encode(oAuth2UserInfo.getEmail()))  // 비밀번호는 의미가 없어서 이메일로 암호화만 해서 넣어줌
+                .provider(oAuth2UserInfo.getProvider())
+                .providerId(oAuth2UserInfo.getProviderId())
+                .build();
 
         return userRepository.save(user);
     }
@@ -82,9 +86,8 @@ public class UserService {
 
     public void updateProfile(User user, UpdateRequestDto updateRequestDto, MultipartFile multipartFile) throws UnsupportedEncodingException {
 
-        String fileName = user.getId() + "_" + multipartFile.getOriginalFilename();
         // 한글 파일 명 깨짐 처리
-        fileName = URLEncoder.encode(fileName, "UTF-8");
+        String fileName = URLEncoder.encode(user.getId() + "_" + multipartFile.getOriginalFilename(), "UTF-8");
         Path imageFilePath = Paths.get(uploadFolder + fileName);
         log.info("fileName: {}", fileName);
 
@@ -103,7 +106,6 @@ public class UserService {
         }
 
         user.updateProfile(updateRequestDto.getNickName(), updateRequestDto.getIntro());
-
     }
 
 

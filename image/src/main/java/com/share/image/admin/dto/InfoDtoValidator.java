@@ -11,7 +11,6 @@ import org.springframework.validation.Validator;
 @RequiredArgsConstructor
 public class InfoDtoValidator implements Validator {
 
-
     @Override
     public boolean supports(Class<?> clazz) {
         return clazz.isAssignableFrom(InfoRequestDto.class);

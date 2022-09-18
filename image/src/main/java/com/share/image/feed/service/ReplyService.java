@@ -37,27 +37,10 @@ public class ReplyService {
 
 
     public void createReply(User user, ReplyRequestDto replyRequestDto, Feed feed) {
-        Reply reply = Reply.builder()
-                .content(replyRequestDto.getContent())
-                .replyLikeStatus("/img/empty_heart.png")
-                .writer(user)
-                .feed(feed)
-                .build();
+        Reply reply = Reply.createReply(replyRequestDto.getContent(), "/img/empty_heart.png", user, feed);
 
         replyRepository.save(reply);
 
     }
-
-
-    public Reply findByReplyId(Long replyId){
-        return replyRepository.findById(replyId).orElseThrow(()->{
-            return new IllegalArgumentException("존재하지 않는 댓글입니다.");
-        });
-    }
-
-    public void deleteReply(Reply reply){
-        replyRepository.delete(reply);
-    }
-
 
 }

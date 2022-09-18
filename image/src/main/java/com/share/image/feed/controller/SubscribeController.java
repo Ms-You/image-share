@@ -1,7 +1,9 @@
 package com.share.image.feed.controller;
 
 import com.share.image.config.PrincipalDetails;
+import com.share.image.feed.domain.Feed;
 import com.share.image.feed.domain.Subscribe;
+import com.share.image.feed.repository.FeedRepository;
 import com.share.image.feed.service.SubscribeService;
 import com.share.image.user.domain.User;
 import com.share.image.user.repository.UserRepository;
@@ -28,37 +30,64 @@ public class SubscribeController {
 
     private final SubscribeService subscribeService;
     private final UserRepository userRepository;
+    private final FeedRepository feedRepository;
+
 
     @PostMapping("/subscribe/toUser/{toUserId}/feed/{feedId}")
-    public String subscribeUser(@PathVariable(name = "toUserId") Long toUserId,
-                                @PathVariable(name = "feedId") Long feedId,
-                                @AuthenticationPrincipal PrincipalDetails principalDetails) {
+    public String subscribeUser(
+            @AuthenticationPrincipal PrincipalDetails principalDetails,
+            @PathVariable(name = "toUserId") Long toUserId,
+            @PathVariable(name = "feedId") Long feedId) {
+
         User user = userRepository.findById(principalDetails.getUser().getId()).orElseThrow(()->{
             return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
         });
 
-        subscribeService.subscribe(user.getId(), toUserId);
+        User toUser = userRepository.findById(toUserId).orElseThrow(()->{
+            return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
+        });
 
-        return "redirect:/user/feed/" + feedId;
+        Feed feed = feedRepository.findById(feedId).orElseThrow(()->{
+            return new IllegalArgumentException("존재하지 않는 피드입니다.");
+        });
+
+        subscribeService.subscribe(user.getId(), toUser.getId());
+
+        return "redirect:/user/feed/" + feed.getId();
     }
+
 
     @PostMapping("/unSubscribe/toUser/{toUserId}/feed/{feedId}")
-    public String unSubscribeUser(@PathVariable(name = "toUserId") Long toUserId,
-                                  @PathVariable(name = "feedId") Long feedId,
-                                  @AuthenticationPrincipal PrincipalDetails principalDetails) {
+    public String unSubscribeUser(
+            @AuthenticationPrincipal PrincipalDetails principalDetails,
+            @PathVariable(name = "toUserId") Long toUserId,
+            @PathVariable(name = "feedId") Long feedId) {
+
         User user = userRepository.findById(principalDetails.getUser().getId()).orElseThrow(()->{
             return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
         });
 
-        subscribeService.unSubscribe(user.getId(), toUserId);
+        User toUser = userRepository.findById(toUserId).orElseThrow(()->{
+            return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
+        });
 
-        return "redirect:/user/feed/" + feedId;
+        Feed feed = feedRepository.findById(feedId).orElseThrow(()->{
+            return new IllegalArgumentException("존재하지 않는 피드입니다.");
+        });
+
+        subscribeService.unSubscribe(user.getId(), toUser.getId());
+
+        return "redirect:/user/feed/" + feed.getId();
     }
+
 
     // 구독 관리 페이지
     @GetMapping("/subscribe")
-    public String subscribes(@AuthenticationPrincipal PrincipalDetails principalDetails, Model model,
-                             @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable){
+    public String subscribes(
+            @AuthenticationPrincipal PrincipalDetails principalDetails,
+            @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
+            Model model){
+
         User user = userRepository.findById(principalDetails.getUser().getId()).orElseThrow(()->{
             return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
         });
@@ -76,10 +105,12 @@ public class SubscribeController {
         return "user/subscribes";
     }
 
+
     // 구독 유저 보기
     @GetMapping("/toUser/{userId}")
-    public String subUserView(@PathVariable(name = "userId") Long userId, Model model,
-                           @AuthenticationPrincipal PrincipalDetails principalDetails){
+    public String subUserView(
+            @AuthenticationPrincipal PrincipalDetails principalDetails,
+            @PathVariable(name = "userId") Long userId, Model model){
 
         User user = userRepository.findById(principalDetails.getUser().getId()).orElseThrow(()->{
             return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
@@ -87,11 +118,10 @@ public class SubscribeController {
 
         User toUser = userRepository.findById(userId).orElseThrow(()->{
             return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
-
         });
 
         // 구독 상태 변경
-        if (subscribeService.isUserSubscribe(toUser.getId(), user.getId()))
+        if (subscribeService.isUserSubscribe(toUser, user))
             model.addAttribute("subscribeStatus", "/img/do_sub.png");
         else
             model.addAttribute("subscribeStatus", "/img/un_sub.png");
@@ -101,52 +131,80 @@ public class SubscribeController {
         return "user/subscribeUser";
     }
 
+
     @PostMapping("/subscribe/toUser/{toUserId}")
-    public String userSubscribe(@PathVariable(name = "toUserId") Long toUserId,
-                                @AuthenticationPrincipal PrincipalDetails principalDetails) {
+    public String userSubscribe(
+            @AuthenticationPrincipal PrincipalDetails principalDetails,
+            @PathVariable(name = "toUserId") Long toUserId) {
+
         User user = userRepository.findById(principalDetails.getUser().getId()).orElseThrow(()->{
             return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
         });
 
-        subscribeService.subscribe(user.getId(), toUserId);
+        User toUser = userRepository.findById(toUserId).orElseThrow(()->{
+            return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
+        });
 
-        return "redirect:/user/toUser/" + toUserId;
+        subscribeService.subscribe(user.getId(), toUser.getId());
+
+        return "redirect:/user/toUser/" + toUser.getId();
     }
+
 
     @PostMapping("/unSubscribe/toUser/{toUserId}")
-    public String userUnSubscribe(@PathVariable(name = "toUserId") Long toUserId,
-                                  @AuthenticationPrincipal PrincipalDetails principalDetails) {
+    public String userUnSubscribe(
+            @AuthenticationPrincipal PrincipalDetails principalDetails,
+            @PathVariable(name = "toUserId") Long toUserId) {
+
         User user = userRepository.findById(principalDetails.getUser().getId()).orElseThrow(()->{
             return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
         });
 
-        subscribeService.unSubscribe(user.getId(), toUserId);
+        User toUser = userRepository.findById(toUserId).orElseThrow(()->{
+            return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
+        });
 
-        return "redirect:/user/toUser/" + toUserId;
+        subscribeService.unSubscribe(user.getId(), toUser.getId());
+
+        return "redirect:/user/toUser/" + toUser.getId();
     }
+
 
     @PostMapping("/sub/toUser/{toUserId}")
-    public String userSub(@PathVariable(name = "toUserId") Long toUserId,
-                                @AuthenticationPrincipal PrincipalDetails principalDetails) {
+    public String userSub(
+            @AuthenticationPrincipal PrincipalDetails principalDetails,
+            @PathVariable(name = "toUserId") Long toUserId) {
+
         User user = userRepository.findById(principalDetails.getUser().getId()).orElseThrow(()->{
             return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
         });
 
-        subscribeService.subscribe(user.getId(), toUserId);
+        User toUser = userRepository.findById(toUserId).orElseThrow(()->{
+            return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
+        });
 
-        return "redirect:/user/" + toUserId;
+        subscribeService.subscribe(user.getId(), toUser.getId());
+
+        return "redirect:/user/" + toUser.getId();
     }
 
+
     @PostMapping("/unSub/toUser/{toUserId}")
-    public String userUnSub(@PathVariable(name = "toUserId") Long toUserId,
-                                  @AuthenticationPrincipal PrincipalDetails principalDetails) {
+    public String userUnSub(
+            @AuthenticationPrincipal PrincipalDetails principalDetails,
+            @PathVariable(name = "toUserId") Long toUserId) {
+
         User user = userRepository.findById(principalDetails.getUser().getId()).orElseThrow(()->{
             return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
         });
 
-        subscribeService.unSubscribe(user.getId(), toUserId);
+        User toUser = userRepository.findById(toUserId).orElseThrow(()->{
+            return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
+        });
 
-        return "redirect:/user/" + toUserId;
+        subscribeService.unSubscribe(user.getId(), toUser.getId());
+
+        return "redirect:/user/" + toUser.getId();
     }
 
 }

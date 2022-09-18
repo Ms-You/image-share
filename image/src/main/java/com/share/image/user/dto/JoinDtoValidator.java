@@ -20,12 +20,12 @@ public class JoinDtoValidator implements Validator {
     @Override
     public void validate(Object object, Errors errors) {
         JoinRequestDto joinRequestDto = (JoinRequestDto) object;
-        if (userRepository.findByEmailAndProvider(joinRequestDto.getEmail(), null) != null) {
+
+        if (userRepository.findByEmailAndProvider(joinRequestDto.getEmail(), null) != null)
             errors.rejectValue("email", "email", new Object[]{joinRequestDto.getEmail()}, "이미 사용중인 이메일입니다.");
-        }
-        if (!joinRequestDto.getPassword().equals(joinRequestDto.getPassword_confirm())){
+
+        if (!joinRequestDto.getPassword().equals(joinRequestDto.getPassword_confirm()))
             errors.rejectValue("password_confirm", "key","비밀번호가 일치하지 않습니다.");
-        }
     }
 
 

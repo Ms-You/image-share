@@ -1,5 +1,6 @@
 package com.share.image.feed.domain;
 
+import com.share.image.feed.dto.FeedRequestDto;
 import com.share.image.user.domain.BaseTimeEntity;
 import com.share.image.user.domain.User;
 import lombok.Builder;
@@ -47,21 +48,24 @@ public class Feed extends BaseTimeEntity {
     @OneToMany(mappedBy = "feed", cascade = CascadeType.ALL)
     private List<Report> reports = new ArrayList<>();
 
-    @Builder
-    public Feed(Long id, String title, String description, Tag tag, User writer){
-        this.id = id;
-        this.title = title;
-        this.description = description;
-        this.tag = tag;
+
+    //== 생성 메서드 ==//
+    public static Feed createFeed(User user, FeedRequestDto feedRequestDto, Tag tag){
+        Feed feed = new Feed();
+
+        feed.updateFeed(user, feedRequestDto.getTitle(), feedRequestDto.getDescription(), tag);
+        user.getFeeds().add(feed);
+        tag.getFeeds().add(feed);
+
+        return feed;
+    }
+
+    public void updateFeed(User writer, String title, String description, Tag tag){
         this.writer = writer;
-    }
-
-    public void modifyFeed(String title, String description, Tag tag){
         this.title = title;
         this.description = description;
         this.tag = tag;
     }
-
 
     public void updateFeedImageUrl(String feedImageUrl){
         this.feedImageUrl = feedImageUrl;

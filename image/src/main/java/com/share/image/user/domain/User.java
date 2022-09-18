@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -76,23 +75,10 @@ public class User extends BaseTimeEntity{
 
 
     @Builder
-    public User(String email, String nickName, String password, RoleType role, String intro, String profileImageUrl){
-        this.email = email;
-        this.nickName = nickName;
-        this.password = password;
-        this.role = role;
-        this.intro = intro;
-        this.profileImageUrl = profileImageUrl;
-        this.permanentLocked = "정지하기";
-        this.temporaryLocked = "정지하기";
-    }
-
     public User(String email, String nickName, String password, String provider, String providerId){
         this.email = email;
         this.nickName = nickName;
         this.password = password;
-        this.intro = null;
-        this.profileImageUrl = null;
         this.role = RoleType.ROLE_USER;
         this.provider = provider;
         this.providerId = providerId;
@@ -109,19 +95,13 @@ public class User extends BaseTimeEntity{
         this.intro = intro;
     }
 
-    public void setTemporaryLocked(String locked){
+    public void updateTemporaryLocked(String locked){
         this.temporaryLocked = locked;
-    }
-
-    public void setPermanentLocked(String locked){
-        this.permanentLocked = locked;
-    }
-
-    public void recordTemporarySuspendTime(){
         this.temporarySuspendedDate = LocalDateTime.now();
     }
 
-    public void recordPermanentSuspendTime(){
+    public void updatePermanentLocked(String locked){
+        this.permanentLocked = locked;
         this.permanentSuspendedDate = LocalDateTime.now();
     }
 

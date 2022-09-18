@@ -43,19 +43,21 @@ public class UserController {
     // 회원 가입
     @PostMapping("/auth/join")
     public String join(@Valid JoinRequestDto joinRequestDto, Errors errors, Model model){
+
         usersDtoValidator.validate(joinRequestDto, errors);
 
         if (errors.hasErrors()){
             model.addAttribute("joinRequestDto", joinRequestDto);
 
             Map<String, String> validatorResult = userService.validateHandling(errors);
-            for (String key : validatorResult.keySet()) {
+            for (String key : validatorResult.keySet())
                 model.addAttribute(key, validatorResult.get(key));
-            }
 
             return "user/join";
         }
+
         userService.signUp(joinRequestDto);
+
         return "/user/login";
     }
 
@@ -64,6 +66,7 @@ public class UserController {
     // 회원 정보 페이지로 이동
     @GetMapping("/user/profile")
     public String userProfile(@AuthenticationPrincipal PrincipalDetails principalDetails, Model model){
+
         User user = userRepository.findById(principalDetails.getUser().getId()).orElseThrow(()->{
             return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
         });
@@ -77,6 +80,7 @@ public class UserController {
     // 회원 정보 수정 페이지로 이동
     @GetMapping("/modifying/user/profile")
     public String modifyProfile(@AuthenticationPrincipal PrincipalDetails principalDetails, Model model) {
+
         User user = userRepository.findById(principalDetails.getUser().getId()).orElseThrow(()->{
             return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
         });
@@ -105,9 +109,8 @@ public class UserController {
             model.addAttribute("user", user);
 
             Map<String, String> validatorResult = userService.validateHandling(errors);
-            for (String key : validatorResult.keySet()) {
+            for (String key : validatorResult.keySet())
                 model.addAttribute(key, validatorResult.get(key));
-            }
 
             return "user/update";
         }
@@ -121,10 +124,12 @@ public class UserController {
 
     }
 
+
     // 특정 사용자 보기
     @GetMapping("/user/{userId}")
-    public String userView(@PathVariable(name = "userId") Long userId, Model model,
-                           @AuthenticationPrincipal PrincipalDetails principalDetails){
+    public String userView(
+            @AuthenticationPrincipal PrincipalDetails principalDetails,
+            @PathVariable(name = "userId") Long userId, Model model){
 
         User fromUser = userRepository.findById(principalDetails.getUser().getId()).orElseThrow(()->{
             return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
@@ -135,7 +140,7 @@ public class UserController {
         });
 
         // 구독 상태 변경
-        if (subscribeService.isUserSubscribe(toUser.getId(), fromUser.getId()))
+        if (subscribeService.isUserSubscribe(toUser, fromUser))
             model.addAttribute("subscribeStatus", "/img/do_sub.png");
         else
             model.addAttribute("subscribeStatus", "/img/un_sub.png");
@@ -145,9 +150,13 @@ public class UserController {
         return "user/view";
     }
 
+
     // 특정 사용자의 피드 관리
     @GetMapping("/user/{userId}/feeds")
-    public String feedsView(@PathVariable(name = "userId") Long userId, Model model, @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable){
+    public String feedsView(
+            @PathVariable(name = "userId") Long userId,
+            @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
+            Model model){
 
         User user = userRepository.findById(userId).orElseThrow(()->{
             return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");

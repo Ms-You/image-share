@@ -41,6 +41,7 @@ public class AdminTagController {
     // 태그 모음 페이지로 이동
     @GetMapping("/tags")
     public String tags(Model model, @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.ASC) Pageable pageable){
+
         Page<Tag> tags = tagRepository.findAll(pageable);
         int startPage = (int) (Math.floor(pageable.getPageNumber() / pageable.getPageSize()) * pageable.getPageSize() + 1);
         int tempEndPage = startPage + pageable.getPageSize() - 1;
@@ -53,15 +54,20 @@ public class AdminTagController {
         return "/admin/tag/tags";
     }
 
+
     // 태그 생성 페이지로 이동
     @GetMapping("/tag")
     public String createTag(){
         return "/admin/tag/newTag";
     }
 
+
     // 태그 생성
     @PostMapping("/tag")
-    public String newTag(@Valid TagRequestDto tagRequestDto, Errors errors, Model model, @RequestParam MultipartFile file) throws UnsupportedEncodingException {
+    public String newTag(
+            @Valid TagRequestDto tagRequestDto, Errors errors, Model model,
+            @RequestParam MultipartFile file) throws UnsupportedEncodingException {
+
         // 파일 유효성 검사를 위해 파일명을 dto 에 넣어줌
         tagRequestDto.insertImage(file.getOriginalFilename());
         tagDtoValidator.validate(tagRequestDto, errors);
@@ -70,9 +76,8 @@ public class AdminTagController {
             model.addAttribute("tagRequestDto", tagRequestDto);
 
             Map<String, String> validatorResult = adminTagService.validateHandling(errors);
-            for (String key : validatorResult.keySet()) {
+            for (String key : validatorResult.keySet())
                 model.addAttribute(key, validatorResult.get(key));
-            }
 
             return "admin/tag/newTag";
         }

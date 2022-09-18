@@ -26,6 +26,7 @@ public class AdminFeedController {
     // 특정 피드 보기
     @GetMapping("/feed/{feedId}")
     public String feedView(@PathVariable(name = "feedId") Long feedId, Model model){
+
         Feed feed = feedRepository.findById(feedId).orElseThrow(()->{
             return new IllegalArgumentException("존재하지 않는 피드입니다.");
         });
@@ -40,15 +41,15 @@ public class AdminFeedController {
     @ResponseBody
     @DeleteMapping("/feed/{feedId}")
     public ResponseEntity deleteFeed(@PathVariable(name = "feedId") Long feedId){
+
         try{
             Feed feed = feedRepository.findById(feedId).orElseThrow(()->{
                 return new IllegalArgumentException("존재하지 않는 피드입니다.");
             });
 
             feedRepository.deleteById(feedId);
-            Long tagId = feed.getTag().getId();
 
-            return new ResponseEntity(tagId, HttpStatus.OK);
+            return new ResponseEntity(feed.getTag().getId(), HttpStatus.OK);
         } catch (Exception e){
             return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
@@ -56,7 +57,10 @@ public class AdminFeedController {
 
     // 피드 검색
     @GetMapping("/feed/search")
-    public String searchFeed(String keyword, Model model, @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+    public String searchFeed(
+            String keyword, Model model,
+            @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+
         Page<Feed> feedList = feedRepository.findByTitleContaining(keyword, pageable);
 
         int startPage = (int) (Math.floor(pageable.getPageNumber() / pageable.getPageSize()) * pageable.getPageSize() + 1);

@@ -37,11 +37,13 @@ public class ReplyController {
 
     // 댓글 작성
     @PostMapping("/feed/{feedId}/reply")
-    public String writeReply(@PathVariable(name = "feedId") Long feedId,
-                              @AuthenticationPrincipal PrincipalDetails principalDetails,
-                              @Valid ReplyRequestDto replyRequestDto,
-                              Errors errors,
-                              Model model) {
+    public String writeReply(
+            @AuthenticationPrincipal PrincipalDetails principalDetails,
+            @PathVariable(name = "feedId") Long feedId,
+            @Valid ReplyRequestDto replyRequestDto,
+            Errors errors,
+            Model model) {
+
         User user = userRepository.findById(principalDetails.getUser().getId()).orElseThrow(()->{
             return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
         });
@@ -57,9 +59,9 @@ public class ReplyController {
             model.addAttribute("feed", feed);
 
             Map<String, String> validatorResult = replyService.validateHandling(errors);
-            for (String key: validatorResult.keySet()) {
+            for (String key: validatorResult.keySet())
                 model.addAttribute(key, validatorResult.get(key));
-            }
+
             return "feed/view :: #replyList";
         }
 
@@ -78,12 +80,15 @@ public class ReplyController {
     @ResponseBody
     @DeleteMapping("/feed/reply/{replyId}")
     public ResponseEntity deleteReply(@PathVariable(name = "replyId") Long replyId){
-        try{
-            Reply reply = replyService.findByReplyId(replyId);
-            replyService.deleteReply(reply);
-            Long feedId = reply.getFeed().getId();
 
-            return new ResponseEntity(feedId, HttpStatus.OK);
+        try{
+            Reply reply = replyRepository.findById(replyId).orElseThrow(()->{
+                return new IllegalArgumentException("존재하지 않는 댓글입니다.");
+            });
+
+            replyRepository.delete(reply);
+
+            return new ResponseEntity(reply.getFeed().getId(), HttpStatus.OK);
         } catch (Exception e){
             return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         }

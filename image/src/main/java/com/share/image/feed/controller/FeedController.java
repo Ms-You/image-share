@@ -42,14 +42,15 @@ public class FeedController {
 
     private final FeedDtoValidator feedDtoValidator;
     private final FeedService feedService;
+    private final ReplyRepository replyRepository;
     private final ViewService viewService;
     private final FeedLikeService feedLikeService;
     private final ReplyLikeService replyLikeService;
     private final SubscribeService subscribeService;
+    private final FeedRepository feedRepository;
     private final TagRepository tagRepository;
     private final UserRepository userRepository;
-    private final FeedRepository feedRepository;
-    private final ReplyRepository replyRepository;
+
 
     // 피드 생성 페이지로 이동
     @GetMapping("/feed")
@@ -75,9 +76,9 @@ public class FeedController {
             return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
         });
 
-        // select-option 에서 태그 이름을 받아와서 dto 에 넣어줌
-        Tag tag = tagRepository.findByName(tagName);
-        feedRequestDto.insertTag(tag);
+        Tag tag = tagRepository.findByName(tagName).orElseThrow(()->{
+            return new IllegalArgumentException("일치하는 태그명을 찾을 수 없습니다.");
+        });
 
         // 파일 유효성 검사를 위해 파일명을 dto 에 넣어줌
         feedRequestDto.insertImage(file.getOriginalFilename());
@@ -90,25 +91,28 @@ public class FeedController {
             model.addAttribute("tags", tags);
 
             Map<String, String> validatorResult = feedService.validateHandling(errors);
-            for (String key : validatorResult.keySet()) {
+            for (String key : validatorResult.keySet())
                 model.addAttribute(key, validatorResult.get(key));
-            }
 
             return "feed/create";
         }
 
-        Feed createdFeed = feedService.createFeed(user, feedRequestDto, file);
+        Feed feed = feedService.createFeed(user, feedRequestDto, tag, file);
+
         // 피드 작성자는 피드 봤다고 침
-        viewService.viewFeed(createdFeed.getId(), user.getId());
+        viewService.viewFeed(feed.getId(), user.getId());
 
         return "redirect:/user";
 
     }
 
+
     // 특정 피드 보기
     @GetMapping("/feed/{feedId}")
-    public String feedView(@AuthenticationPrincipal PrincipalDetails principalDetails,
-                        @PathVariable(name = "feedId") Long feedId, Model model){
+    public String feedView(
+            @AuthenticationPrincipal PrincipalDetails principalDetails,
+            @PathVariable(name = "feedId") Long feedId,
+            Model model){
 
         User user = userRepository.findById(principalDetails.getUser().getId()).orElseThrow(()->{
             return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
@@ -121,30 +125,28 @@ public class FeedController {
         List<Reply> replies = replyRepository.findByFeed(feed);
 
         // 구독 상태 변경
-        if (subscribeService.isUserSubscribe(feed.getWriter().getId(), user.getId()))
+        if (subscribeService.isUserSubscribe(feed.getWriter(), user))
             model.addAttribute("subscribeStatus", "/img/do_sub.png");
         else
             model.addAttribute("subscribeStatus", "/img/un_sub.png");
 
         // 피드 좋아요 변경
-        if (feedLikeService.isUserLikeFeed(feedId, user.getId()))
+        if (feedLikeService.isUserLikeFeed(user, feed))
             model.addAttribute("feedLikeStatus", "/img/full_heart.png");
         else
             model.addAttribute("feedLikeStatus", "/img/empty_heart.png");
 
-
         // 댓글별 좋아요 변경
         for(Reply reply: replies){
-            if (replyLikeService.isUserLikeReply(reply.getId(), user.getId()))
-                reply.setReplyLikeStatus("/img/full_heart.png");
+            if (replyLikeService.isUserLikeReply(user, reply))
+                reply.updateReplyLikeStatus("/img/full_heart.png");
             else
-                reply.setReplyLikeStatus("/img/empty_heart.png");
+                reply.updateReplyLikeStatus("/img/empty_heart.png");
         }
 
         // 피드를 안 본 경우 조회수 1 증가
-        if (viewService.isUserViewFeed(feedId, user.getId())) {
-            viewService.viewFeed(feedId, user.getId());
-        }
+        if (viewService.isUserViewFeed(user, feed))
+            viewService.viewFeed(feed.getId(), user.getId());
 
         model.addAttribute("prevFeed", feedRepository.leadFeedId(feed.getId(), feed.getTag().getId()));
         model.addAttribute("nextFeed", feedRepository.lagFeedId(feed.getId(), feed.getTag().getId()));
@@ -154,10 +156,13 @@ public class FeedController {
         return "feed/view";
     }
 
+
     // 구독한 사용자의 피드 보기 (prevFeed, nextFeed 때문에 생성)
     @GetMapping("/subscription/feed/{feedId}")
-    public String subscribedFeedView(@AuthenticationPrincipal PrincipalDetails principalDetails,
-                       @PathVariable(name = "feedId") Long feedId, Model model){
+    public String subscribedFeedView(
+            @AuthenticationPrincipal PrincipalDetails principalDetails,
+            @PathVariable(name = "feedId") Long feedId,
+            Model model){
 
         User user = userRepository.findById(principalDetails.getUser().getId()).orElseThrow(()->{
             return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
@@ -170,30 +175,28 @@ public class FeedController {
         List<Reply> replies = replyRepository.findByFeed(feed);
 
         // 구독 상태 변경
-        if (subscribeService.isUserSubscribe(feed.getWriter().getId(), user.getId()))
+        if (subscribeService.isUserSubscribe(feed.getWriter(), user))
             model.addAttribute("subscribeStatus", "/img/do_sub.png");
         else
             model.addAttribute("subscribeStatus", "/img/un_sub.png");
 
         // 피드 좋아요 변경
-        if (feedLikeService.isUserLikeFeed(feedId, user.getId()))
+        if (feedLikeService.isUserLikeFeed(user, feed))
             model.addAttribute("feedLikeStatus", "/img/full_heart.png");
         else
             model.addAttribute("feedLikeStatus", "/img/empty_heart.png");
 
-
         // 댓글별 좋아요 변경
         for(Reply reply: replies){
-            if (replyLikeService.isUserLikeReply(reply.getId(), user.getId()))
-                reply.setReplyLikeStatus("/img/full_heart.png");
+            if (replyLikeService.isUserLikeReply(user, reply))
+                reply.updateReplyLikeStatus("/img/full_heart.png");
             else
-                reply.setReplyLikeStatus("/img/empty_heart.png");
+                reply.updateReplyLikeStatus("/img/empty_heart.png");
         }
 
         // 피드를 안 본 경우 조회수 1 증가
-        if (viewService.isUserViewFeed(feedId, user.getId())) {
-            viewService.viewFeed(feedId, user.getId());
-        }
+        if (viewService.isUserViewFeed(user, feed))
+            viewService.viewFeed(feed.getId(), user.getId());
 
         model.addAttribute("prevFeed", feedRepository.toUsersLeadFeedId(feed.getId(), feed.getWriter().getId()));
         model.addAttribute("nextFeed", feedRepository.toUsersLagFeedId(feed.getId(), feed.getWriter().getId()));
@@ -203,10 +206,13 @@ public class FeedController {
         return "feed/subscribedFeedView";
     }
 
+
     // 피드 수정페이지 이동
     @GetMapping("/modifying/feed/{feedId}")
-    public String updateFeed(@AuthenticationPrincipal PrincipalDetails principalDetails,
-                                @PathVariable(name = "feedId") Long feedId, Model model){
+    public String updateFeed(
+            @AuthenticationPrincipal PrincipalDetails principalDetails,
+            @PathVariable(name = "feedId") Long feedId,
+            Model model){
 
         User user = userRepository.findById(principalDetails.getUser().getId()).orElseThrow(()->{
             return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
@@ -216,20 +222,20 @@ public class FeedController {
             return new IllegalArgumentException("존재하지 않는 피드입니다.");
         });
 
-        if (user.getId() != feed.getWriter().getId()){
+        if (user.getId() != feed.getWriter().getId())
             return "feed/exception";
-        }
 
-        List<Tag> tags = tagRepository.findAll();
-        model.addAttribute("tags", tags);
+        model.addAttribute("tags", tagRepository.findAll());
         model.addAttribute("feed", feed);
 
         return "feed/update";
     }
 
+
     // 피드 수정
     @PutMapping("/feed/{feedId}")
-    public String updateFeed(@PathVariable(name = "feedId") Long feedId,
+    public String updateFeed(
+            @PathVariable(name = "feedId") Long feedId,
             @Valid FeedRequestDto feedRequestDto,
             Errors errors,
             Model model,
@@ -240,11 +246,9 @@ public class FeedController {
             return new IllegalArgumentException("존재하지 않는 피드입니다.");
         });
 
-        User user = feed.getWriter();
-
-        // select-option 에서 태그 이름을 받아와서 dto 에 넣어줌
-        Tag tag = tagRepository.findByName(tagName);
-        feedRequestDto.insertTag(tag);
+        Tag tag = tagRepository.findByName(tagName).orElseThrow(()->{
+            return new IllegalArgumentException("일치하는 태그명을 찾을 수 없습니다.");
+        });
 
         // 파일 유효성 검사를 위해 파일명을 dto 에 넣어줌
         feedRequestDto.insertImage(file.getOriginalFilename());
@@ -258,13 +262,14 @@ public class FeedController {
             model.addAttribute("feed", feed);
 
             Map<String, String> validatorResult = feedService.validateHandling(errors);
-            for (String key : validatorResult.keySet()) {
+            for (String key : validatorResult.keySet())
                 model.addAttribute(key, validatorResult.get(key));
-            }
 
             return "feed/update";
         }
-        feedService.updateFeed(user, feed, feedRequestDto, file);
+
+        feedService.updateFeed(feed.getWriter(), feed, feedRequestDto, tag, file);
+
         return "redirect:/user";
 
     }
@@ -274,15 +279,15 @@ public class FeedController {
     @ResponseBody
     @DeleteMapping("/feed/{feedId}")
     public ResponseEntity deleteFeed(@PathVariable(name = "feedId") Long feedId){
+
         try {
             Feed feed = feedRepository.findById(feedId).orElseThrow(()->{
                 return new IllegalArgumentException("존재하지 않는 피드입니다.");
             });
 
             feedRepository.deleteById(feedId);
-            Long tagId = feed.getTag().getId();
 
-            return new ResponseEntity(tagId, HttpStatus.OK);
+            return new ResponseEntity(feed.getTag().getId(), HttpStatus.OK);
         } catch (Exception e){
             return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
@@ -291,8 +296,10 @@ public class FeedController {
 
     // 현재 사용자의 피드 관리
     @GetMapping("/feeds")
-    public String currentUsersFeeds(@AuthenticationPrincipal PrincipalDetails principalDetails,
-                              Model model, @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC)Pageable pageable){
+    public String currentUsersFeeds(
+            @AuthenticationPrincipal PrincipalDetails principalDetails,
+            @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
+            Model model){
 
         User user = userRepository.findById(principalDetails.getUser().getId()).orElseThrow(()->{
             return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
@@ -314,8 +321,10 @@ public class FeedController {
 
     // 구독한 사용자의 피드 보기
     @GetMapping("/toUser/{userId}/feeds")
-    public String subscriptionFeedsView(@PathVariable(name = "userId") Long userId, Model model,
-                                      @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC)Pageable pageable){
+    public String subscriptionFeedsView(
+            @PathVariable(name = "userId") Long userId,
+            @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
+            Model model){
 
         User user = userRepository.findById(userId).orElseThrow(()->{
             return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
@@ -338,9 +347,11 @@ public class FeedController {
 
     // 피드 검색
     @GetMapping("/feed/search")
-    public String searchFeed(String keyword, Model model,
-                             @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC)Pageable pageable) {
-        Page<Feed> searchList = feedService.search(keyword, pageable);
+    public String searchFeed(
+            String keyword, Model model,
+            @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+
+        Page<Feed> searchList = feedRepository.findByTitleContaining(keyword, pageable);
 
         int startPage = (int) (Math.floor(pageable.getPageNumber() / pageable.getPageSize()) * pageable.getPageSize() + 1);
         int tempEndPage = startPage + pageable.getPageSize() - 1;
@@ -357,8 +368,11 @@ public class FeedController {
 
     // 좋아요 표시한 피드 목록
     @GetMapping("/likes/feeds")
-    public String feedsLikes(@AuthenticationPrincipal PrincipalDetails principalDetails, Model model,
-                                   @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable){
+    public String feedsLikes(
+            @AuthenticationPrincipal PrincipalDetails principalDetails,
+            @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
+            Model model){
+
         User user = userRepository.findById(principalDetails.getUser().getId()).orElseThrow(()->{
             return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
         });
@@ -390,10 +404,13 @@ public class FeedController {
         return "user/likeFeeds";
     }
 
+
     // 서치 타입 별 피드 조회
     @GetMapping("/feed/searchType")
-    public String searchFeedByType(@RequestParam String searchType, Model model,
-                                   @PageableDefault(size = 5) Pageable pageable) {
+    public String searchFeedByType(
+            @RequestParam String searchType, Model model,
+            @PageableDefault(size = 5) Pageable pageable) {
+
         int offset = pageable.getPageNumber()*5;
         int totalFeedsCount = feedRepository.findAll().size(); // 총 게시물 수를 알아옴
 

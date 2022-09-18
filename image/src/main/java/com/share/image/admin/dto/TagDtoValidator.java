@@ -1,8 +1,6 @@
 package com.share.image.admin.dto;
 
 import com.share.image.feed.repository.TagRepository;
-import com.share.image.user.dto.JoinRequestDto;
-import com.share.image.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;

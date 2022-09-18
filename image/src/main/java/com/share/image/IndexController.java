@@ -26,6 +26,7 @@ public class IndexController {
 
     @GetMapping({"", "/"})
     public String index(Model model, @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable){
+
         Page<Information> infos = informationRepository.findAll(pageable);
         int startPage = (int) (Math.floor(pageable.getPageNumber() / pageable.getPageSize()) * pageable.getPageSize() + 1);
         int tempEndPage = startPage + pageable.getPageSize() - 1;
@@ -37,6 +38,7 @@ public class IndexController {
 
         return "index";
     }
+
 
     // 특정 공지 보기
     @GetMapping("/info/{information_id}")
@@ -51,17 +53,21 @@ public class IndexController {
         return "info/view";
     }
 
+
     // 회원가입 페이지 이동
     @GetMapping("/auth/join")
     public String join(JoinRequestDto joinRequestDto){
         return "/user/join";
     }
 
+
     // 로그인 페이지 이동
     @GetMapping("/auth/login")
-    public String login(@RequestParam(value = "error", required = false)String error,
-                        @RequestParam(value = "exception", required = false)String exception,
-                        Model model, HttpServletRequest httpServletRequest){
+    public String login(
+            @RequestParam(value = "error", required = false)String error,
+            @RequestParam(value = "exception", required = false)String exception,
+            Model model, HttpServletRequest httpServletRequest){
+
         model.addAttribute("error", error);
         model.addAttribute("exception", exception);
 
@@ -78,6 +84,7 @@ public class IndexController {
 
         return "/user/login";
     }
+
 
     // 로그인 실패 시 이동
     @PostMapping("/auth/login")
