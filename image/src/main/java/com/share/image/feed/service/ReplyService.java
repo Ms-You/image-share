@@ -36,11 +36,10 @@ public class ReplyService {
     }
 
 
-    public void createReply(User user, ReplyRequestDto replyRequestDto, Feed feed) {
+    public Reply createReply(User user, ReplyRequestDto replyRequestDto, Feed feed) {
         Reply reply = Reply.createReply(replyRequestDto.getContent(), "/img/empty_heart.png", user, feed);
 
-        replyRepository.save(reply);
-
+        return replyRepository.save(reply);
     }
 
 }
