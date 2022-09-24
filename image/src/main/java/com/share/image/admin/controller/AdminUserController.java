@@ -1,5 +1,7 @@
 package com.share.image.admin.controller;
 
+import com.share.image.config.exception.ErrorCode;
+import com.share.image.config.exception.GlobalException;
 import com.share.image.feed.domain.Feed;
 import com.share.image.feed.repository.FeedRepository;
 import com.share.image.feed.repository.ReportRepository;
@@ -49,9 +51,9 @@ public class AdminUserController {
     @GetMapping("/user/{userId}")
     public String userView(@PathVariable(name = "userId") Long userId, Model model){
 
-        User user = userRepository.findById(userId).orElseThrow(()->{
-            return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
-        });
+        User user = userRepository.findById(userId).orElseThrow(
+                ()-> new GlobalException(ErrorCode.USER_ERROR)
+        );
 
         model.addAttribute("user", user);
         model.addAttribute("reportCount", reportRepository.findReportCountByUserId(user.getId()));
@@ -123,9 +125,9 @@ public class AdminUserController {
             @PathVariable(name = "userId") Long userId, Model model,
             @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC)Pageable pageable){
 
-        User user = userRepository.findById(userId).orElseThrow(()->{
-            return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
-        });
+        User user = userRepository.findById(userId).orElseThrow(
+                ()-> new GlobalException(ErrorCode.USER_ERROR)
+        );
 
         Page<Feed> feeds = feedRepository.findByWriter(user, pageable);
 

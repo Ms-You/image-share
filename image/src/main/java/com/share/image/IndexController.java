@@ -2,6 +2,8 @@ package com.share.image;
 
 import com.share.image.admin.domain.Information;
 import com.share.image.admin.repository.InformationRepository;
+import com.share.image.config.exception.ErrorCode;
+import com.share.image.config.exception.GlobalException;
 import com.share.image.user.dto.JoinRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -44,9 +46,9 @@ public class IndexController {
     @GetMapping("/info/{information_id}")
     public String viewInfo(@PathVariable(name = "information_id") Long informationId, Model model){
 
-        Information info = informationRepository.findById(informationId).orElseThrow(()->{
-            return new IllegalArgumentException("공지를 찾을 수 없습니다.");
-        });
+        Information info = informationRepository.findById(informationId).orElseThrow(
+                ()-> new GlobalException(ErrorCode.RESOURCE_ERROR)
+        );
 
         model.addAttribute("info", info);
 

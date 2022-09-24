@@ -1,6 +1,8 @@
 package com.share.image.admin.controller;
 
 import com.share.image.admin.service.BlockUserService;
+import com.share.image.config.exception.ErrorCode;
+import com.share.image.config.exception.GlobalException;
 import com.share.image.feed.domain.Report;
 import com.share.image.feed.repository.ReportRepository;
 import com.share.image.user.domain.User;
@@ -50,9 +52,9 @@ public class AdminReportController {
     @GetMapping("/{reportId}")
     public String reportView(@PathVariable(name = "reportId") Long reportId, Model model){
 
-        Report report = reportRepository.findById(reportId).orElseThrow(()->{
-            return new IllegalArgumentException("존재하지 않는 신고입니다.");
-        });
+        Report report = reportRepository.findById(reportId).orElseThrow(
+                ()-> new GlobalException(ErrorCode.RESOURCE_ERROR)
+        );
 
         model.addAttribute("report", report);
 
@@ -64,9 +66,9 @@ public class AdminReportController {
     @PostMapping("/temporary/user/{userId}")
     public String temporaryStoppedUser(@PathVariable(name = "userId") Long userId){
 
-        User user = userRepository.findById(userId).orElseThrow(()->{
-            return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
-        });
+        User user = userRepository.findById(userId).orElseThrow(
+                ()-> new GlobalException(ErrorCode.USER_ERROR)
+        );
 
         blockUserService.temporaryBlockUser(user);
 
@@ -78,9 +80,9 @@ public class AdminReportController {
     @PostMapping("/permanent/user/{userId}")
     public String permanentStoppedUser(@PathVariable(name = "userId") Long userId){
 
-        User user = userRepository.findById(userId).orElseThrow(()->{
-            return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
-        });
+        User user = userRepository.findById(userId).orElseThrow(
+                ()-> new GlobalException(ErrorCode.USER_ERROR)
+        );
 
         blockUserService.permanentBlockUser(user);
 

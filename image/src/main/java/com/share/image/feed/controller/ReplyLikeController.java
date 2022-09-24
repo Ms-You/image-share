@@ -1,6 +1,8 @@
 package com.share.image.feed.controller;
 
 import com.share.image.config.PrincipalDetails;
+import com.share.image.config.exception.ErrorCode;
+import com.share.image.config.exception.GlobalException;
 import com.share.image.feed.domain.Feed;
 import com.share.image.feed.domain.Reply;
 import com.share.image.feed.repository.FeedRepository;
@@ -35,17 +37,17 @@ public class ReplyLikeController {
             @PathVariable(name = "feedId") Long feedId,
             @PathVariable(name = "replyId") Long replyId) {
 
-        User user = userRepository.findById(principalDetails.getUser().getId()).orElseThrow(()->{
-            return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
-        });
+        User user = userRepository.findById(principalDetails.getUser().getId()).orElseThrow(
+                ()-> new GlobalException(ErrorCode.USER_ERROR)
+        );
 
-        Feed feed = feedRepository.findById(feedId).orElseThrow(()->{
-            return new IllegalArgumentException("피드가 존재하지 않습니다.");
-        });
+        Feed feed = feedRepository.findById(feedId).orElseThrow(
+                ()-> new GlobalException(ErrorCode.FEED_ERROR)
+        );
 
-        Reply reply = replyRepository.findById(replyId).orElseThrow(()->{
-            return new IllegalArgumentException("존재하지 않는 댓글입니다.");
-        });
+        Reply reply = replyRepository.findById(replyId).orElseThrow(
+                ()-> new GlobalException(ErrorCode.REPLY_ERROR)
+        );
 
         replyLikeService.likeReply(user, reply);
 
@@ -59,17 +61,17 @@ public class ReplyLikeController {
             @PathVariable(name = "feedId") Long feedId,
             @PathVariable(name = "replyId") Long replyId) {
 
-        User user = userRepository.findById(principalDetails.getUser().getId()).orElseThrow(()->{
-            return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
-        });
+        User user = userRepository.findById(principalDetails.getUser().getId()).orElseThrow(
+                ()-> new GlobalException(ErrorCode.USER_ERROR)
+        );
 
-        Feed feed = feedRepository.findById(feedId).orElseThrow(()->{
-            return new IllegalArgumentException("피드가 존재하지 않습니다.");
-        });
+        Feed feed = feedRepository.findById(feedId).orElseThrow(
+                ()-> new GlobalException(ErrorCode.FEED_ERROR)
+        );
 
-        Reply reply = replyRepository.findById(replyId).orElseThrow(()->{
-            return new IllegalArgumentException("존재하지 않는 댓글입니다.");
-        });
+        Reply reply = replyRepository.findById(replyId).orElseThrow(
+                ()-> new GlobalException(ErrorCode.REPLY_ERROR)
+        );
 
         replyLikeService.unLikeReply(user, reply);
 

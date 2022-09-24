@@ -1,5 +1,7 @@
 package com.share.image.feed.api;
 
+import com.share.image.config.exception.ErrorCode;
+import com.share.image.config.exception.GlobalException;
 import com.share.image.feed.domain.Feed;
 import com.share.image.feed.repository.FeedRepository;
 import lombok.RequiredArgsConstructor;
@@ -32,9 +34,9 @@ public class FeedApiController {
     @GetMapping("/download/feed/{feedId}")
     public ResponseEntity<Resource> download(@PathVariable(name = "feedId") Long feedId){
 
-        Feed feed = feedRepository.findById(feedId).orElseThrow(()->{
-            return new IllegalArgumentException("존재하지 않는 피드입니다.");
-        });
+        Feed feed = feedRepository.findById(feedId).orElseThrow(
+                ()-> new GlobalException(ErrorCode.FEED_ERROR)
+        );
 
         String url = feed.getFeedImageUrl();
         String path = uploadFolder + url;

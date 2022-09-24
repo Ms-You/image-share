@@ -1,6 +1,8 @@
 package com.share.image.user.controller;
 
 import com.share.image.config.PrincipalDetails;
+import com.share.image.config.exception.ErrorCode;
+import com.share.image.config.exception.GlobalException;
 import com.share.image.feed.domain.Feed;
 import com.share.image.feed.repository.FeedRepository;
 import com.share.image.feed.service.SubscribeService;
@@ -67,9 +69,9 @@ public class UserController {
     @GetMapping("/user/profile")
     public String userProfile(@AuthenticationPrincipal PrincipalDetails principalDetails, Model model){
 
-        User user = userRepository.findById(principalDetails.getUser().getId()).orElseThrow(()->{
-            return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
-        });
+        User user = userRepository.findById(principalDetails.getUser().getId()).orElseThrow(
+                ()-> new GlobalException(ErrorCode.USER_ERROR)
+        );
 
         model.addAttribute("user", user);
 
@@ -81,9 +83,9 @@ public class UserController {
     @GetMapping("/modifying/user/profile")
     public String modifyProfile(@AuthenticationPrincipal PrincipalDetails principalDetails, Model model) {
 
-        User user = userRepository.findById(principalDetails.getUser().getId()).orElseThrow(()->{
-            return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
-        });
+        User user = userRepository.findById(principalDetails.getUser().getId()).orElseThrow(
+                ()-> new GlobalException(ErrorCode.USER_ERROR)
+        );
 
         model.addAttribute("user", user);
 
@@ -100,9 +102,9 @@ public class UserController {
             @AuthenticationPrincipal PrincipalDetails principalDetails,
             @RequestParam MultipartFile file) throws IOException {
 
-        User user = userRepository.findById(principalDetails.getUser().getId()).orElseThrow(()->{
-            return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
-        });
+        User user = userRepository.findById(principalDetails.getUser().getId()).orElseThrow(
+                ()-> new GlobalException(ErrorCode.USER_ERROR)
+        );
 
         if (errors.hasErrors()) {
             model.addAttribute("updateRequestDto", updateRequestDto);
@@ -131,13 +133,13 @@ public class UserController {
             @AuthenticationPrincipal PrincipalDetails principalDetails,
             @PathVariable(name = "userId") Long userId, Model model){
 
-        User fromUser = userRepository.findById(principalDetails.getUser().getId()).orElseThrow(()->{
-            return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
-        });
+        User fromUser = userRepository.findById(principalDetails.getUser().getId()).orElseThrow(
+                ()-> new GlobalException(ErrorCode.USER_ERROR)
+        );
 
-        User toUser = userRepository.findById(userId).orElseThrow(()->{
-            return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
-        });
+        User toUser = userRepository.findById(userId).orElseThrow(
+                ()-> new GlobalException(ErrorCode.USER_ERROR)
+        );
 
         // 구독 상태 변경
         if (subscribeService.isUserSubscribe(toUser, fromUser))
@@ -158,9 +160,9 @@ public class UserController {
             @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
             Model model){
 
-        User user = userRepository.findById(userId).orElseThrow(()->{
-            return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
-        });
+        User user = userRepository.findById(userId).orElseThrow(
+                ()-> new GlobalException(ErrorCode.USER_ERROR)
+        );
 
         Page<Feed> feeds = feedRepository.findByWriter(user, pageable);
 

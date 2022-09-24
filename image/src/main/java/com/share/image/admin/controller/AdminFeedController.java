@@ -1,5 +1,7 @@
 package com.share.image.admin.controller;
 
+import com.share.image.config.exception.ErrorCode;
+import com.share.image.config.exception.GlobalException;
 import com.share.image.feed.domain.Feed;
 import com.share.image.feed.repository.FeedRepository;
 import lombok.RequiredArgsConstructor;
@@ -27,9 +29,9 @@ public class AdminFeedController {
     @GetMapping("/feed/{feedId}")
     public String feedView(@PathVariable(name = "feedId") Long feedId, Model model){
 
-        Feed feed = feedRepository.findById(feedId).orElseThrow(()->{
-            return new IllegalArgumentException("존재하지 않는 피드입니다.");
-        });
+        Feed feed = feedRepository.findById(feedId).orElseThrow(
+                ()-> new GlobalException(ErrorCode.FEED_ERROR)
+        );
 
         model.addAttribute("feed", feed);
 
@@ -43,9 +45,9 @@ public class AdminFeedController {
     public ResponseEntity deleteFeed(@PathVariable(name = "feedId") Long feedId){
 
         try{
-            Feed feed = feedRepository.findById(feedId).orElseThrow(()->{
-                return new IllegalArgumentException("존재하지 않는 피드입니다.");
-            });
+            Feed feed = feedRepository.findById(feedId).orElseThrow(
+                    ()-> new GlobalException(ErrorCode.FEED_ERROR)
+            );
 
             feedRepository.deleteById(feedId);
 

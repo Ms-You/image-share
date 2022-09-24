@@ -1,6 +1,8 @@
 package com.share.image.feed.controller;
 
 import com.share.image.config.PrincipalDetails;
+import com.share.image.config.exception.ErrorCode;
+import com.share.image.config.exception.GlobalException;
 import com.share.image.feed.domain.Feed;
 import com.share.image.feed.domain.Reply;
 import com.share.image.feed.domain.Tag;
@@ -72,13 +74,13 @@ public class FeedController {
             @RequestParam MultipartFile file,
             @RequestParam String tagName) throws UnsupportedEncodingException {
 
-        User user = userRepository.findById(principalDetails.getUser().getId()).orElseThrow(()->{
-            return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
-        });
+        User user = userRepository.findById(principalDetails.getUser().getId()).orElseThrow(
+                ()-> new GlobalException(ErrorCode.USER_ERROR)
+        );
 
-        Tag tag = tagRepository.findByName(tagName).orElseThrow(()->{
-            return new IllegalArgumentException("일치하는 태그명을 찾을 수 없습니다.");
-        });
+        Tag tag = tagRepository.findByName(tagName).orElseThrow(
+                ()-> new GlobalException(ErrorCode.TAG_ERROR)
+        );
 
         // 파일 유효성 검사를 위해 파일명을 dto 에 넣어줌
         feedRequestDto.insertImage(file.getOriginalFilename());
@@ -114,13 +116,13 @@ public class FeedController {
             @PathVariable(name = "feedId") Long feedId,
             Model model){
 
-        User user = userRepository.findById(principalDetails.getUser().getId()).orElseThrow(()->{
-            return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
-        });
+        User user = userRepository.findById(principalDetails.getUser().getId()).orElseThrow(
+                ()-> new GlobalException(ErrorCode.USER_ERROR)
+        );
 
-        Feed feed = feedRepository.findById(feedId).orElseThrow(()->{
-            return new IllegalArgumentException("존재하지 않는 피드입니다.");
-        });
+        Feed feed = feedRepository.findById(feedId).orElseThrow(
+                ()-> new GlobalException(ErrorCode.FEED_ERROR)
+        );
 
         List<Reply> replies = replyRepository.findByFeed(feed);
 
@@ -164,13 +166,13 @@ public class FeedController {
             @PathVariable(name = "feedId") Long feedId,
             Model model){
 
-        User user = userRepository.findById(principalDetails.getUser().getId()).orElseThrow(()->{
-            return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
-        });
+        User user = userRepository.findById(principalDetails.getUser().getId()).orElseThrow(
+                ()-> new GlobalException(ErrorCode.USER_ERROR)
+        );
 
-        Feed feed = feedRepository.findById(feedId).orElseThrow(()->{
-            return new IllegalArgumentException("존재하지 않는 피드입니다.");
-        });
+        Feed feed = feedRepository.findById(feedId).orElseThrow(
+                ()-> new GlobalException(ErrorCode.FEED_ERROR)
+        );
 
         List<Reply> replies = replyRepository.findByFeed(feed);
 
@@ -214,13 +216,13 @@ public class FeedController {
             @PathVariable(name = "feedId") Long feedId,
             Model model){
 
-        User user = userRepository.findById(principalDetails.getUser().getId()).orElseThrow(()->{
-            return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
-        });
+        User user = userRepository.findById(principalDetails.getUser().getId()).orElseThrow(
+                ()-> new GlobalException(ErrorCode.USER_ERROR)
+        );
 
-        Feed feed = feedRepository.findById(feedId).orElseThrow(()->{
-            return new IllegalArgumentException("존재하지 않는 피드입니다.");
-        });
+        Feed feed = feedRepository.findById(feedId).orElseThrow(
+                ()-> new GlobalException(ErrorCode.FEED_ERROR)
+        );
 
         if (user.getId() != feed.getWriter().getId())
             return "feed/exception";
@@ -242,13 +244,13 @@ public class FeedController {
             @RequestParam MultipartFile file,
             @RequestParam String tagName) throws UnsupportedEncodingException {
 
-        Feed feed = feedRepository.findById(feedId).orElseThrow(()->{
-            return new IllegalArgumentException("존재하지 않는 피드입니다.");
-        });
+        Feed feed = feedRepository.findById(feedId).orElseThrow(
+                ()-> new GlobalException(ErrorCode.FEED_ERROR)
+        );
 
-        Tag tag = tagRepository.findByName(tagName).orElseThrow(()->{
-            return new IllegalArgumentException("일치하는 태그명을 찾을 수 없습니다.");
-        });
+        Tag tag = tagRepository.findByName(tagName).orElseThrow(
+                ()-> new GlobalException(ErrorCode.TAG_ERROR)
+        );
 
         // 파일 유효성 검사를 위해 파일명을 dto 에 넣어줌
         feedRequestDto.insertImage(file.getOriginalFilename());
@@ -281,9 +283,9 @@ public class FeedController {
     public ResponseEntity deleteFeed(@PathVariable(name = "feedId") Long feedId){
 
         try {
-            Feed feed = feedRepository.findById(feedId).orElseThrow(()->{
-                return new IllegalArgumentException("존재하지 않는 피드입니다.");
-            });
+            Feed feed = feedRepository.findById(feedId).orElseThrow(
+                    ()-> new GlobalException(ErrorCode.FEED_ERROR)
+            );
 
             feedRepository.deleteById(feedId);
 
@@ -301,9 +303,9 @@ public class FeedController {
             @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
             Model model){
 
-        User user = userRepository.findById(principalDetails.getUser().getId()).orElseThrow(()->{
-            return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
-        });
+        User user = userRepository.findById(principalDetails.getUser().getId()).orElseThrow(
+                ()-> new GlobalException(ErrorCode.USER_ERROR)
+        );
 
         Page<Feed> feeds = feedRepository.findByWriter(user, pageable);
 
@@ -326,9 +328,9 @@ public class FeedController {
             @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
             Model model){
 
-        User user = userRepository.findById(userId).orElseThrow(()->{
-            return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
-        });
+        User user = userRepository.findById(userId).orElseThrow(
+                ()-> new GlobalException(ErrorCode.USER_ERROR)
+        );
 
         Page<Feed> feeds = feedRepository.findByWriter(user, pageable);
 
@@ -373,9 +375,9 @@ public class FeedController {
             @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
             Model model){
 
-        User user = userRepository.findById(principalDetails.getUser().getId()).orElseThrow(()->{
-            return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
-        });
+        User user = userRepository.findById(principalDetails.getUser().getId()).orElseThrow(
+                ()-> new GlobalException(ErrorCode.USER_ERROR)
+        );
 
         int offset = pageable.getPageNumber()*5;
 

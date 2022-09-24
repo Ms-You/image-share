@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<!-- head.html -->
+<th:block th:replace="layout/head::headFragment"></th:block>
+
+<body>
+<section class="page_error">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12 ">
+                <div class="col-sm-10 col-sm-offset-1 text-center">
+                    <h1 class="text-center" th:text="${code}" style="margin-top: 10rem;"></h1>
+                    <h1 class="text-center" th:text="${msg}"></h1>
+                    <div class="four_zero_four_bg"></div>
+
+                    <div class="content_box_error">
+                        <p style="font-size: 40px; margin-top: 3rem;">the page you are looking for not available!</p>
+                        <div sec:authorize="isAnonymous()">
+                            <a th:href="@{/}" class="link_error">Go to Home</a>
+                        </div>
+                        <div sec:authorize="isAuthenticated()">
+                            <a th:href="@{/user}" class="link_error">Go to Home</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>

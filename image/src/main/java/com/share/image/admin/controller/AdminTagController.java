@@ -4,6 +4,8 @@ import com.share.image.admin.dto.TagDtoUpdateValidator;
 import com.share.image.admin.dto.TagDtoValidator;
 import com.share.image.admin.dto.TagRequestDto;
 import com.share.image.admin.service.AdminTagService;
+import com.share.image.config.exception.ErrorCode;
+import com.share.image.config.exception.GlobalException;
 import com.share.image.feed.domain.Feed;
 import com.share.image.feed.domain.Tag;
 import com.share.image.feed.repository.FeedRepository;
@@ -91,9 +93,9 @@ public class AdminTagController {
     @GetMapping("/modifying/tag/{tagId}")
     public String updateTag(@PathVariable(name = "tagId") Long tagId, Model model){
 
-        Tag tag = tagRepository.findById(tagId).orElseThrow(()->{
-            return new IllegalArgumentException("존재하지 않는 태그입니다.");
-        });
+        Tag tag = tagRepository.findById(tagId).orElseThrow(
+                ()-> new GlobalException(ErrorCode.TAG_ERROR)
+        );
         model.addAttribute("tag", tag);
 
         return "admin/tag/update";
@@ -107,9 +109,9 @@ public class AdminTagController {
                             Model model,
                             @RequestParam MultipartFile file) throws UnsupportedEncodingException {
 
-        Tag tag = tagRepository.findById(tagId).orElseThrow(()->{
-            return new IllegalArgumentException("존재하지 않는 태그입니다.");
-        });
+        Tag tag = tagRepository.findById(tagId).orElseThrow(
+                ()-> new GlobalException(ErrorCode.TAG_ERROR)
+        );
 
         // 파일 유효성 검사를 위해 파일명을 dto 에 넣어줌
         tagRequestDto.insertImage(file.getOriginalFilename());
@@ -156,9 +158,9 @@ public class AdminTagController {
     // 피드 모음 페이지로 이동
     @GetMapping("/tag/{tagId}")
     public String feedsOfTag(@PathVariable(name = "tagId") Long tagId, Model model, @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable){
-        Tag tag = tagRepository.findById(tagId).orElseThrow(()->{
-            return new IllegalArgumentException("존재하지 않는 태그입니다.");
-        });
+        Tag tag = tagRepository.findById(tagId).orElseThrow(
+                ()-> new GlobalException(ErrorCode.TAG_ERROR)
+        );
 
         Page<Feed> feeds = feedRepository.findByTag(tag, pageable);
 

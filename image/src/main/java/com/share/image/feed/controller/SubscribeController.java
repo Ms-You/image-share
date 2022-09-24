@@ -1,6 +1,8 @@
 package com.share.image.feed.controller;
 
 import com.share.image.config.PrincipalDetails;
+import com.share.image.config.exception.ErrorCode;
+import com.share.image.config.exception.GlobalException;
 import com.share.image.feed.domain.Feed;
 import com.share.image.feed.domain.Subscribe;
 import com.share.image.feed.repository.FeedRepository;
@@ -39,17 +41,17 @@ public class SubscribeController {
             @PathVariable(name = "toUserId") Long toUserId,
             @PathVariable(name = "feedId") Long feedId) {
 
-        User user = userRepository.findById(principalDetails.getUser().getId()).orElseThrow(()->{
-            return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
-        });
+        User user = userRepository.findById(principalDetails.getUser().getId()).orElseThrow(
+                ()-> new GlobalException(ErrorCode.USER_ERROR)
+        );
 
-        User toUser = userRepository.findById(toUserId).orElseThrow(()->{
-            return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
-        });
+        User toUser = userRepository.findById(toUserId).orElseThrow(
+                ()-> new GlobalException(ErrorCode.USER_ERROR)
+        );
 
-        Feed feed = feedRepository.findById(feedId).orElseThrow(()->{
-            return new IllegalArgumentException("존재하지 않는 피드입니다.");
-        });
+        Feed feed = feedRepository.findById(feedId).orElseThrow(
+                ()-> new GlobalException(ErrorCode.FEED_ERROR)
+        );
 
         subscribeService.subscribe(user.getId(), toUser.getId());
 
@@ -63,17 +65,17 @@ public class SubscribeController {
             @PathVariable(name = "toUserId") Long toUserId,
             @PathVariable(name = "feedId") Long feedId) {
 
-        User user = userRepository.findById(principalDetails.getUser().getId()).orElseThrow(()->{
-            return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
-        });
+        User user = userRepository.findById(principalDetails.getUser().getId()).orElseThrow(
+                ()-> new GlobalException(ErrorCode.USER_ERROR)
+        );
 
-        User toUser = userRepository.findById(toUserId).orElseThrow(()->{
-            return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
-        });
+        User toUser = userRepository.findById(toUserId).orElseThrow(
+                ()-> new GlobalException(ErrorCode.USER_ERROR)
+        );
 
-        Feed feed = feedRepository.findById(feedId).orElseThrow(()->{
-            return new IllegalArgumentException("존재하지 않는 피드입니다.");
-        });
+        Feed feed = feedRepository.findById(feedId).orElseThrow(
+                ()-> new GlobalException(ErrorCode.FEED_ERROR)
+        );
 
         subscribeService.unSubscribe(user.getId(), toUser.getId());
 
@@ -88,9 +90,9 @@ public class SubscribeController {
             @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
             Model model){
 
-        User user = userRepository.findById(principalDetails.getUser().getId()).orElseThrow(()->{
-            return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
-        });
+        User user = userRepository.findById(principalDetails.getUser().getId()).orElseThrow(
+                ()-> new GlobalException(ErrorCode.USER_ERROR)
+        );
 
         Page<Subscribe> subscribes = subscribeService.findSubscribeList(user, pageable);
 
@@ -112,13 +114,13 @@ public class SubscribeController {
             @AuthenticationPrincipal PrincipalDetails principalDetails,
             @PathVariable(name = "userId") Long userId, Model model){
 
-        User user = userRepository.findById(principalDetails.getUser().getId()).orElseThrow(()->{
-            return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
-        });
+        User user = userRepository.findById(principalDetails.getUser().getId()).orElseThrow(
+                ()-> new GlobalException(ErrorCode.USER_ERROR)
+        );
 
-        User toUser = userRepository.findById(userId).orElseThrow(()->{
-            return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
-        });
+        User toUser = userRepository.findById(userId).orElseThrow(
+                ()-> new GlobalException(ErrorCode.USER_ERROR)
+        );
 
         // 구독 상태 변경
         if (subscribeService.isUserSubscribe(toUser, user))
@@ -137,13 +139,13 @@ public class SubscribeController {
             @AuthenticationPrincipal PrincipalDetails principalDetails,
             @PathVariable(name = "toUserId") Long toUserId) {
 
-        User user = userRepository.findById(principalDetails.getUser().getId()).orElseThrow(()->{
-            return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
-        });
+        User user = userRepository.findById(principalDetails.getUser().getId()).orElseThrow(
+                ()-> new GlobalException(ErrorCode.USER_ERROR)
+        );
 
-        User toUser = userRepository.findById(toUserId).orElseThrow(()->{
-            return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
-        });
+        User toUser = userRepository.findById(toUserId).orElseThrow(
+                ()-> new GlobalException(ErrorCode.USER_ERROR)
+        );
 
         subscribeService.subscribe(user.getId(), toUser.getId());
 
@@ -156,13 +158,13 @@ public class SubscribeController {
             @AuthenticationPrincipal PrincipalDetails principalDetails,
             @PathVariable(name = "toUserId") Long toUserId) {
 
-        User user = userRepository.findById(principalDetails.getUser().getId()).orElseThrow(()->{
-            return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
-        });
+        User user = userRepository.findById(principalDetails.getUser().getId()).orElseThrow(
+                ()-> new GlobalException(ErrorCode.USER_ERROR)
+        );
 
-        User toUser = userRepository.findById(toUserId).orElseThrow(()->{
-            return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
-        });
+        User toUser = userRepository.findById(toUserId).orElseThrow(
+                ()-> new GlobalException(ErrorCode.USER_ERROR)
+        );
 
         subscribeService.unSubscribe(user.getId(), toUser.getId());
 
@@ -175,13 +177,13 @@ public class SubscribeController {
             @AuthenticationPrincipal PrincipalDetails principalDetails,
             @PathVariable(name = "toUserId") Long toUserId) {
 
-        User user = userRepository.findById(principalDetails.getUser().getId()).orElseThrow(()->{
-            return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
-        });
+        User user = userRepository.findById(principalDetails.getUser().getId()).orElseThrow(
+                ()-> new GlobalException(ErrorCode.USER_ERROR)
+        );
 
-        User toUser = userRepository.findById(toUserId).orElseThrow(()->{
-            return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
-        });
+        User toUser = userRepository.findById(toUserId).orElseThrow(
+                ()-> new GlobalException(ErrorCode.USER_ERROR)
+        );
 
         subscribeService.subscribe(user.getId(), toUser.getId());
 
@@ -194,13 +196,13 @@ public class SubscribeController {
             @AuthenticationPrincipal PrincipalDetails principalDetails,
             @PathVariable(name = "toUserId") Long toUserId) {
 
-        User user = userRepository.findById(principalDetails.getUser().getId()).orElseThrow(()->{
-            return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
-        });
+        User user = userRepository.findById(principalDetails.getUser().getId()).orElseThrow(
+                ()-> new GlobalException(ErrorCode.USER_ERROR)
+        );
 
-        User toUser = userRepository.findById(toUserId).orElseThrow(()->{
-            return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
-        });
+        User toUser = userRepository.findById(toUserId).orElseThrow(
+                ()-> new GlobalException(ErrorCode.USER_ERROR)
+        );
 
         subscribeService.unSubscribe(user.getId(), toUser.getId());
 

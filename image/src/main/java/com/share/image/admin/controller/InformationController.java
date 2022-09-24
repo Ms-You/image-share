@@ -7,6 +7,8 @@ import com.share.image.admin.dto.InfoRequestDto;
 import com.share.image.admin.repository.InformationRepository;
 import com.share.image.admin.service.InformationService;
 import com.share.image.config.PrincipalDetails;
+import com.share.image.config.exception.ErrorCode;
+import com.share.image.config.exception.GlobalException;
 import com.share.image.user.domain.User;
 import com.share.image.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -78,9 +80,9 @@ public class InformationController {
             BindingResult bindingResult, Model model,
             @RequestParam MultipartFile file) throws UnsupportedEncodingException {
 
-        User writer = userRepository.findById(principalDetails.getUser().getId()).orElseThrow(()->{
-            return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다");
-        });
+        User writer = userRepository.findById(principalDetails.getUser().getId()).orElseThrow(
+                ()-> new GlobalException(ErrorCode.USER_ERROR)
+        );
 
         infoDtoValidator.validate(infoRequestDto, bindingResult);
 
@@ -105,9 +107,9 @@ public class InformationController {
     @GetMapping("/info/{informationId}")
     public String infoView(@PathVariable(name = "informationId") Long informationId, Model model){
 
-        Information info = informationRepository.findById(informationId).orElseThrow(()->{
-            return new IllegalArgumentException("공지를 찾을 수 없습니다.");
-        });
+        Information info = informationRepository.findById(informationId).orElseThrow(
+                ()-> new GlobalException(ErrorCode.RESOURCE_ERROR)
+        );
 
         model.addAttribute("info", info);
 
@@ -119,9 +121,9 @@ public class InformationController {
     @GetMapping("/modifying/info/{informationId}")
     public String updateInfo(@PathVariable(name = "informationId") Long informationId, Model model){
 
-        Information info = informationRepository.findById(informationId).orElseThrow(()->{
-            return new IllegalArgumentException("공지를 찾을 수 없습니다.");
-        });
+        Information info = informationRepository.findById(informationId).orElseThrow(
+                ()-> new GlobalException(ErrorCode.RESOURCE_ERROR)
+        );
 
         model.addAttribute("info", info);
         model.addAttribute("infoRequestDto", new InfoRequestDto());
@@ -138,9 +140,9 @@ public class InformationController {
             BindingResult bindingResult, Model model,
             @RequestParam MultipartFile file) throws UnsupportedEncodingException {
 
-        Information info = informationRepository.findById(informationId).orElseThrow(()->{
-            return new IllegalArgumentException("공지를 찾을 수 없습니다.");
-        });
+        Information info = informationRepository.findById(informationId).orElseThrow(
+                ()-> new GlobalException(ErrorCode.RESOURCE_ERROR)
+        );
 
         infoDtoValidator.validate(infoRequestDto, bindingResult);
 

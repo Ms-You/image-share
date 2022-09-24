@@ -1,6 +1,8 @@
 package com.share.image.feed.controller;
 
 import com.share.image.config.PrincipalDetails;
+import com.share.image.config.exception.ErrorCode;
+import com.share.image.config.exception.GlobalException;
 import com.share.image.feed.domain.Feed;
 import com.share.image.feed.domain.Reply;
 import com.share.image.feed.dto.ReplyRequestDto;
@@ -46,13 +48,13 @@ public class ReplyController {
             Errors errors,
             Model model) {
 
-        User user = userRepository.findById(principalDetails.getUser().getId()).orElseThrow(()->{
-            return new UsernameNotFoundException("일치하는 사용자를 찾을 수 없습니다.");
-        });
+        User user = userRepository.findById(principalDetails.getUser().getId()).orElseThrow(
+                ()-> new GlobalException(ErrorCode.USER_ERROR)
+        );
 
-        Feed feed = feedRepository.findById(feedId).orElseThrow(()->{
-            return new IllegalArgumentException("존재하지 않는 피드입니다.");
-        });
+        Feed feed = feedRepository.findById(feedId).orElseThrow(
+                ()-> new GlobalException(ErrorCode.FEED_ERROR)
+        );
 
         List<Reply> replies = replyRepository.findByFeed(feed);
         // 댓글별 좋아요 변경
@@ -90,9 +92,9 @@ public class ReplyController {
     public ResponseEntity deleteReply(@PathVariable(name = "replyId") Long replyId){
 
         try{
-            Reply reply = replyRepository.findById(replyId).orElseThrow(()->{
-                return new IllegalArgumentException("존재하지 않는 댓글입니다.");
-            });
+            Reply reply = replyRepository.findById(replyId).orElseThrow(
+                    ()-> new GlobalException(ErrorCode.REPLY_ERROR)
+            );
 
             replyRepository.delete(reply);
 

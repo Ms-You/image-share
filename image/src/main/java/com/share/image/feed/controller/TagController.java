@@ -1,5 +1,7 @@
 package com.share.image.feed.controller;
 
+import com.share.image.config.exception.ErrorCode;
+import com.share.image.config.exception.GlobalException;
 import com.share.image.feed.domain.Feed;
 import com.share.image.feed.domain.Tag;
 import com.share.image.feed.repository.FeedRepository;
@@ -43,9 +45,9 @@ public class TagController {
             @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
             Model model){
 
-        Tag tag = tagRepository.findById(tagId).orElseThrow(()->{
-            return new IllegalArgumentException("존재하지 않는 태그입니다.");
-        });
+        Tag tag = tagRepository.findById(tagId).orElseThrow(
+                ()-> new GlobalException(ErrorCode.TAG_ERROR)
+        );
 
         Page<Feed> feeds = feedRepository.findByTag(tag, pageable);
 
