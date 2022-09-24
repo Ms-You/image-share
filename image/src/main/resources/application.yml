@@ -6,6 +6,14 @@ server:
       enabled: true
       force: true
 
+  error:
+    include-exception: true
+    include-message: always
+    include-binding-errors: always
+    include-stacktrace: always
+    whitelabel:
+      enabled: false
+
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -14,6 +22,8 @@ spring:
     password: root
 
   mvc:
+    throw-exception-if-no-handler-found: true
+    dispatch-options-request: false
     hiddenmethod:
       filter:
         enabled: true
