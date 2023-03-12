@@ -1,5 +1,7 @@
 package com.share.image.feed.service;
 
+import com.share.image.config.exception.ErrorCode;
+import com.share.image.config.exception.GlobalException;
 import com.share.image.feed.domain.Feed;
 import com.share.image.feed.domain.Report;
 import com.share.image.feed.dto.ReportRequestDto;
@@ -36,6 +38,10 @@ public class ReportService {
     }
 
     public void reportingFeed(User fromUser, Feed feed, ReportRequestDto reportRequestDto){
+        if (reportRepository.findByFromUserAndToUser(fromUser, feed.getWriter()).isPresent()){
+            // 추후 alert 등으로 변경
+            throw new GlobalException(ErrorCode.DUPLICATE_REPORT);
+        }
         Report report = Report.createReport(fromUser, feed.getWriter(), feed, reportRequestDto.getReportType().name(), reportRequestDto.getContent());
 
         reportRepository.save(report);

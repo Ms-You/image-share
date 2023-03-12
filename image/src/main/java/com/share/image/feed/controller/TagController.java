@@ -42,7 +42,7 @@ public class TagController {
     @GetMapping("/tag/{tagId}")
     public String feedsOfTag(
             @PathVariable(name = "tagId") Long tagId,
-            @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
+            @PageableDefault(size = 20, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
             Model model){
 
         Tag tag = tagRepository.findById(tagId).orElseThrow(

@@ -35,6 +35,8 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
+	implementation group: 'org.springframework.security', name: 'spring-security-config', version: '5.7.3'
+
 }
 
 tasks.named('test') {
