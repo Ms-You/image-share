@@ -15,36 +15,19 @@ import java.util.List;
 public interface FeedRepository extends JpaRepository<Feed, Long> {
     Page<Feed> findByTag(Tag tag, Pageable pageable);
 
-    @Query(value = "select feed_id from Feed where feed_id = (select MIN(feed_id) from Feed where feed_id > :feedId and tag_id = :tagId)", nativeQuery = true)
+    @Query(value = "select f.id from Feed f where f.id = (select MIN(f.id) from Feed f where f.id > :feedId and f.tag.id = :tagId)")
     Long lagFeedId(@Param(value = "feedId") Long feedId, @Param(value = "tagId") Long tagId);
 
-    @Query(value = "select feed_id from Feed where feed_id = (select MAX(feed_id) from Feed where feed_id < :feedId and tag_id = :tagId)", nativeQuery = true)
+    @Query(value = "select f.id from Feed f where f.id = (select MAX(f.id) from Feed f where f.id < :feedId and f.tag.id = :tagId)")
     Long leadFeedId(@Param(value = "feedId") Long feedId, @Param(value = "tagId") Long tagId);
 
-    @Query(value = "select feed_id from Feed where feed_id = (select MIN(feed_id) from Feed where feed_id > :feedId and user_id = :userId)", nativeQuery = true)
+    @Query(value = "select f.id from Feed f where f.id = (select MIN(f.id) from Feed f where f.id > :feedId and f.writer.id = :userId)")
     Long toUsersLagFeedId(@Param(value = "feedId") Long feedId, @Param(value = "userId") Long userId);
 
-    @Query(value = "select feed_id from Feed where feed_id = (select MAX(feed_id) from Feed where feed_id < :feedId and user_id = :userId)", nativeQuery = true)
+    @Query(value = "select f.id from Feed f where f.id = (select MAX(f.id) from Feed f where f.id < :feedId and f.writer.id = :userId)")
     Long toUsersLeadFeedId(@Param(value = "feedId") Long feedId, @Param(value = "userId") Long userId);
 
     Page<Feed> findByTitleContaining(String keyword, Pageable pageable);
-    @Query(value = "select feed_id from Views group by feed_id order by count(feed_id) desc, feed_id desc limit 5 offset :offset", nativeQuery = true)
-    List<Long> findFeedIdByViewsDesc(@Param(value = "offset") int offset);
-
-    @Query(value = "select feed_id from Feed_like group by feed_id order by count(feed_id) desc, feed_id desc limit 5 offset :offset", nativeQuery = true)
-    List<Long> findFeedIdByLikesDesc(@Param(value = "offset") int offset);
-
-    @Query(value = "select feed_id from Feed order by createdDate desc limit 5 offset :offset", nativeQuery = true)
-    List<Long> findFeedIdByCreatedDateDesc(@Param(value = "offset") int offset);
-
-    @Query(value = "select feed_id from Feed_like where user_id = :userId group by feed_id order by count(feed_id) desc, feed_id desc limit 5 offset :offset", nativeQuery = true)
-    List<Long> findFeedIdByUserIdAndLikesDesc(@Param(value = "userId") Long userId, @Param(value = "offset") int offset);
-
-    @Query(value = "select feed_id from Feed_like where user_id = :userId", nativeQuery = true)
-    List<Long> findSizeOfFeedByUserId(@Param(value = "userId") Long userId);
-
-    @Query(value = "select user_id from Feed where feed_id = :feedId", nativeQuery = true)
-    Long findUserIdByFeedId(@Param(value = "feedId") Long feedId);
 
     Page<Feed> findByWriter(User writer, Pageable pageable);
 }

@@ -89,7 +89,7 @@
             </div>
 
             <!--  이전 피드로 이동  -->
-            <a th:href="@{/user/subscribed/feed/{id}(id=${prevFeed})}">
+            <a th:href="@{/user/subscription/feed/{id}(id=${prevFeed})}">
                 <div th:if="${not #strings.isEmpty(prevFeed)}">
                     <button class="carousel-control-next" type="button" data-bs-slide="next">❯</button>
                 </div>
@@ -98,7 +98,7 @@
                 </div>
             </a>
             <!--  다음 피드로 이동  -->
-            <a th:href="@{/user/subscribed/feed/{id}(id=${nextFeed})}">
+            <a th:href="@{/user/subscription/feed/{id}(id=${nextFeed})}">
                 <div th:if="${not #strings.isEmpty(nextFeed)}">
                     <button class="carousel-control-prev" type="button" data-bs-slide="prev">❮</button>
                 </div>

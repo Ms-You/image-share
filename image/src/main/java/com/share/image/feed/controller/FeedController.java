@@ -8,10 +8,7 @@ import com.share.image.feed.domain.Reply;
 import com.share.image.feed.domain.Tag;
 import com.share.image.feed.dto.FeedDtoValidator;
 import com.share.image.feed.dto.FeedRequestDto;
-import com.share.image.feed.repository.FeedLikeRepository;
-import com.share.image.feed.repository.FeedRepository;
-import com.share.image.feed.repository.ReplyRepository;
-import com.share.image.feed.repository.TagRepository;
+import com.share.image.feed.repository.*;
 import com.share.image.feed.service.*;
 import com.share.image.user.domain.User;
 import com.share.image.user.repository.UserRepository;
@@ -30,12 +27,10 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -52,6 +47,7 @@ public class FeedController {
     private final ReplyLikeService replyLikeService;
     private final SubscribeService subscribeService;
     private final FeedRepository feedRepository;
+    private final FeedQueries feedQueries;
     private final TagRepository tagRepository;
     private final UserRepository userRepository;
 
@@ -211,7 +207,7 @@ public class FeedController {
                 ()-> new GlobalException(ErrorCode.USER_ERROR)
         );
 
-        Feed feed = feedRepository.findById(feedId).orElseThrow(
+        Feed feed = feedQueries.findById(feedId).orElseThrow(
                 ()-> new GlobalException(ErrorCode.FEED_ERROR)
         );
 
@@ -235,7 +231,7 @@ public class FeedController {
             @RequestParam MultipartFile file,
             @RequestParam String tagName) throws UnsupportedEncodingException {
 
-        Feed feed = feedRepository.findById(feedId).orElseThrow(
+        Feed feed = feedQueries.findById(feedId).orElseThrow(
                 ()-> new GlobalException(ErrorCode.FEED_ERROR)
         );
 
@@ -274,11 +270,11 @@ public class FeedController {
     public ResponseEntity deleteFeed(@PathVariable(name = "feedId") Long feedId){
 
         try {
-            Feed feed = feedRepository.findById(feedId).orElseThrow(
+            Feed feed = feedQueries.findById(feedId).orElseThrow(
                     ()-> new GlobalException(ErrorCode.FEED_ERROR)
             );
 
-            feedRepository.deleteById(feedId);
+            feedQueries.delete(feed);
 
             return new ResponseEntity(feed.getTag().getId(), HttpStatus.OK);
         } catch (Exception e){
@@ -372,15 +368,10 @@ public class FeedController {
 
         int offset = pageable.getPageNumber()*5;
 
-        List<Long> findIds = feedRepository.findFeedIdByUserIdAndLikesDesc(user.getId(), offset);
-        List<Feed> findFeeds = new ArrayList<>();
-
-        for (Long id: findIds){
-            findFeeds.add(feedRepository.findById(id).orElseGet(null));
-        }
+        List<Feed> findFeeds = feedQueries.findByUserAndLikesDesc(user, offset);
 
         // totalPages 를 알아오기 위해 사용
-        List<Long> feedSize = feedRepository.findSizeOfFeedByUserId(user.getId());
+        List<Long> feedSize = feedQueries.findSizeOfFeedByUser(user);
 
         int totalPages = (int)(Math.ceil(feedSize.size() * 1.0 / 5));
 
@@ -407,23 +398,18 @@ public class FeedController {
         int offset = pageable.getPageNumber()*5;
         int totalFeedsCount = feedRepository.findAll().size(); // 총 게시물 수를 알아옴
 
-        List<Long> findIds;
-        List<Feed> findFeeds = new ArrayList<>();
+        List<Feed> findFeeds;
         if (searchType.equals("최신순")) {
-            findIds = feedRepository.findFeedIdByCreatedDateDesc(offset);
+            findFeeds = feedQueries.findByCreatedDateDesc(offset);
             model.addAttribute("searchType", "최신순");
         }
         else if (searchType.equals("조회수 순")) {
-            findIds = feedRepository.findFeedIdByViewsDesc(offset);
+            findFeeds = feedQueries.findByViewDesc(offset);
             model.addAttribute("searchType", "조회수 순");
         }
         else {
-            findIds = feedRepository.findFeedIdByLikesDesc(offset);
+            findFeeds = feedQueries.findByLikesDesc(offset);
             model.addAttribute("searchType", "좋아요 순");
-        }
-
-        for (Long id: findIds){
-            findFeeds.add(feedRepository.findById(id).orElseGet(null));
         }
 
         int totalPages = (int)(Math.ceil(totalFeedsCount * 1.0 / 5));
