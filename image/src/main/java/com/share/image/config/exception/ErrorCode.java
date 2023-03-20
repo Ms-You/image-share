@@ -10,6 +10,13 @@ import static org.springframework.http.HttpStatus.*;
 @AllArgsConstructor
 public enum ErrorCode {
     /* 400 BAD_REQUEST : 잘못된 요청 */
+    RESOURCE_ERROR(BAD_REQUEST, "해당 정보를 찾을 수 없습니다"),
+    USER_ERROR(BAD_REQUEST, "해당 사용자 정보를 찾을 수 없습니다"),
+    FEED_ERROR(BAD_REQUEST, "해당 피드 정보를 찾을 수 없습니다"),
+    FEED_LIKE_ERROR(BAD_REQUEST, "해당 피드 좋아요 정보를 찾을 수 없습니다."),
+    TAG_ERROR(BAD_REQUEST, "해당 태그 정보를 찾을 수 없습니다"),
+    REPLY_ERROR(BAD_REQUEST, "해당 댓글 정보를 찾을 수 없습니다"),
+
     INVALID_REFRESH_TOKEN(BAD_REQUEST, "리프레시 토큰이 유효하지 않습니다"),
     MISMATCH_REFRESH_TOKEN(BAD_REQUEST, "리프레시 토큰의 유저 정보가 일치하지 않습니다"),
     CANNOT_SUBSCRIBE_MYSELF(BAD_REQUEST, "자기 자신은 구독 할 수 없습니다"),
@@ -29,11 +36,6 @@ public enum ErrorCode {
     /* 500 INTERNAL_SERVER_ERROR */
     SERVER_ERROR(INTERNAL_SERVER_ERROR, "서버가 응답하지 않습니다"),
     SQL_ERROR(INTERNAL_SERVER_ERROR, "DB 접속 오류가 발생했습니다"),
-    RESOURCE_ERROR(INTERNAL_SERVER_ERROR, "해당 정보를 찾을 수 없습니다"),
-    USER_ERROR(INTERNAL_SERVER_ERROR, "해당 사용자 정보를 찾을 수 없습니다"),
-    FEED_ERROR(INTERNAL_SERVER_ERROR, "해당 피드 정보를 찾을 수 없습니다"),
-    TAG_ERROR(INTERNAL_SERVER_ERROR, "해당 태그 정보를 찾을 수 없습니다"),
-    REPLY_ERROR(INTERNAL_SERVER_ERROR, "해당 댓글 정보를 찾을 수 없습니다"),
     ;
 
 
