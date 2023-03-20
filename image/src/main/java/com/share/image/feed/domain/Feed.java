@@ -28,6 +28,8 @@ public class Feed extends BaseTimeEntity {
 
     private String feedImageUrl;
 
+    private int view;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User writer;
@@ -41,9 +43,6 @@ public class Feed extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "feed", cascade = CascadeType.ALL)
     private List<Reply> replies = new ArrayList<>();
-
-    @OneToMany(mappedBy = "feed", cascade = CascadeType.ALL)
-    private List<View> views = new ArrayList<>();
 
     @OneToMany(mappedBy = "feed", cascade = CascadeType.ALL)
     private List<Report> reports = new ArrayList<>();
@@ -69,6 +68,10 @@ public class Feed extends BaseTimeEntity {
 
     public void updateFeedImageUrl(String feedImageUrl){
         this.feedImageUrl = feedImageUrl;
+    }
+
+    public void increaseView(){
+        this.view++;
     }
 
 }

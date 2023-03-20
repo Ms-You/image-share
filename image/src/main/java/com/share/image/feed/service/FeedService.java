@@ -1,5 +1,7 @@
 package com.share.image.feed.service;
 
+import com.share.image.config.exception.ErrorCode;
+import com.share.image.config.exception.GlobalException;
 import com.share.image.feed.domain.Feed;
 import com.share.image.feed.domain.Tag;
 import com.share.image.feed.dto.FeedRequestDto;
@@ -14,6 +16,9 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -47,12 +52,12 @@ public class FeedService {
     @Value("${feedImg.path}")
     private String uploadFolder;
 
-    public Feed createFeed(User user, FeedRequestDto feedRequestDto, Tag tag, MultipartFile multipartFile) throws UnsupportedEncodingException {
+    public void createFeed(User user, FeedRequestDto feedRequestDto, Tag tag, MultipartFile multipartFile) throws UnsupportedEncodingException {
 
         Feed feed = Feed.createFeed(user, feedRequestDto, tag);
         updateFeedImage(user, feed, multipartFile);
 
-        return feedRepository.save(feed);
+        feedRepository.save(feed);
     }
 
 
@@ -85,6 +90,49 @@ public class FeedService {
             }
             feed.updateFeedImageUrl(fileName);
         }
+    }
+
+    // 피드 조회수 증가 로직
+    public Feed adjustViewCnt(Long feedId, HttpServletRequest req, HttpServletResponse resp){
+        Feed feed = feedRepository.findById(feedId).orElseThrow(
+                ()-> new GlobalException(ErrorCode.FEED_ERROR)
+        );
+
+        Cookie[] cookies = req.getCookies();
+        Cookie cookie = null;
+        boolean flag = false;
+
+        int idx = 0;
+        while(idx < cookies.length && cookies != null){
+            // 조회수 관련 쿠키가 있을 때
+            if (cookies[idx].getName().equals("feedView")) {
+                // cookie에 저장
+                cookie = cookies[idx];
+
+                // 안 본 피드일 때 조회수 증가
+                if (!cookie.getValue().contains("[" + feed.getId() + "]")){
+                    feed.increaseView();
+                    cookie.setValue(cookie.getValue() + "[" + feed.getId() + "]");
+                }
+                flag = true;
+                break;
+            }
+            idx++;
+        }
+
+        // feedView 쿠키가 없으면 새로 생성
+        if (!flag){
+            feed.increaseView();
+            cookie = new Cookie("feedView", "[" + feed.getId() + "]");
+        }
+
+        feedRepository.save(feed);
+
+        cookie.setPath("/");
+        cookie.setMaxAge(60 * 60 * 24);
+        resp.addCookie(cookie);
+
+        return feed;
     }
 
 }

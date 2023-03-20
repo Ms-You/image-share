@@ -23,13 +23,15 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -45,7 +47,6 @@ public class FeedController {
     private final FeedDtoValidator feedDtoValidator;
     private final FeedService feedService;
     private final ReplyRepository replyRepository;
-    private final ViewService viewService;
     private final FeedLikeService feedLikeService;
     private final ReplyLikeService replyLikeService;
     private final SubscribeService subscribeService;
@@ -99,10 +100,7 @@ public class FeedController {
             return "feed/create";
         }
 
-        Feed feed = feedService.createFeed(user, feedRequestDto, tag, file);
-
-        // 피드 작성자는 피드 봤다고 침
-        viewService.viewFeed(feed.getId(), user.getId());
+        feedService.createFeed(user, feedRequestDto, tag, file);
 
         return "redirect:/user";
 
@@ -112,6 +110,8 @@ public class FeedController {
     // 특정 피드 보기
     @GetMapping("/feed/{feedId}")
     public String feedView(
+            HttpServletRequest request,
+            HttpServletResponse response,
             @AuthenticationPrincipal PrincipalDetails principalDetails,
             @PathVariable(name = "feedId") Long feedId,
             Model model){
@@ -120,9 +120,7 @@ public class FeedController {
                 ()-> new GlobalException(ErrorCode.USER_ERROR)
         );
 
-        Feed feed = feedRepository.findById(feedId).orElseThrow(
-                ()-> new GlobalException(ErrorCode.FEED_ERROR)
-        );
+        Feed feed = feedService.adjustViewCnt(feedId, request, response);
 
         List<Reply> replies = replyRepository.findByFeed(feed);
 
@@ -145,10 +143,6 @@ public class FeedController {
             else
                 reply.updateReplyLikeStatus("/img/empty_heart.png");
         }
-
-        // 피드를 안 본 경우 조회수 1 증가
-        if (viewService.isUserViewFeed(user, feed))
-            viewService.viewFeed(feed.getId(), user.getId());
 
         model.addAttribute("prevFeed", feedRepository.leadFeedId(feed.getId(), feed.getTag().getId()));
         model.addAttribute("nextFeed", feedRepository.lagFeedId(feed.getId(), feed.getTag().getId()));
@@ -162,6 +156,8 @@ public class FeedController {
     // 구독한 사용자의 피드 보기 (prevFeed, nextFeed 때문에 생성)
     @GetMapping("/subscription/feed/{feedId}")
     public String subscribedFeedView(
+            HttpServletRequest request,
+            HttpServletResponse response,
             @AuthenticationPrincipal PrincipalDetails principalDetails,
             @PathVariable(name = "feedId") Long feedId,
             Model model){
@@ -170,9 +166,7 @@ public class FeedController {
                 ()-> new GlobalException(ErrorCode.USER_ERROR)
         );
 
-        Feed feed = feedRepository.findById(feedId).orElseThrow(
-                ()-> new GlobalException(ErrorCode.FEED_ERROR)
-        );
+        Feed feed = feedService.adjustViewCnt(feedId, request, response);
 
         List<Reply> replies = replyRepository.findByFeed(feed);
 
@@ -195,10 +189,6 @@ public class FeedController {
             else
                 reply.updateReplyLikeStatus("/img/empty_heart.png");
         }
-
-        // 피드를 안 본 경우 조회수 1 증가
-        if (viewService.isUserViewFeed(user, feed))
-            viewService.viewFeed(feed.getId(), user.getId());
 
         model.addAttribute("prevFeed", feedRepository.toUsersLeadFeedId(feed.getId(), feed.getWriter().getId()));
         model.addAttribute("nextFeed", feedRepository.toUsersLagFeedId(feed.getId(), feed.getWriter().getId()));

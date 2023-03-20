@@ -84,7 +84,7 @@
                 <!--  구독 end  -->
             </div>
             <h6 th:text="${#temporals.format(feed.createdDate, 'yyyy-MM-dd')}"></h6>
-            조회수: <span th:text="${#lists.size(feed.views)}"></span>
+            조회수: <span th:text="${feed.view}"></span>
             <a th:href="@{/user/tag/{id}(id=${feed.tag.id})}">
                 <div th:text="${feed.tag.name}" style="color: orange;"></div>
             </a>

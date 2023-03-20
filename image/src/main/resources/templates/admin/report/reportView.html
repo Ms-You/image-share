@@ -37,7 +37,7 @@
                     <td th:text="${report.content}" style="width: 30%;"></td>
                     <td th:text="${report.fromUser.nickName}"></td>
                     <td th:text="${report.toUser.nickName}"></td>
-                    <td th:text="${#temporals.format(report.reportDate, 'yyyy-MM-dd')}"></td>
+                    <td th:text="${#temporals.format(report.createdDate, 'yyyy-MM-dd')}"></td>
                     <td>
                         <button type="button" class="button btnPush btnRed" th:id="'temporaryAccount'+${report.toUser.id}" th:onclick="temporarySuspendAccount('[[${report.toUser.id}]]')" th:text="${report.toUser.temporaryLocked}"></button>
                     </td>

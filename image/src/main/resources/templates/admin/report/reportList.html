@@ -50,7 +50,7 @@
                         <img th:src="@{/feed_imgs/} + ${report.feed.feedImageUrl}" style="border-radius: 100%; width: 80px; height: 80px;" />
                     </a>
                 </td>
-                <td th:text="${#temporals.format(report.reportDate, 'yyyy-MM-dd')}"></td>
+                <td th:text="${#temporals.format(report.createdDate, 'yyyy-MM-dd')}"></td>
             </tr>
             </tbody>
         </table>
