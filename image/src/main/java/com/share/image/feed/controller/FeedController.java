@@ -122,7 +122,7 @@ public class FeedController {
         List<Reply> replies = replyRepository.findByFeed(feed);
 
         // 구독 상태 변경
-        if (subscribeService.isUserSubscribe(feed.getWriter(), user))
+        if (subscribeService.isSubscribe(user, feed.getWriter()))
             model.addAttribute("subscribeStatus", "/img/do_sub.png");
         else
             model.addAttribute("subscribeStatus", "/img/un_sub.png");
@@ -168,7 +168,7 @@ public class FeedController {
         List<Reply> replies = replyRepository.findByFeed(feed);
 
         // 구독 상태 변경
-        if (subscribeService.isUserSubscribe(feed.getWriter(), user))
+        if (subscribeService.isSubscribe(user, feed.getWriter()))
             model.addAttribute("subscribeStatus", "/img/do_sub.png");
         else
             model.addAttribute("subscribeStatus", "/img/un_sub.png");

@@ -29,4 +29,15 @@ public class Subscribe {
     @JoinColumn(name = "to_user_id")
     private User toUser;    // 구독을 받는 유저
 
+
+    public static Subscribe create(User fromUser, User toUser){
+        Subscribe subscribe = new Subscribe();
+        subscribe.fromUser = fromUser;
+        subscribe.toUser = toUser;
+
+        fromUser.getSubscribes().add(subscribe);
+
+        return subscribe;
+    }
+
 }

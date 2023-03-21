@@ -17,6 +17,7 @@ public enum ErrorCode {
     TAG_ERROR(BAD_REQUEST, "해당 태그 정보를 찾을 수 없습니다"),
     REPLY_ERROR(BAD_REQUEST, "해당 댓글 정보를 찾을 수 없습니다"),
     REPLY_LIKE_ERROR(BAD_REQUEST, "해당 댓글 좋아요 정보를 찾을 수 없습니다."),
+    SUBSCRIBE_ERROR(BAD_REQUEST, "구독 정보를 찾을 수 없습니다."),
 
     INVALID_REFRESH_TOKEN(BAD_REQUEST, "리프레시 토큰이 유효하지 않습니다"),
     MISMATCH_REFRESH_TOKEN(BAD_REQUEST, "리프레시 토큰의 유저 정보가 일치하지 않습니다"),

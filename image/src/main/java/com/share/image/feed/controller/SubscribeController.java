@@ -16,7 +16,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -53,7 +52,7 @@ public class SubscribeController {
                 ()-> new GlobalException(ErrorCode.FEED_ERROR)
         );
 
-        subscribeService.subscribe(user.getId(), toUser.getId());
+        subscribeService.createSubscribe(user, toUser);
 
         return "redirect:/user/feed/" + feed.getId();
     }
@@ -77,7 +76,7 @@ public class SubscribeController {
                 ()-> new GlobalException(ErrorCode.FEED_ERROR)
         );
 
-        subscribeService.unSubscribe(user.getId(), toUser.getId());
+        subscribeService.deleteSubscribe(user, toUser);
 
         return "redirect:/user/feed/" + feed.getId();
     }
@@ -94,7 +93,7 @@ public class SubscribeController {
                 ()-> new GlobalException(ErrorCode.USER_ERROR)
         );
 
-        Page<Subscribe> subscribes = subscribeService.findSubscribeList(user, pageable);
+        Page<Subscribe> subscribes = subscribeService.subscribePage(user, pageable);
 
         int startPage = (int) (Math.floor(pageable.getPageNumber() / pageable.getPageSize()) * pageable.getPageSize() + 1);
         int tempEndPage = startPage + pageable.getPageSize() - 1;
@@ -123,7 +122,7 @@ public class SubscribeController {
         );
 
         // 구독 상태 변경
-        if (subscribeService.isUserSubscribe(toUser, user))
+        if (subscribeService.isSubscribe(user, toUser))
             model.addAttribute("subscribeStatus", "/img/do_sub.png");
         else
             model.addAttribute("subscribeStatus", "/img/un_sub.png");
@@ -147,7 +146,7 @@ public class SubscribeController {
                 ()-> new GlobalException(ErrorCode.USER_ERROR)
         );
 
-        subscribeService.subscribe(user.getId(), toUser.getId());
+        subscribeService.createSubscribe(user, toUser);
 
         return "redirect:/user/toUser/" + toUser.getId();
     }
@@ -166,7 +165,7 @@ public class SubscribeController {
                 ()-> new GlobalException(ErrorCode.USER_ERROR)
         );
 
-        subscribeService.unSubscribe(user.getId(), toUser.getId());
+        subscribeService.deleteSubscribe(user, toUser);
 
         return "redirect:/user/toUser/" + toUser.getId();
     }
@@ -185,7 +184,7 @@ public class SubscribeController {
                 ()-> new GlobalException(ErrorCode.USER_ERROR)
         );
 
-        subscribeService.subscribe(user.getId(), toUser.getId());
+        subscribeService.createSubscribe(user, toUser);
 
         return "redirect:/user/" + toUser.getId();
     }
@@ -204,7 +203,7 @@ public class SubscribeController {
                 ()-> new GlobalException(ErrorCode.USER_ERROR)
         );
 
-        subscribeService.unSubscribe(user.getId(), toUser.getId());
+        subscribeService.deleteSubscribe(user, toUser);
 
         return "redirect:/user/" + toUser.getId();
     }
