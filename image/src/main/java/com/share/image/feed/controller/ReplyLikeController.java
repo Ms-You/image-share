@@ -7,8 +7,8 @@ import com.share.image.feed.domain.Feed;
 import com.share.image.feed.domain.Reply;
 import com.share.image.feed.domain.ReplyLike;
 import com.share.image.feed.repository.FeedRepository;
-import com.share.image.feed.repository.ReplyLikeRepository;
 import com.share.image.feed.repository.ReplyRepository;
+import com.share.image.feed.service.ReplyLikeService;
 import com.share.image.user.domain.User;
 import com.share.image.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +28,7 @@ public class ReplyLikeController {
     private final UserRepository userRepository;
     private final FeedRepository feedRepository;
     private final ReplyRepository replyRepository;
-    private final ReplyLikeRepository replyLikeRepository;
+    private final ReplyLikeService replyLikeService;
 
 
     @PostMapping("/likes/feed/{feedId}/reply/{replyId}")
@@ -49,7 +49,7 @@ public class ReplyLikeController {
                 ()-> new GlobalException(ErrorCode.REPLY_ERROR)
         );
 
-        replyLikeRepository.save(ReplyLike.create(user, reply));
+        replyLikeService.createReplyLike(user, reply);
 
         return "redirect:/user/feed/" + feed.getId();
     }
@@ -73,11 +73,7 @@ public class ReplyLikeController {
                 ()-> new GlobalException(ErrorCode.REPLY_ERROR)
         );
 
-        ReplyLike replyLike = replyLikeRepository.findByUserAndReply(user, reply).orElseThrow(
-                () -> new GlobalException(ErrorCode.REPLY_LIKE_ERROR)
-        );
-
-        replyLikeRepository.delete(replyLike);
+        replyLikeService.deleteReplyLike(user, reply);
 
         return "redirect:/user/feed/" + feed.getId();
     }
