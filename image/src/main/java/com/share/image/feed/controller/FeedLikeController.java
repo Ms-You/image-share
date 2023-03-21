@@ -4,9 +4,8 @@ import com.share.image.config.PrincipalDetails;
 import com.share.image.config.exception.ErrorCode;
 import com.share.image.config.exception.GlobalException;
 import com.share.image.feed.domain.Feed;
-import com.share.image.feed.domain.FeedLike;
-import com.share.image.feed.repository.FeedLikeRepository;
 import com.share.image.feed.repository.FeedRepository;
+import com.share.image.feed.service.FeedLikeService;
 import com.share.image.user.domain.User;
 import com.share.image.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -22,9 +21,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/user")
 public class FeedLikeController {
-    private final FeedLikeRepository feedLikeRepository;
     private final UserRepository userRepository;
     private final FeedRepository feedRepository;
+    private final FeedLikeService feedLikeService;
 
 
     @PostMapping("/likes/feed/{feedId}")
@@ -40,7 +39,7 @@ public class FeedLikeController {
                 ()-> new GlobalException(ErrorCode.FEED_ERROR)
         );
 
-        feedLikeRepository.save(FeedLike.create(user, feed));
+        feedLikeService.createFeedLike(user, feed);
 
         return "redirect:/user/feed/" + feed.getId();
     }
@@ -59,11 +58,7 @@ public class FeedLikeController {
                 ()-> new GlobalException(ErrorCode.FEED_ERROR)
         );
 
-        FeedLike feedLike = feedLikeRepository.findByUserAndFeed(user, feed).orElseThrow(
-                () -> new GlobalException(ErrorCode.FEED_LIKE_ERROR)
-        );
-
-        feedLikeRepository.delete(feedLike);
+        feedLikeService.deleteFeedLike(user, feed);
 
         return "redirect:/user/feed/" + feed.getId();
     }

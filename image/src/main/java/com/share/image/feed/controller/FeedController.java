@@ -43,7 +43,7 @@ public class FeedController {
     private final FeedDtoValidator feedDtoValidator;
     private final FeedService feedService;
     private final ReplyRepository replyRepository;
-    private final FeedLikeRepository feedLikeRepository;
+    private final FeedLikeService feedLikeService;
     private final ReplyLikeRepository replyLikeRepository;
     private final SubscribeService subscribeService;
     private final FeedRepository feedRepository;
@@ -128,7 +128,7 @@ public class FeedController {
             model.addAttribute("subscribeStatus", "/img/un_sub.png");
 
         // 피드 좋아요 변경
-        if (feedLikeRepository.existsByUserAndFeed(user, feed))
+        if (feedLikeService.isUserLikeFeed(user, feed))
             model.addAttribute("feedLikeStatus", "/img/full_heart.png");
         else
             model.addAttribute("feedLikeStatus", "/img/empty_heart.png");
@@ -174,7 +174,7 @@ public class FeedController {
             model.addAttribute("subscribeStatus", "/img/un_sub.png");
 
         // 피드 좋아요 변경
-        if (feedLikeRepository.existsByUserAndFeed(user, feed))
+        if (feedLikeService.isUserLikeFeed(user, feed))
             model.addAttribute("feedLikeStatus", "/img/full_heart.png");
         else
             model.addAttribute("feedLikeStatus", "/img/empty_heart.png");
