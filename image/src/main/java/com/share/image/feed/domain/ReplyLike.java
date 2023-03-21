@@ -25,4 +25,15 @@ public class ReplyLike {
     @JoinColumn(name = "reply_id")
     private Reply reply;
 
+
+    public static ReplyLike create(User user, Reply reply){
+        ReplyLike replyLike = new ReplyLike();
+        replyLike.user = user;
+        replyLike.reply = reply;
+
+        reply.getReplyLikes().add(replyLike);
+
+        return replyLike;
+    }
+
 }

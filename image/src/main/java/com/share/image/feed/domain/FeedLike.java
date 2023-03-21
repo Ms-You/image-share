@@ -30,6 +30,8 @@ public class FeedLike {
         feedLike.user = user;
         feedLike.feed = feed;
 
+        feed.getFeedLikes().add(feedLike);
+
         return feedLike;
     }
 

@@ -5,15 +5,15 @@ import com.share.image.config.exception.ErrorCode;
 import com.share.image.config.exception.GlobalException;
 import com.share.image.feed.domain.Feed;
 import com.share.image.feed.domain.Reply;
+import com.share.image.feed.domain.ReplyLike;
 import com.share.image.feed.repository.FeedRepository;
+import com.share.image.feed.repository.ReplyLikeRepository;
 import com.share.image.feed.repository.ReplyRepository;
-import com.share.image.feed.service.ReplyLikeService;
 import com.share.image.user.domain.User;
 import com.share.image.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,10 +25,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/user")
 public class ReplyLikeController {
 
-    private final ReplyLikeService replyLikeService;
+    private final UserRepository userRepository;
     private final FeedRepository feedRepository;
     private final ReplyRepository replyRepository;
-    private final UserRepository userRepository;
+    private final ReplyLikeRepository replyLikeRepository;
 
 
     @PostMapping("/likes/feed/{feedId}/reply/{replyId}")
@@ -49,7 +49,7 @@ public class ReplyLikeController {
                 ()-> new GlobalException(ErrorCode.REPLY_ERROR)
         );
 
-        replyLikeService.likeReply(user, reply);
+        replyLikeRepository.save(ReplyLike.create(user, reply));
 
         return "redirect:/user/feed/" + feed.getId();
     }
@@ -73,7 +73,11 @@ public class ReplyLikeController {
                 ()-> new GlobalException(ErrorCode.REPLY_ERROR)
         );
 
-        replyLikeService.unLikeReply(user, reply);
+        ReplyLike replyLike = replyLikeRepository.findByUserAndReply(user, reply).orElseThrow(
+                () -> new GlobalException(ErrorCode.REPLY_LIKE_ERROR)
+        );
+
+        replyLikeRepository.delete(replyLike);
 
         return "redirect:/user/feed/" + feed.getId();
     }

@@ -44,7 +44,7 @@ public class FeedController {
     private final FeedService feedService;
     private final ReplyRepository replyRepository;
     private final FeedLikeRepository feedLikeRepository;
-    private final ReplyLikeService replyLikeService;
+    private final ReplyLikeRepository replyLikeRepository;
     private final SubscribeService subscribeService;
     private final FeedRepository feedRepository;
     private final FeedQueries feedQueries;
@@ -135,7 +135,7 @@ public class FeedController {
 
         // 댓글별 좋아요 변경
         for(Reply reply: replies){
-            if (replyLikeService.isUserLikeReply(user, reply))
+            if (replyLikeRepository.existsByUserAndReply(user, reply))
                 reply.updateReplyLikeStatus("/img/full_heart.png");
             else
                 reply.updateReplyLikeStatus("/img/empty_heart.png");
@@ -181,7 +181,7 @@ public class FeedController {
 
         // 댓글별 좋아요 변경
         for(Reply reply: replies){
-            if (replyLikeService.isUserLikeReply(user, reply))
+            if (replyLikeRepository.existsByUserAndReply(user, reply))
                 reply.updateReplyLikeStatus("/img/full_heart.png");
             else
                 reply.updateReplyLikeStatus("/img/empty_heart.png");

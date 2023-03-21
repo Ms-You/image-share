@@ -40,8 +40,7 @@ public class FeedLikeController {
                 ()-> new GlobalException(ErrorCode.FEED_ERROR)
         );
 
-        FeedLike feedLike = FeedLike.create(user, feed);
-        feedLikeRepository.save(feedLike);
+        feedLikeRepository.save(FeedLike.create(user, feed));
 
         return "redirect:/user/feed/" + feed.getId();
     }

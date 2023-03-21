@@ -4,9 +4,6 @@ import com.share.image.feed.domain.Feed;
 import com.share.image.feed.domain.FeedLike;
 import com.share.image.user.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
 
