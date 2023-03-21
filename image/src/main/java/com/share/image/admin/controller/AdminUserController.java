@@ -56,7 +56,7 @@ public class AdminUserController {
         );
 
         model.addAttribute("user", user);
-        model.addAttribute("reportCount", reportRepository.findReportCountByUserId(user.getId()));
+        model.addAttribute("reportCount", reportRepository.findByToUser(user).size());
 
         return "admin/user/userView";
     }

@@ -7,6 +7,7 @@ import com.share.image.feed.domain.Feed;
 import com.share.image.feed.domain.Reply;
 import com.share.image.feed.dto.ReplyRequestDto;
 import com.share.image.feed.repository.FeedRepository;
+import com.share.image.feed.repository.ReplyLikeRepository;
 import com.share.image.feed.repository.ReplyRepository;
 import com.share.image.feed.service.ReplyService;
 import com.share.image.user.domain.User;
@@ -31,11 +32,11 @@ import java.util.Map;
 @RequestMapping("/user")
 public class ReplyController {
 
-    private final ReplyService replyService;
-    private final ReplyLikeService replyLikeService;
     private final UserRepository userRepository;
     private final FeedRepository feedRepository;
+    private final ReplyService replyService;
     private final ReplyRepository replyRepository;
+    private final ReplyLikeRepository replyLikeRepository;
 
     // 댓글 작성
     @PostMapping("/feed/{feedId}/reply")
@@ -57,7 +58,7 @@ public class ReplyController {
         List<Reply> replies = replyRepository.findByFeed(feed);
         // 댓글별 좋아요 변경
         for(Reply reply: replies){
-            if (replyLikeService.isUserLikeReply(user, reply)) reply.updateReplyLikeStatus("/img/full_heart.png");
+            if (replyLikeRepository.existsByUserAndReply(user, reply)) reply.updateReplyLikeStatus("/img/full_heart.png");
             else reply.updateReplyLikeStatus("/img/empty_heart.png");
         }
 

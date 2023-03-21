@@ -55,7 +55,7 @@
         <img th:src="@{/profile_imgs/} + ${report.toUser.profileImageUrl}" onerror="this.src='/img/default_profile.png';" width="30" height="30" style="border-radius: 100%;" />
         <span th:text="${report.toUser.nickName}" style="font-size: 30px;"></span>
         <h6 th:text="${#temporals.format(report.feed.createdDate, 'yyyy-MM-dd')}"></h6>
-        조회수: <span th:text="${#lists.size(report.feed.views)}"></span>
+        조회수: <span th:text="${report.feed.view}"></span>
         <a th:href="@{/admin/tag/(tag_id=${report.feed.tag.id})}">
             <div th:text="${report.feed.tag.name}" style="color: orange;"></div>
         </a>
