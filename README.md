@@ -186,3 +186,10 @@ Image share project for Spring Boot
     - 카카오
     - 네이버
     - 구글
+    
+<br>
+<br>
+
+# ERD
+<div align="center"><img src='https://user-images.githubusercontent.com/66125391/235109985-bd6136d4-be0c-49a9-abdb-9f6620bc8521.png' width='600px' height='1000px'>
+</div>
